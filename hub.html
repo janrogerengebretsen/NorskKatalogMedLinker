@@ -1,28 +1,28 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="no">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#007b68">
-  <title>Mine Tupperware-verktøy</title>
+  <title>Mine Tupperware-verktÃ¸y</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js" defer></script>
+  <script src="/hub.js?v=20260818-v2-nettkatalog" defer></script>
 </head>
 <body>
   <header class="hub-header">
     <a class="hub-brand" href="/mine-sider">
       <span class="brand-mark">T</span>
       <span>
-        <strong>Mine Tupperware-verktøy</strong>
+        <strong>Mine Tupperware-verktÃ¸y</strong>
         <small id="hubConsultantName">Arbeidsflate for konsulent</small>
       </span>
     </a>
     <a class="account-link" href="/konsulent">
       <i data-lucide="user-round"></i>
-      Konsulentområdet
+      KonsulentomrÃ¥det
     </a>
   </header>
 
@@ -30,7 +30,7 @@
     <section class="page-heading">
       <div>
         <p class="eyebrow" id="pageConsultantName">KONSULENT</p>
-        <h1>Alle verktøy på ett sted</h1>
+        <h1>Alle verktÃ¸y pÃ¥ ett sted</h1>
       </div>
       <div class="reference">
         <span>Konsulentreferanse</span>
@@ -66,7 +66,7 @@
         <div class="admin-search-row">
           <label class="admin-search">
             <i data-lucide="search"></i>
-            <input id="adminConsultantSearch" type="search" autocomplete="off" placeholder="Søk etter navn, sted eller referanse">
+            <input id="adminConsultantSearch" type="search" autocomplete="off" placeholder="SÃ¸k etter navn, sted eller referanse">
           </label>
           <span class="admin-result-count" id="adminResultCount"></span>
         </div>
@@ -77,12 +77,12 @@
             <select id="adminConsultantSelect" aria-label="Velg konsulent"></select>
           </label>
           <button type="button" class="admin-icon-button" id="adminNext" title="Neste konsulent" aria-label="Neste konsulent"><i data-lucide="chevron-right"></i></button>
-          <button type="button" class="admin-open-button" id="adminOpenConsultant"><i data-lucide="external-link"></i><span>Åpne valgt</span></button>
+          <button type="button" class="admin-open-button" id="adminOpenConsultant"><i data-lucide="external-link"></i><span>Ã…pne valgt</span></button>
         </div>
         <p class="admin-current" id="adminCurrentConsultant"></p>
         <div class="admin-product-access">
           <div class="admin-product-heading">
-            <strong>Kjøpte produkter</strong>
+            <strong>KjÃ¸pte produkter</strong>
             <span>Gi eller fjern tilgang for valgt konsulent</span>
           </div>
           <div class="admin-product-list" id="adminProductAccessList"></div>
@@ -124,7 +124,7 @@
           <span class="module-icon"><i data-lucide="book-open"></i></span>
           <span class="module-copy">
             <strong>Digital produktkatalog</strong>
-            <small>Katalogheftet med søk og personlige produktlenker</small>
+            <small>Katalogheftet med sÃ¸k og personlige produktlenker</small>
           </span>
           <span class="module-status active">Publisert</span>
           <i class="arrow" data-lucide="arrow-up-right"></i>
@@ -133,7 +133,7 @@
           <span class="module-icon"><i data-lucide="package-check"></i></span>
           <span class="module-copy">
             <strong id="ownCatalogTitle">Konsulentens egne varer</strong>
-            <small>Varer konsulenten har på eget lager</small>
+            <small>Varer konsulenten har pÃ¥ eget lager</small>
           </span>
           <span class="module-status seller">Eget lager</span>
           <i class="arrow" data-lucide="arrow-up-right"></i>
@@ -194,11 +194,11 @@
         <span class="section-icon"><i data-lucide="badge-check"></i></span>
         <div>
           <p class="eyebrow">PRODUKTREGISTER</p>
-          <h2 id="product-register-heading">Hvilke løsninger konsulenten har tilgang til</h2>
+          <h2 id="product-register-heading">Hvilke lÃ¸sninger konsulenten har tilgang til</h2>
         </div>
       </header>
       <p class="section-intro" id="productRegisterIntro">
-        Her ser du hvilke produkter som er åpne for den valgte konsulenten.
+        Her ser du hvilke produkter som er Ã¥pne for den valgte konsulenten.
       </p>
       <div class="registry-list" id="productRegistryList"></div>
     </section>
@@ -207,7 +207,7 @@
       <header>
         <span class="section-icon"><i data-lucide="briefcase-business"></i></span>
         <div>
-          <p class="eyebrow">ARBEIDSVERKTØY</p>
+          <p class="eyebrow">ARBEIDSVERKTÃ˜Y</p>
           <h2 id="work-heading">Administrasjon og innhold</h2>
         </div>
       </header>
@@ -215,7 +215,7 @@
         <a class="module-row" href="/konsulent" target="tupperware-work">
           <span class="module-icon"><i data-lucide="settings-2"></i></span>
           <span class="module-copy">
-            <strong>Konsulentområdet</strong>
+            <strong>KonsulentomrÃ¥det</strong>
             <small>Mine varer, bestillinger og profil</small>
           </span>
           <span class="module-status login">Innlogging</span>
@@ -224,7 +224,7 @@
         <a class="module-row" href="https://tupperware-mailverktoy.onrender.com/" target="tupperware-work">
           <span class="module-icon"><i data-lucide="mail"></i></span>
           <span class="module-copy">
-            <strong>Mail- og oppskriftsverktøy</strong>
+            <strong>Mail- og oppskriftsverktÃ¸y</strong>
             <small>Lag produktmailer, oppskrifter og tips</small>
           </span>
           <span class="module-status active">Publisert</span>
@@ -241,3 +241,4 @@
   <div class="toast" id="hubToast" role="status" aria-live="polite"></div>
 </body>
 </html>
+
