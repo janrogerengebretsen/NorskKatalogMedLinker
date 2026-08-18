@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: norskkatalogmedlinker
+    runtime: python
+    plan: free
+    buildCommand: echo Ready
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: SUPABASE_URL
+        value: https://coekzqrjiuwhslzwldiw.supabase.co
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: CATALOG_SYNC_TOKEN
+        sync: false

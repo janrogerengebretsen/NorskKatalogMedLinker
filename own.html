@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#b83d4b">
+  <title>Konsulentens egne varer | Tupperware Norsk Nettkatalog</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://cdn.shopify.com">
+  <link rel="stylesheet" href="/own.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="/own.js" defer></script>
+</head>
+<body>
+  <div class="seller-strip">
+    <i data-lucide="store"></i>
+    <span id="sellerStripText">Konsulentens egne varer</span>
+  </div>
+
+  <header class="own-header">
+    <a class="brand" id="officialHomeLink" href="/">
+      <span class="brand-mark">T</span>
+      <span><strong>Tupperware</strong><small>Norsk Nettkatalog</small></span>
+    </a>
+    <nav class="catalog-tabs" aria-label="Velg katalog">
+      <a id="officialCatalogLink" href="/">Tupperwares varer</a>
+      <span class="active">Konsulentens egne varer</span>
+    </nav>
+    <button class="cart-button" id="cartButton" type="button" aria-label="Åpne bestillingen">
+      <i data-lucide="shopping-bag"></i>
+      <span>Bestilling</span>
+      <strong id="cartCount">0</strong>
+    </button>
+  </header>
+
+  <main>
+    <section class="access-gate" id="accessGate" hidden>
+      <div class="access-gate-icon"><i data-lucide="key-round"></i></div>
+      <p class="eyebrow">PRIVAT KUNDEKATALOG</p>
+      <h1>Kundekode kreves</h1>
+      <p>Konsulenten har begrenset lageroversikten til inviterte kunder.</p>
+      <form id="accessForm">
+        <label>Kundekode
+          <input id="accessCodeInput" type="password" minlength="4" maxlength="40"
+            autocomplete="current-password" required>
+        </label>
+        <button type="submit"><i data-lucide="unlock-keyhole"></i> Åpne varekatalogen</button>
+        <small id="accessMessage" role="status"></small>
+      </form>
+      <a id="accessBackLink" href="/">Tilbake til Tupperwares varer</a>
+    </section>
+
+    <div id="shopContent">
+    <section class="own-hero">
+      <div>
+        <p class="eyebrow">EGET LAGER I NORGE</p>
+        <h1 id="pageTitle">Konsulentens egne varer</h1>
+        <p id="pageDescription">Varene selges og leveres av konsulenten, ikke fra Tupperwares nettbutikk eller lager.</p>
+      </div>
+      <div class="seller-panel">
+        <span>Du bestiller fra</span>
+        <strong id="consultantName">Kontrollerer konsulent ...</strong>
+        <small>Tilgjengelighet og levering avtales direkte med konsulenten.</small>
+      </div>
+    </section>
+
+    <section class="separation-notice">
+      <i data-lucide="info"></i>
+      <div>
+        <strong>Dette er en egen varekatalog</strong>
+        <span>Disse varene kan ikke blandes med varer som bestilles direkte fra Tupperware.</span>
+      </div>
+    </section>
+
+    <div class="own-toolbar">
+      <label class="own-search">
+        <i data-lucide="search"></i>
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Søk i konsulentens varer">
+      </label>
+      <span id="resultCount">Laster varer ...</span>
+    </div>
+
+    <section class="own-grid" id="productGrid" aria-live="polite">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </section>
+    </div>
+  </main>
+
+  <footer class="own-footer">
+    <span>Konsulentens egne varer administreres separat fra Tupperwares nettbutikk.</span>
+    <a href="/konsulent">Konsulentinnlogging</a>
+  </footer>
+
+  <dialog class="cart-dialog" id="cartDialog" aria-labelledby="cartTitle">
+    <div class="cart-shell">
+      <header>
+        <div>
+          <p class="eyebrow">BESTILL DIREKTE FRA KONSULENTEN</p>
+          <h2 id="cartTitle">Din bestilling</h2>
+        </div>
+        <button class="icon-button" id="closeCart" type="button" aria-label="Lukk bestillingen">
+          <i data-lucide="x"></i>
+        </button>
+      </header>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-total">
+        <span>Sum varer</span>
+        <strong id="cartTotal">0 kr</strong>
+      </div>
+      <p class="delivery-note">Bestillingen er en forespørsel. Konsulenten bekrefter lagerstatus, levering og eventuell frakt før kjøpet er bindende.</p>
+      <form id="orderForm" class="order-form">
+        <label>Navn <input name="name" required maxlength="120" autocomplete="name"></label>
+        <div class="form-row">
+          <label>E-post <input name="email" type="email" maxlength="160" autocomplete="email"></label>
+          <label>Telefon <input name="phone" type="tel" maxlength="40" autocomplete="tel"></label>
+        </div>
+        <label>Melding til konsulenten
+          <textarea name="message" rows="3" maxlength="1000" placeholder="For eksempel ønsket levering eller hentested"></textarea>
+        </label>
+        <p class="form-help">Oppgi enten e-post eller telefon.</p>
+        <button class="send-order" id="sendOrder" type="submit">
+          <i data-lucide="send"></i>
+          Send bestillingsforespørsel
+        </button>
+      </form>
+      <div class="order-success" id="orderSuccess" hidden>
+        <i data-lucide="circle-check-big"></i>
+        <h3>Bestillingen er sendt</h3>
+        <p id="successText">Konsulenten kontakter deg for å bekrefte varene og leveringen.</p>
+        <button type="button" id="closeSuccess">Lukk</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>

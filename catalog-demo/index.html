@@ -1,0 +1,1772 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupperware digital katalog</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f2f5f4;
+      color: #172124;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffff;
+      border-bottom: 1px solid #dbe2e0;
+    }
+    .consultant-line {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 18px;
+      background: #0b6b66;
+      color: white;
+      font-size: 13px;
+    }
+    .consultant-line small {
+      color: rgba(255, 255, 255, .75);
+    }
+    .consultant-line.invalid {
+      background: #9b332d;
+    }
+    .bar {
+      display: grid;
+      grid-template-columns: minmax(210px, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 12px 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: #d45a3c;
+      color: white;
+      font-size: 21px;
+      font-weight: 800;
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    input {
+      width: min(420px, 100%);
+      border: 1px solid #cbd6d3;
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 8px 10px;
+      font: inherit;
+    }
+    button {
+      border: 1px solid #0b6b66;
+      background: #0b6b66;
+      color: white;
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 18px;
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    aside {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+      max-height: calc(100vh - 92px);
+      overflow: auto;
+      background: white;
+      border: 1px solid #dbe2e0;
+      border-radius: 8px;
+    }
+    .product-row {
+      display: grid;
+      gap: 4px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef2f1;
+      color: #172124;
+      text-decoration: none;
+    }
+    .product-row:hover { background: #edf8f6; }
+    .product-row strong { color: #0b6b66; font-size: 13px; }
+    .pages {
+      display: grid;
+      gap: 18px;
+    }
+    .page {
+      background: white;
+      border: 1px solid #dbe2e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(18, 48, 47, .08);
+    }
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e7ecea;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #506166;
+    }
+    .sheet {
+      position: relative;
+      width: 100%;
+      aspect-ratio: var(--page-ratio);
+      background: #fff;
+    }
+    .sheet img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .hotspot {
+      position: absolute;
+      display: block;
+      border-radius: 4px;
+      outline-offset: 2px;
+    }
+    .hotspot:focus {
+      outline: 3px solid #d45a3c;
+      background: rgba(212, 90, 60, 0.14);
+    }
+    body.show-links .hotspot {
+      background: rgba(11, 107, 102, 0.18);
+      box-shadow: inset 0 0 0 2px rgba(11, 107, 102, 0.75);
+    }
+    @media (max-width: 860px) {
+      .bar { grid-template-columns: 1fr; }
+      main { grid-template-columns: 1fr; }
+      aside { position: static; max-height: 210px; }
+      .consultant-line { flex-wrap: wrap; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="consultant-line" id="consultantLine">
+      <span>Du handler med <strong id="consultantName">Kontrollerer konsulent ...</strong></span>
+      <small id="consultantCode"></small>
+    </div>
+    <div class="bar">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <h1>Tupperware digital katalog</h1>
+      </div>
+      <input id="search" type="search" placeholder="Søk produkt eller kode">
+      <button id="toggle" type="button">Vis lenkeflater</button>
+    </div>
+  </header>
+  <main>
+    <aside id="products" aria-label="Produktliste">
+      
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=10WITHIN" target="tupperware_shop"
+           data-search="10within 10within"
+           data-page="3">
+          <span>10WITHIN</span>
+          <strong>10WITHIN</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11156002" target="tupperware_shop"
+           data-search="a. ventsmart 375 ml 11156002"
+           data-page="6">
+          <span>A. Ventsmart 375 ml</span>
+          <strong>11156002</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155861" target="tupperware_shop"
+           data-search="b. ventsmart 800 ml 11155861"
+           data-page="6">
+          <span>B. Ventsmart 800 ml</span>
+          <strong>11155861</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155974" target="tupperware_shop"
+           data-search="c.ventsmart1.8lhigh 11155974"
+           data-page="6">
+          <span>C.Ventsmart1.8Lhigh</span>
+          <strong>11155974</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155840" target="tupperware_shop"
+           data-search="d. ventsmart 4.4 l 11155840"
+           data-page="6">
+          <span>D. Ventsmart 4.4 L</span>
+          <strong>11155840</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184119" target="tupperware_shop"
+           data-search="a. fridge container 650 ml 11184119"
+           data-page="7">
+          <span>A. Fridge container 650 ml</span>
+          <strong>11184119</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184120" target="tupperware_shop"
+           data-search="b. fridge container 1.3 l 11184120"
+           data-page="7">
+          <span>B. Fridge container 1.3 L</span>
+          <strong>11184120</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184204" target="tupperware_shop"
+           data-search="c. fridge container 3.4 l 11184204"
+           data-page="7">
+          <span>C. Fridge container 3.4 L</span>
+          <strong>11184204</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=30X23X8" target="tupperware_shop"
+           data-search="c. fridge container 3.4 l 30x23x8"
+           data-page="7">
+          <span>C. Fridge container 3.4 L</span>
+          <strong>30X23X8</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178253" target="tupperware_shop"
+           data-search="d. slim line pitcher 1 l (uten filter) 11178253"
+           data-page="7">
+          <span>D. Slim line pitcher 1 L (uten filter)</span>
+          <strong>11178253</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174378" target="tupperware_shop"
+           data-search="e. modular bowl 630 ml (2) 11174378"
+           data-page="7">
+          <span>E. Modular bowl 630 ml (2)</span>
+          <strong>11174378</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11169011" target="tupperware_shop"
+           data-search="f. modular bowls set ( 3) ** 11169011"
+           data-page="7">
+          <span>F. Modular bowls set ( 3) **</span>
+          <strong>11169011</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11164312" target="tupperware_shop"
+           data-search="g. expressions butter dish** 11164312"
+           data-page="7">
+          <span>G. Expressions butter dish**</span>
+          <strong>11164312</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop"
+           data-search="h. cheesmart max rectangular ** 11165083"
+           data-page="7">
+          <span>H. Cheesmart max rectangular **</span>
+          <strong>11165083</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176764" target="tupperware_shop"
+           data-search="a. ultra clear 500 ml 11176764"
+           data-page="8">
+          <span>A. Ultra Clear 500 ml</span>
+          <strong>11176764</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176765" target="tupperware_shop"
+           data-search="c. ultra clear 1 l 11176765"
+           data-page="8">
+          <span>C. Ultra Clear 1 L</span>
+          <strong>11176765</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176870" target="tupperware_shop"
+           data-search="d. utra clear 1.7 l 11176870"
+           data-page="8">
+          <span>D. Utra Clear 1.7 L</span>
+          <strong>11176870</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176775" target="tupperware_shop"
+           data-search="e. ultra clear 2.2 l 11176775"
+           data-page="8">
+          <span>E. Ultra Clear 2.2 L</span>
+          <strong>11176775</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176871" target="tupperware_shop"
+           data-search="f. ultra clear 3.6 l 11176871"
+           data-page="8">
+          <span>F. Ultra Clear 3.6 L</span>
+          <strong>11176871</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop"
+           data-search="a.recycline®chopcollector2.5 l 11162264"
+           data-page="9">
+          <span>A.Recycline®chopcollector2.5 L</span>
+          <strong>11162264</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=2PERFEKT" target="tupperware_shop"
+           data-search="a.recycline®chopcollector2.5 l 2perfekt"
+           data-page="9">
+          <span>A.Recycline®chopcollector2.5 L</span>
+          <strong>2PERFEKT</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11159416" target="tupperware_shop"
+           data-search="b. recycline® paper towel holder 11159416"
+           data-page="9">
+          <span>B. Recycline® paper towel holder</span>
+          <strong>11159416</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11175889" target="tupperware_shop"
+           data-search="c.potatosmart5.5 l 11175889"
+           data-page="9">
+          <span>C.Potatosmart5.5 L</span>
+          <strong>11175889</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11181136" target="tupperware_shop"
+           data-search="d.garlicnallkeeper 2.3 l 11181136"
+           data-page="9">
+          <span>D.GarlicNallkeeper 2.3 L</span>
+          <strong>11181136</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11157472" target="tupperware_shop"
+           data-search="a. universal jar 825 ml 11157472"
+           data-page="10">
+          <span>A. Universal jar 825 ml</span>
+          <strong>11157472</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11160085" target="tupperware_shop"
+           data-search="b.universaljar325 ml 11160085"
+           data-page="10">
+          <span>B.Universaljar325 ml</span>
+          <strong>11160085</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11160057" target="tupperware_shop"
+           data-search="c. universal jar 550 ml 11160057"
+           data-page="10">
+          <span>C. Universal jar 550 ml</span>
+          <strong>11160057</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11176670" target="tupperware_shop"
+           data-search="d. freezer mates plus 450 ml** 11176670"
+           data-page="11">
+          <span>D. Freezer mates plus 450 ml**</span>
+          <strong>11176670</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11177568" target="tupperware_shop"
+           data-search="e. ice cube tray** 11177568"
+           data-page="11">
+          <span>E. Ice cube tray**</span>
+          <strong>11177568</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11112914" target="tupperware_shop"
+           data-search="f. cool cubes 11112914"
+           data-page="11">
+          <span>F. Cool cubes</span>
+          <strong>11112914</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168759" target="tupperware_shop"
+           data-search="a. ultimate silicone 11168759"
+           data-page="13">
+          <span>A. Ultimate silicone</span>
+          <strong>11168759</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168760" target="tupperware_shop"
+           data-search="b. ultimate silicone 11168760"
+           data-page="13">
+          <span>B. Ultimate silicone</span>
+          <strong>11168760</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168761" target="tupperware_shop"
+           data-search="c. ultimate 11168761"
+           data-page="13">
+          <span>C. Ultimate</span>
+          <strong>11168761</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168762" target="tupperware_shop"
+           data-search="d. ultimate 11168762"
+           data-page="13">
+          <span>D. Ultimate</span>
+          <strong>11168762</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=7X22CMH" target="tupperware_shop"
+           data-search="d. ultimate 7x22cmh"
+           data-page="13">
+          <span>D. Ultimate</span>
+          <strong>7X22CMH</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174029" target="tupperware_shop"
+           data-search="e. ultimate silicone 11174029"
+           data-page="13">
+          <span>E. Ultimate silicone</span>
+          <strong>11174029</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174026" target="tupperware_shop"
+           data-search="f. ultimate silicone 11174026"
+           data-page="13">
+          <span>F. Ultimate silicone</span>
+          <strong>11174026</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174028" target="tupperware_shop"
+           data-search="g. ultimate silicone 11174028"
+           data-page="13">
+          <span>G. Ultimate silicone</span>
+          <strong>11174028</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop"
+           data-search="a. sbf queen 11170305"
+           data-page="14">
+          <span>A. SBF queen</span>
+          <strong>11170305</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11180469" target="tupperware_shop"
+           data-search="b. sbf mini hearts 11180469"
+           data-page="14">
+          <span>B. SBF mini hearts</span>
+          <strong>11180469</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11181082" target="tupperware_shop"
+           data-search="c. sbf heart 11181082"
+           data-page="14">
+          <span>C. SBF heart</span>
+          <strong>11181082</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=RIVER13" target="tupperware_shop"
+           data-search="a. grate n store river13"
+           data-page="15">
+          <span>A. Grate n store</span>
+          <strong>RIVER13</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11086744" target="tupperware_shop"
+           data-search="c. double colander** 11086744"
+           data-page="15">
+          <span>C. Double colander**</span>
+          <strong>11086744</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop"
+           data-search="d. mandochef 11109598"
+           data-page="15">
+          <span>D. Mandochef</span>
+          <strong>11109598</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop"
+           data-search="e. speedymando 11131820"
+           data-page="15">
+          <span>E. SpeedyMando</span>
+          <strong>11131820</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11172601" target="tupperware_shop"
+           data-search="11172601 11172601"
+           data-page="16">
+          <span>11172601</span>
+          <strong>11172601</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11156647" target="tupperware_shop"
+           data-search="a. supersonic chopper extra 11156647"
+           data-page="18">
+          <span>A. SuperSonic Chopper extra</span>
+          <strong>11156647</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11156645" target="tupperware_shop"
+           data-search="b. supersonic chopper compact 11156645"
+           data-page="18">
+          <span>B. SuperSonic Chopper compact</span>
+          <strong>11156645</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11126299" target="tupperware_shop"
+           data-search="a. kpt silicone spatula thin 11126299"
+           data-page="19">
+          <span>A. KPT silicone spatula thin</span>
+          <strong>11126299</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11146149" target="tupperware_shop"
+           data-search="b. kpt silicone spatula 11146149"
+           data-page="19">
+          <span>B. KPT silicone spatula</span>
+          <strong>11146149</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11172982" target="tupperware_shop"
+           data-search="c. ergo tools skimmer 11172982"
+           data-page="19">
+          <span>C. Ergo tools skimmer</span>
+          <strong>11172982</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11172984" target="tupperware_shop"
+           data-search="d. ergo tools ladle 11172984"
+           data-page="19">
+          <span>D. Ergo tools ladle</span>
+          <strong>11172984</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11163027" target="tupperware_shop"
+           data-search="e. kpt master tongs 11163027"
+           data-page="19">
+          <span>E. KPT master tongs</span>
+          <strong>11163027</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11069728" target="tupperware_shop"
+           data-search="f. kpt beater stirrer 11069728"
+           data-page="19">
+          <span>F. KPT beater stirrer</span>
+          <strong>11069728</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11130070" target="tupperware_shop"
+           data-search="g. kpt simple spoon 11130070"
+           data-page="19">
+          <span>G. KPT simple spoon</span>
+          <strong>11130070</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11140486" target="tupperware_shop"
+           data-search="h. kpt whisk** 11140486"
+           data-page="19">
+          <span>H. KPT whisk**</span>
+          <strong>11140486</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11163030" target="tupperware_shop"
+           data-search="i. kpt small ladle** 11163030"
+           data-page="19">
+          <span>I. KPT small ladle**</span>
+          <strong>11163030</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11106331" target="tupperware_shop"
+           data-search="a. ergologics ice cream 11106331"
+           data-page="20">
+          <span>A. Ergologics ice cream</span>
+          <strong>11106331</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop"
+           data-search="b. ergologics corkscrew 11118522"
+           data-page="20">
+          <span>B. Ergologics corkscrew</span>
+          <strong>11118522</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11164566" target="tupperware_shop"
+           data-search="c. kpt tool holder** 11164566"
+           data-page="20">
+          <span>C. KPT tool holder**</span>
+          <strong>11164566</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11157678" target="tupperware_shop"
+           data-search="d. ergologics zest’n press 11157678"
+           data-page="20">
+          <span>D. Ergologics zest’n press</span>
+          <strong>11157678</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11177880" target="tupperware_shop"
+           data-search="e. grate n measure grater 11177880"
+           data-page="20">
+          <span>E. Grate n measure grater</span>
+          <strong>11177880</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11090050" target="tupperware_shop"
+           data-search="a. flexi cutting board 11090050"
+           data-page="21">
+          <span>A. Flexi cutting board</span>
+          <strong>11090050</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11161873" target="tupperware_shop"
+           data-search="b. a-series paring knife 11161873"
+           data-page="21">
+          <span>B. A-series paring knife</span>
+          <strong>11161873</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11161879" target="tupperware_shop"
+           data-search="c. a-series serrated utiliy knife 11161879"
+           data-page="21">
+          <span>C. A-series serrated utiliy knife</span>
+          <strong>11161879</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11161867" target="tupperware_shop"
+           data-search="d. a-series bread knife 11161867"
+           data-page="21">
+          <span>D. A-series bread knife</span>
+          <strong>11161867</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=3TAGGET" target="tupperware_shop"
+           data-search="d. a-series bread knife 3tagget"
+           data-page="21">
+          <span>D. A-series bread knife</span>
+          <strong>3TAGGET</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11161869" target="tupperware_shop"
+           data-search="e. a-series chef knife 11161869"
+           data-page="21">
+          <span>E. A-series chef knife</span>
+          <strong>11161869</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop"
+           data-search="a. tuppercare divided dish 310 ml 11178789"
+           data-page="22">
+          <span>A. TupperCare Divided Dish 310 ml</span>
+          <strong>11178789</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop"
+           data-search="b. feeding cutlery 11168886"
+           data-page="22">
+          <span>B. Feeding Cutlery</span>
+          <strong>11168886</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop"
+           data-search="c. tupperkids snack cupd.powderedmilk 11166328"
+           data-page="22">
+          <span>C. Tupperkids snack cupD.Powderedmilk</span>
+          <strong>11166328</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop"
+           data-search="c. tupperkids snack cupd.powderedmilk 11178323"
+           data-page="22">
+          <span>C. Tupperkids snack cupD.Powderedmilk</span>
+          <strong>11178323</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop"
+           data-search="e. feeding spoon &amp; case 11167063"
+           data-page="22">
+          <span>E. Feeding spoon &amp; case</span>
+          <strong>11167063</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184923" target="tupperware_shop"
+           data-search="a. rock n serve 11184923"
+           data-page="23">
+          <span>A. Rock n serve</span>
+          <strong>11184923</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184531" target="tupperware_shop"
+           data-search="b. rock n serve 11184531"
+           data-page="23">
+          <span>B. Rock n serve</span>
+          <strong>11184531</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184532" target="tupperware_shop"
+           data-search="b. rock n serve 11184532"
+           data-page="23">
+          <span>B. Rock n serve</span>
+          <strong>11184532</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184428" target="tupperware_shop"
+           data-search="d. rock n serve 11184428"
+           data-page="23">
+          <span>D. Rock n serve</span>
+          <strong>11184428</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184677" target="tupperware_shop"
+           data-search="e. rock n serve medium 11184677"
+           data-page="23">
+          <span>E. Rock n serve medium</span>
+          <strong>11184677</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184519" target="tupperware_shop"
+           data-search="f. rock n serve 11184519"
+           data-page="23">
+          <span>F. Rock n serve</span>
+          <strong>11184519</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184933" target="tupperware_shop"
+           data-search="g. rock n serve rectangular 260 ml 11184933"
+           data-page="23">
+          <span>G. Rock n serve rectangular 260 ml</span>
+          <strong>11184933</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174474" target="tupperware_shop"
+           data-search="a. wow popcorn maker 11174474"
+           data-page="24">
+          <span>A. WOW Popcorn maker</span>
+          <strong>11174474</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11129256" target="tupperware_shop"
+           data-search="b. microcook 2,25 l 11129256"
+           data-page="24">
+          <span>B. MicroCook 2,25 L</span>
+          <strong>11129256</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11128042" target="tupperware_shop"
+           data-search="c. microcook pitcher 1 l 11128042"
+           data-page="24">
+          <span>C. MicroCook pitcher 1 L</span>
+          <strong>11128042</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11177543" target="tupperware_shop"
+           data-search="d. pasta maker round 3 l 11177543"
+           data-page="24">
+          <span>D. Pasta maker round 3 L</span>
+          <strong>11177543</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11130599" target="tupperware_shop"
+           data-search="e. micro healthy delight 11130599"
+           data-page="24">
+          <span>E. Micro healthy delight</span>
+          <strong>11130599</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11133292" target="tupperware_shop"
+           data-search="11133292 11133292"
+           data-page="26">
+          <span>11133292</span>
+          <strong>11133292</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11183902" target="tupperware_shop"
+           data-search="a.voila™rectangulaire 1,5 l 11183902"
+           data-page="28">
+          <span>A.Voila™rectangulaire 1,5 l</span>
+          <strong>11183902</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11183901" target="tupperware_shop"
+           data-search="b.voila™rectangulaire 1 l 11183901"
+           data-page="28">
+          <span>B.Voila™rectangulaire 1 l</span>
+          <strong>11183901</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11183900" target="tupperware_shop"
+           data-search="c.voila™rectangulaire 650 ml 11183900"
+           data-page="28">
+          <span>C.Voila™rectangulaire 650 ml</span>
+          <strong>11183900</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11183899" target="tupperware_shop"
+           data-search="d.voila™rectangulaire 400 ml 11183899"
+           data-page="28">
+          <span>D.Voila™rectangulaire 400 ml</span>
+          <strong>11183899</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS901" target="tupperware_shop"
+           data-search="a. micro pro grill &amp; micro pro ring (free) 26ss901"
+           data-page="29">
+          <span>A. Micro Pro Grill &amp; Micro pro ring (free)</span>
+          <strong>26SS901</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11146975" target="tupperware_shop"
+           data-search="b. micro pro ring 11146975"
+           data-page="29">
+          <span>B. Micro pro ring</span>
+          <strong>11146975</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11167057" target="tupperware_shop"
+           data-search="c. air fryer 11167057"
+           data-page="29">
+          <span>C. Air Fryer</span>
+          <strong>11167057</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=CB003KR" target="tupperware_shop"
+           data-search="d. ultra pro 2 l cb003kr"
+           data-page="29">
+          <span>D. Ultra Pro 2 l</span>
+          <strong>CB003KR</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11158285" target="tupperware_shop"
+           data-search="b.eco+clearbowl 2.4 l 11158285"
+           data-page="31">
+          <span>B.Eco+clearbowl 2.4 L</span>
+          <strong>11158285</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=1157968" target="tupperware_shop"
+           data-search="b.eco+clearbowl 2.4 l 1157968"
+           data-page="31">
+          <span>B.Eco+clearbowl 2.4 L</span>
+          <strong>1157968</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11158286" target="tupperware_shop"
+           data-search="c.eco+clearbowl 4 l 11158286"
+           data-page="31">
+          <span>C.Eco+clearbowl 4 L</span>
+          <strong>11158286</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11158287" target="tupperware_shop"
+           data-search="d.eco+clearbowl 6 l 11158287"
+           data-page="31">
+          <span>D.Eco+clearbowl 6 L</span>
+          <strong>11158287</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11157966" target="tupperware_shop"
+           data-search="e.eco+clearbowl 810 ml 11157966"
+           data-page="31">
+          <span>E.Eco+clearbowl 810 ml</span>
+          <strong>11157966</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11148370" target="tupperware_shop"
+           data-search="a. condiserve flip cap dispenser 11148370"
+           data-page="32">
+          <span>A. Condiserve flip cap dispenser</span>
+          <strong>11148370</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11068549" target="tupperware_shop"
+           data-search="b. moments milk foamer 11068549"
+           data-page="32">
+          <span>B. Moments milk foamer</span>
+          <strong>11068549</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11177780" target="tupperware_shop"
+           data-search="c. aloha bowl 2 l** 11177780"
+           data-page="32">
+          <span>C. Aloha bowl 2 L**</span>
+          <strong>11177780</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11147110" target="tupperware_shop"
+           data-search="d. aloha bowl 4 l 11147110"
+           data-page="32">
+          <span>D. Aloha bowl 4 L</span>
+          <strong>11147110</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11180364" target="tupperware_shop"
+           data-search="e. aloha serving dish 2.2 l 11180364"
+           data-page="32">
+          <span>E. Aloha serving dish 2.2 L</span>
+          <strong>11180364</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS904" target="tupperware_shop"
+           data-search="a. big t 1.1 l blackberry 26ss904"
+           data-page="34">
+          <span>A. Big T 1.1 L blackberry</span>
+          <strong>26SS904</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS903" target="tupperware_shop"
+           data-search="b. big t 1.1 l mint 26ss903"
+           data-page="34">
+          <span>B. Big T 1.1 L mint</span>
+          <strong>26SS903</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS902" target="tupperware_shop"
+           data-search="c. big t 1.1 l pink 26ss902"
+           data-page="34">
+          <span>C. Big T 1.1 L pink</span>
+          <strong>26SS902</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS905" target="tupperware_shop"
+           data-search="d. big t 1.1 l chestnut 26ss905"
+           data-page="34">
+          <span>D. Big T 1.1 L chestnut</span>
+          <strong>26SS905</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS908" target="tupperware_shop"
+           data-search="e. big t 630 ml blackberry 26ss908"
+           data-page="34">
+          <span>E. Big T 630 ml blackberry</span>
+          <strong>26SS908</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS907" target="tupperware_shop"
+           data-search="f. big t 630 ml mint 26ss907"
+           data-page="34">
+          <span>F. Big T 630 ml mint</span>
+          <strong>26SS907</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS906" target="tupperware_shop"
+           data-search="g. big t 630 ml pink 26ss906"
+           data-page="34">
+          <span>G. Big T 630 ml pink</span>
+          <strong>26SS906</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS909" target="tupperware_shop"
+           data-search="h. big t 630 ml chestnut 26ss909"
+           data-page="34">
+          <span>H. Big T 630 ml chestnut</span>
+          <strong>26SS909</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168463" target="tupperware_shop"
+           data-search="11168463 11168463"
+           data-page="35">
+          <span>11168463</span>
+          <strong>11168463</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11179809" target="tupperware_shop"
+           data-search="11179809 11179809"
+           data-page="35">
+          <span>11179809</span>
+          <strong>11179809</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178567" target="tupperware_shop"
+           data-search="a. eco bottle 2 l with straw 11178567"
+           data-page="35">
+          <span>A. Eco bottle 2 L with straw</span>
+          <strong>11178567</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11169999" target="tupperware_shop"
+           data-search="b. eco+ bottle 500 ml 11169999"
+           data-page="35">
+          <span>B. Eco+ bottle 500 ml</span>
+          <strong>11169999</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11172902" target="tupperware_shop"
+           data-search="c. eco bottle 750 11172902"
+           data-page="35">
+          <span>C. Eco bottle 750</span>
+          <strong>11172902</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11158623" target="tupperware_shop"
+           data-search="d. celery 11158623"
+           data-page="35">
+          <span>D. Celery</span>
+          <strong>11158623</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168462" target="tupperware_shop"
+           data-search="g. premium eco bottle 750 ml 11168462"
+           data-page="35">
+          <span>G. Premium eco bottle 750 ml</span>
+          <strong>11168462</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11183976" target="tupperware_shop"
+           data-search="a. slim lunch box 11183976"
+           data-page="36">
+          <span>A. Slim lunch box</span>
+          <strong>11183976</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11180062" target="tupperware_shop"
+           data-search="b. divided lunch box 1 l** 11180062"
+           data-page="36">
+          <span>B. Divided lunch box 1 L**</span>
+          <strong>11180062</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11165385" target="tupperware_shop"
+           data-search="c. 1 2 3 lunch 11165385"
+           data-page="36">
+          <span>C. 1 2 3 lunch</span>
+          <strong>11165385</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174730" target="tupperware_shop"
+           data-search="d. on the go cutlery 11174730"
+           data-page="36">
+          <span>D. On the go cutlery</span>
+          <strong>11174730</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11181137" target="tupperware_shop"
+           data-search="e. sweet box 1.4 l 11181137"
+           data-page="36">
+          <span>E. Sweet box 1.4 L</span>
+          <strong>11181137</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155977" target="tupperware_shop"
+           data-search="11155977 11155977"
+           data-page="37">
+          <span>11155977</span>
+          <strong>11155977</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155980" target="tupperware_shop"
+           data-search="11155980 11155980"
+           data-page="37">
+          <span>11155980</span>
+          <strong>11155980</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155982" target="tupperware_shop"
+           data-search="11155982 11155982"
+           data-page="37">
+          <span>11155982</span>
+          <strong>11155982</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11174866" target="tupperware_shop"
+           data-search="11174866 11174866"
+           data-page="37">
+          <span>11174866</span>
+          <strong>11174866</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155978" target="tupperware_shop"
+           data-search="d.2 universalklut i resirkulert mikrofiber 11155978"
+           data-page="37">
+          <span>D.2 Universalklut i resirkulert mikrofiber</span>
+          <strong>11155978</strong>
+        </a>
+        
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11155981" target="tupperware_shop"
+           data-search="e.2 støvkluter i resirkulert mikrofiber 11155981"
+           data-page="37">
+          <span>E.2 Støvkluter i resirkulert mikrofiber</span>
+          <strong>11155981</strong>
+        </a>
+        
+    </aside>
+    <div class="pages">
+      
+            <section class="page" id="page-1" data-page="1">
+              <div class="page-head">
+                <span>Side 1</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-01.webp" width="1007" height="1402" alt="Katalogside 1">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-2" data-page="2">
+              <div class="page-head">
+                <span>Side 2</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-02.webp" width="1007" height="1402" alt="Katalogside 2">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-3" data-page="3">
+              <div class="page-head">
+                <span>Side 3</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-03.webp" width="1007" height="1402" alt="Katalogside 3">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=10WITHIN" target="tupperware_shop" style="left:58.45130%;top:64.34722%;width:24.73519%;height:8.65892%;" aria-label="10WITHIN - 10WITHIN" title="10WITHIN - 10WITHIN"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-4" data-page="4">
+              <div class="page-head">
+                <span>Side 4</span>
+                <span>6 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-04.webp" width="1007" height="1402" alt="Katalogside 4">
+                <a class="hotspot internal-hotspot" href="#page-7" style="left:5.55983%;top:12.32503%;width:88.79841%;height:13.35211%;" aria-label="Side 7 - Perfekt for kjoleskapet" title="Side 7 - Perfekt for kjoleskapet"></a><a class="hotspot internal-hotspot" href="#page-11" style="left:5.55983%;top:25.79126%;width:88.79841%;height:13.00975%;" aria-label="Side 11 - Like perfekte i fryseren" title="Side 11 - Like perfekte i fryseren"></a><a class="hotspot internal-hotspot" href="#page-15" style="left:5.55983%;top:38.80101%;width:88.79841%;height:13.12387%;" aria-label="Side 15 - Uunnvaerlig til baking" title="Side 15 - Uunnvaerlig til baking"></a><a class="hotspot internal-hotspot" href="#page-17" style="left:5.55983%;top:51.92489%;width:88.79841%;height:11.41206%;" aria-label="Side 17 - Ekstra praktisk" title="Side 17 - Ekstra praktisk"></a><a class="hotspot internal-hotspot" href="#page-20" style="left:5.55983%;top:63.33695%;width:88.79841%;height:13.69448%;" aria-label="Side 20 - Uunnvaerlig" title="Side 20 - Uunnvaerlig"></a><a class="hotspot internal-hotspot" href="#page-24" style="left:5.55983%;top:77.03143%;width:88.79841%;height:14.83568%;" aria-label="Side 24 - For mikrobolgeovnen" title="Side 24 - For mikrobolgeovnen"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-5" data-page="5">
+              <div class="page-head">
+                <span>Side 5</span>
+                <span>6 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-05.webp" width="1007" height="1402" alt="Katalogside 5">
+                <a class="hotspot internal-hotspot" href="#page-28" style="left:11.11966%;top:6.84724%;width:80.22039%;height:16.54749%;" aria-label="Side 28 - Voila" title="Side 28 - Voila"></a><a class="hotspot internal-hotspot" href="#page-32" style="left:11.11966%;top:26.24775%;width:80.22039%;height:9.12965%;" aria-label="Side 32 - Server med stil" title="Side 32 - Server med stil"></a><a class="hotspot internal-hotspot" href="#page-33" style="left:11.11966%;top:35.37740%;width:80.22039%;height:13.12387%;" aria-label="Side 33 - Ogsa utendors" title="Side 33 - Ogsa utendors"></a><a class="hotspot internal-hotspot" href="#page-34" style="left:7.14835%;top:48.50127%;width:84.19170%;height:19.40051%;" aria-label="Side 34 - Big T" title="Side 34 - Big T"></a><a class="hotspot internal-hotspot" href="#page-36" style="left:36.85372%;top:67.90178%;width:54.48633%;height:11.98267%;" aria-label="Side 36 - Slukk torsten" title="Side 36 - Slukk torsten"></a><a class="hotspot internal-hotspot" href="#page-37" style="left:7.14835%;top:79.88444%;width:84.19170%;height:11.98267%;" aria-label="Side 37 - Lunch box" title="Side 37 - Lunch box"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-6" data-page="6">
+              <div class="page-head">
+                <span>Side 6</span>
+                <span>4 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-06.webp" width="1007" height="1402" alt="Katalogside 6">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156002" target="tupperware_shop" style="left:12.31717%;top:78.37066%;width:21.78267%;height:1.74792%;" aria-label="A. Ventsmart 375 ml - 11156002" title="A. Ventsmart 375 ml - 11156002"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155861" target="tupperware_shop" style="left:54.14576%;top:77.61414%;width:18.39068%;height:3.54028%;" aria-label="B. Ventsmart 800 ml - 11155861" title="B. Ventsmart 800 ml - 11155861"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155974" target="tupperware_shop" style="left:12.38257%;top:85.02287%;width:22.32637%;height:1.74923%;" aria-label="C.Ventsmart1.8Lhigh - 11155974" title="C.Ventsmart1.8Lhigh - 11155974"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155840" target="tupperware_shop" style="left:54.50817%;top:86.88691%;width:19.49098%;height:1.74776%;" aria-label="D. Ventsmart 4.4 L - 11155840" title="D. Ventsmart 4.4 L - 11155840"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-7" data-page="7">
+              <div class="page-head">
+                <span>Side 7</span>
+                <span>9 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-07.webp" width="1007" height="1402" alt="Katalogside 7">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178253" target="tupperware_shop" style="left:6.46442%;top:70.86521%;width:23.40961%;height:3.38374%;" aria-label="D. Slim line pitcher 1 L (uten filter) - 11178253" title="D. Slim line pitcher 1 L (uten filter) - 11178253"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184119" target="tupperware_shop" style="left:7.24097%;top:20.92926%;width:24.79779%;height:3.46523%;" aria-label="A. Fridge container 650 ml - 11184119" title="A. Fridge container 650 ml - 11184119"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184120" target="tupperware_shop" style="left:37.14072%;top:21.45993%;width:24.05807%;height:3.74683%;" aria-label="B. Fridge container 1.3 L - 11184120" title="B. Fridge container 1.3 L - 11184120"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=30X23X8" target="tupperware_shop" style="left:65.07910%;top:21.00889%;width:24.00594%;height:3.49131%;" aria-label="C. Fridge container 3.4 L - 30X23X8" title="C. Fridge container 3.4 L - 30X23X8"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184204" target="tupperware_shop" style="left:65.07910%;top:21.00889%;width:24.00594%;height:3.49131%;" aria-label="C. Fridge container 3.4 L - 11184204" title="C. Fridge container 3.4 L - 11184204"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11164312" target="tupperware_shop" style="left:8.46236%;top:83.94596%;width:29.39135%;height:1.76990%;" aria-label="G. Expressions butter dish** - 11164312" title="G. Expressions butter dish** - 11164312"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174378" target="tupperware_shop" style="left:34.72474%;top:70.82920%;width:28.09892%;height:1.76990%;" aria-label="E. Modular bowl 630 ml (2) - 11174378" title="E. Modular bowl 630 ml (2) - 11174378"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop" style="left:50.52222%;top:83.94596%;width:34.94869%;height:1.76990%;" aria-label="H. Cheesmart max rectangular ** - 11165083" title="H. Cheesmart max rectangular ** - 11165083"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11169011" target="tupperware_shop" style="left:62.98506%;top:70.91226%;width:26.77440%;height:1.76990%;" aria-label="F. Modular bowls set ( 3) ** - 11169011" title="F. Modular bowls set ( 3) ** - 11169011"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-8" data-page="8">
+              <div class="page-head">
+                <span>Side 8</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-08.webp" width="1007" height="1402" alt="Katalogside 8">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176764" target="tupperware_shop" style="left:9.87827%;top:62.63628%;width:21.85208%;height:1.76990%;" aria-label="A. Ultra Clear 500 ml - 11176764" title="A. Ultra Clear 500 ml - 11176764"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176870" target="tupperware_shop" style="left:9.87827%;top:87.16987%;width:18.45423%;height:1.76990%;" aria-label="D. Utra Clear 1.7 L - 11176870" title="D. Utra Clear 1.7 L - 11176870"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176775" target="tupperware_shop" style="left:39.05472%;top:87.16987%;width:19.11004%;height:1.76990%;" aria-label="E. Ultra Clear 2.2 L - 11176775" title="E. Ultra Clear 2.2 L - 11176775"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176765" target="tupperware_shop" style="left:68.05318%;top:62.63628%;width:17.10048%;height:1.76990%;" aria-label="C. Ultra Clear 1 L - 11176765" title="C. Ultra Clear 1 L - 11176765"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176871" target="tupperware_shop" style="left:68.05318%;top:87.16987%;width:19.12321%;height:1.76990%;" aria-label="F. Ultra Clear 3.6 L - 11176871" title="F. Ultra Clear 3.6 L - 11176871"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-9" data-page="9">
+              <div class="page-head">
+                <span>Side 9</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-09.webp" width="1007" height="1402" alt="Katalogside 9">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11175889" target="tupperware_shop" style="left:9.07660%;top:52.58320%;width:20.60216%;height:1.76990%;" aria-label="C.Potatosmart5.5 L - 11175889" title="C.Potatosmart5.5 L - 11175889"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=2PERFEKT" target="tupperware_shop" style="left:9.07660%;top:26.08847%;width:33.28024%;height:1.76990%;" aria-label="A.Recycline®chopcollector2.5 L - 2PERFEKT" title="A.Recycline®chopcollector2.5 L - 2PERFEKT"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop" style="left:9.07660%;top:26.08847%;width:33.28024%;height:1.76990%;" aria-label="A.Recycline®chopcollector2.5 L - 11162264" title="A.Recycline®chopcollector2.5 L - 11162264"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11181136" target="tupperware_shop" style="left:52.08697%;top:52.49105%;width:25.82634%;height:1.76990%;" aria-label="D.GarlicNallkeeper 2.3 L - 11181136" title="D.GarlicNallkeeper 2.3 L - 11181136"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11159416" target="tupperware_shop" style="left:52.08697%;top:25.50272%;width:35.41627%;height:1.76990%;" aria-label="B. Recycline® paper towel holder - 11159416" title="B. Recycline® paper towel holder - 11159416"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-10" data-page="10">
+              <div class="page-head">
+                <span>Side 10</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-10.webp" width="1007" height="1402" alt="Katalogside 10">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157472" target="tupperware_shop" style="left:7.02269%;top:55.70382%;width:23.48840%;height:1.76990%;" aria-label="A. Universal jar 825 ml - 11157472" title="A. Universal jar 825 ml - 11157472"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11160057" target="tupperware_shop" style="left:67.96519%;top:55.70382%;width:23.51668%;height:1.76990%;" aria-label="C. Universal jar 550 ml - 11160057" title="C. Universal jar 550 ml - 11160057"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11160085" target="tupperware_shop" style="left:40.85562%;top:56.50867%;width:13.29888%;height:1.06135%;" aria-label="B.Universaljar325 ml - 11160085" title="B.Universaljar325 ml - 11160085"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-11" data-page="11">
+              <div class="page-head">
+                <span>Side 11</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-11.webp" width="1007" height="1402" alt="Katalogside 11">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176670" target="tupperware_shop" style="left:36.34748%;top:55.41149%;width:32.69828%;height:1.76990%;" aria-label="D. Freezer mates plus 450 ml** - 11176670" title="D. Freezer mates plus 450 ml** - 11176670"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177568" target="tupperware_shop" style="left:37.56330%;top:80.27255%;width:17.93315%;height:1.76990%;" aria-label="E. Ice cube tray** - 11177568" title="E. Ice cube tray** - 11177568"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11112914" target="tupperware_shop" style="left:65.84065%;top:80.32704%;width:14.07474%;height:1.76990%;" aria-label="F. Cool cubes - 11112914" title="F. Cool cubes - 11112914"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-12" data-page="12">
+              <div class="page-head">
+                <span>Side 12</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-12.webp" width="1007" height="1402" alt="Katalogside 12">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-13" data-page="13">
+              <div class="page-head">
+                <span>Side 13</span>
+                <span>8 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-13.webp" width="1007" height="1402" alt="Katalogside 13">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174029" target="tupperware_shop" style="left:10.57965%;top:82.48264%;width:20.44622%;height:1.77021%;" aria-label="E. Ultimate silicone - 11174029" title="E. Ultimate silicone - 11174029"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174026" target="tupperware_shop" style="left:37.82736%;top:82.48264%;width:20.37548%;height:1.77021%;" aria-label="F. Ultimate silicone - 11174026" title="F. Ultimate silicone - 11174026"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168761" target="tupperware_shop" style="left:50.36715%;top:45.82160%;width:11.85865%;height:1.76890%;" aria-label="C. Ultimate - 11168761" title="C. Ultimate - 11168761"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174028" target="tupperware_shop" style="left:65.99775%;top:82.48264%;width:20.65241%;height:1.77021%;" aria-label="G. Ultimate silicone - 11174028" title="G. Ultimate silicone - 11174028"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=7X22CMH" target="tupperware_shop" style="left:73.05133%;top:46.01852%;width:12.07975%;height:1.77020%;" aria-label="D. Ultimate - 7X22CMH" title="D. Ultimate - 7X22CMH"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168762" target="tupperware_shop" style="left:73.05133%;top:46.01852%;width:12.07975%;height:1.77020%;" aria-label="D. Ultimate - 11168762" title="D. Ultimate - 11168762"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168759" target="tupperware_shop" style="left:5.32512%;top:45.85740%;width:20.55950%;height:1.76990%;" aria-label="A. Ultimate silicone - 11168759" title="A. Ultimate silicone - 11168759"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168760" target="tupperware_shop" style="left:27.84613%;top:45.85740%;width:20.61000%;height:1.76990%;" aria-label="B. Ultimate silicone - 11168760" title="B. Ultimate silicone - 11168760"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-14" data-page="14">
+              <div class="page-head">
+                <span>Side 14</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-14.webp" width="1007" height="1402" alt="Katalogside 14">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11181082" target="tupperware_shop" style="left:67.40388%;top:20.47475%;width:13.03189%;height:1.77021%;" aria-label="C. SBF heart - 11181082" title="C. SBF heart - 11181082"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop" style="left:9.11284%;top:20.40729%;width:14.15165%;height:1.76990%;" aria-label="A. SBF queen - 11170305" title="A. SBF queen - 11170305"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11180469" target="tupperware_shop" style="left:39.74060%;top:20.40729%;width:19.54123%;height:1.76990%;" aria-label="B. SBF mini hearts - 11180469" title="B. SBF mini hearts - 11180469"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-15" data-page="15">
+              <div class="page-head">
+                <span>Side 15</span>
+                <span>4 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-15.webp" width="1007" height="1402" alt="Katalogside 15">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop" style="left:58.04929%;top:80.64969%;width:17.69287%;height:1.76990%;" aria-label="E. SpeedyMando - 11131820" title="E. SpeedyMando - 11131820"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=RIVER13" target="tupperware_shop" style="left:9.05671%;top:22.10117%;width:16.44449%;height:1.76990%;" aria-label="A. Grate n store - RIVER13" title="A. Grate n store - RIVER13"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop" style="left:9.05671%;top:80.66187%;width:14.78969%;height:1.76990%;" aria-label="D. Mandochef - 11109598" title="D. Mandochef - 11109598"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11086744" target="tupperware_shop" style="left:41.19695%;top:25.52707%;width:21.95115%;height:1.76990%;" aria-label="C. Double colander** - 11086744" title="C. Double colander** - 11086744"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-16" data-page="16">
+              <div class="page-head">
+                <span>Side 16</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-16.webp" width="1007" height="1402" alt="Katalogside 16">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172601" target="tupperware_shop" style="left:7.13613%;top:68.65782%;width:22.45848%;height:9.44327%;" aria-label="11172601 - 11172601" title="11172601 - 11172601"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-17" data-page="17">
+              <div class="page-head">
+                <span>Side 17</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-17.webp" width="1007" height="1402" alt="Katalogside 17">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-18" data-page="18">
+              <div class="page-head">
+                <span>Side 18</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-18.webp" width="1007" height="1402" alt="Katalogside 18">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156645" target="tupperware_shop" style="left:46.37901%;top:29.29131%;width:34.58705%;height:1.76990%;" aria-label="B. SuperSonic Chopper compact - 11156645" title="B. SuperSonic Chopper compact - 11156645"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156647" target="tupperware_shop" style="left:46.37901%;top:16.99956%;width:30.52881%;height:1.76990%;" aria-label="A. SuperSonic Chopper extra - 11156647" title="A. SuperSonic Chopper extra - 11156647"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-19" data-page="19">
+              <div class="page-head">
+                <span>Side 19</span>
+                <span>9 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-19.webp" width="1007" height="1402" alt="Katalogside 19">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11130070" target="tupperware_shop" style="left:10.18876%;top:65.79273%;width:21.73767%;height:1.76990%;" aria-label="G. KPT simple spoon - 11130070" title="G. KPT simple spoon - 11130070"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11069728" target="tupperware_shop" style="left:10.18876%;top:59.31862%;width:21.18187%;height:1.76990%;" aria-label="F. KPT beater stirrer - 11069728" title="F. KPT beater stirrer - 11069728"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172982" target="tupperware_shop" style="left:10.18876%;top:31.82860%;width:23.39799%;height:1.76990%;" aria-label="C. Ergo tools skimmer - 11172982" title="C. Ergo tools skimmer - 11172982"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11140486" target="tupperware_shop" style="left:10.18876%;top:72.26683%;width:15.46813%;height:1.76990%;" aria-label="H. KPT whisk** - 11140486" title="H. KPT whisk** - 11140486"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172984" target="tupperware_shop" style="left:10.18876%;top:39.91630%;width:19.31553%;height:1.76990%;" aria-label="D. Ergo tools ladle - 11172984" title="D. Ergo tools ladle - 11172984"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11126299" target="tupperware_shop" style="left:10.17898%;top:10.81306%;width:28.83905%;height:1.76990%;" aria-label="A. KPT silicone spatula thin - 11126299" title="A. KPT silicone spatula thin - 11126299"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11146149" target="tupperware_shop" style="left:10.17898%;top:20.51398%;width:23.97875%;height:1.76990%;" aria-label="B. KPT silicone spatula - 11146149" title="B. KPT silicone spatula - 11146149"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11163030" target="tupperware_shop" style="left:10.18876%;top:80.35441%;width:19.67572%;height:1.76990%;" aria-label="I. KPT small ladle** - 11163030" title="I. KPT small ladle** - 11163030"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11163027" target="tupperware_shop" style="left:10.17898%;top:49.61746%;width:21.46788%;height:1.76990%;" aria-label="E. KPT master tongs - 11163027" title="E. KPT master tongs - 11163027"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-20" data-page="20">
+              <div class="page-head">
+                <span>Side 20</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-20.webp" width="1007" height="1402" alt="Katalogside 20">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop" style="left:38.42718%;top:31.18918%;width:25.39745%;height:1.77018%;" aria-label="B. Ergologics corkscrew - 11118522" title="B. Ergologics corkscrew - 11118522"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11106331" target="tupperware_shop" style="left:9.33095%;top:31.23057%;width:24.84462%;height:1.76990%;" aria-label="A. Ergologics ice cream - 11106331" title="A. Ergologics ice cream - 11106331"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157678" target="tupperware_shop" style="left:11.47892%;top:81.09030%;width:27.08445%;height:1.76990%;" aria-label="D. Ergologics zest’n press - 11157678" title="D. Ergologics zest’n press - 11157678"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177880" target="tupperware_shop" style="left:46.64483%;top:81.09030%;width:27.40351%;height:1.76990%;" aria-label="E. Grate n measure grater - 11177880" title="E. Grate n measure grater - 11177880"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11164566" target="tupperware_shop" style="left:66.93730%;top:31.12820%;width:20.69869%;height:1.76990%;" aria-label="C. KPT tool holder** - 11164566" title="C. KPT tool holder** - 11164566"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-21" data-page="21">
+              <div class="page-head">
+                <span>Side 21</span>
+                <span>6 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-21.webp" width="1007" height="1402" alt="Katalogside 21">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161873" target="tupperware_shop" style="left:9.42451%;top:53.21205%;width:24.62202%;height:1.76990%;" aria-label="B. A-series paring knife - 11161873" title="B. A-series paring knife - 11161873"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161879" target="tupperware_shop" style="left:9.42451%;top:62.98478%;width:32.32312%;height:1.76990%;" aria-label="C. A-series serrated utiliy knife - 11161879" title="C. A-series serrated utiliy knife - 11161879"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161869" target="tupperware_shop" style="left:9.42451%;top:82.21951%;width:22.09361%;height:1.76990%;" aria-label="E. A-series chef knife - 11161869" title="E. A-series chef knife - 11161869"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=3TAGGET" target="tupperware_shop" style="left:9.42451%;top:72.60214%;width:24.00045%;height:1.76990%;" aria-label="D. A-series bread knife - 3TAGGET" title="D. A-series bread knife - 3TAGGET"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161867" target="tupperware_shop" style="left:9.42451%;top:72.60214%;width:24.00045%;height:1.76990%;" aria-label="D. A-series bread knife - 11161867" title="D. A-series bread knife - 11161867"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11090050" target="tupperware_shop" style="left:29.71580%;top:9.72683%;width:22.82960%;height:1.76990%;" aria-label="A. Flexi cutting board - 11090050" title="A. Flexi cutting board - 11090050"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-22" data-page="22">
+              <div class="page-head">
+                <span>Side 22</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-22.webp" width="1007" height="1402" alt="Katalogside 22">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop" style="left:11.20332%;top:79.90805%;width:43.78895%;height:1.76990%;" aria-label="C. Tupperkids snack cupD.Powderedmilk - 11166328" title="C. Tupperkids snack cupD.Powderedmilk - 11166328"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop" style="left:11.24378%;top:57.63154%;width:36.60509%;height:1.76990%;" aria-label="A. TupperCare Divided Dish 310 ml - 11178789" title="A. TupperCare Divided Dish 310 ml - 11178789"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop" style="left:54.41361%;top:57.63154%;width:19.68471%;height:1.76990%;" aria-label="B. Feeding Cutlery - 11168886" title="B. Feeding Cutlery - 11168886"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop" style="left:11.20332%;top:79.90805%;width:43.78895%;height:1.76990%;" aria-label="C. Tupperkids snack cupD.Powderedmilk - 11178323" title="C. Tupperkids snack cupD.Powderedmilk - 11178323"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop" style="left:64.33862%;top:79.90805%;width:25.71283%;height:1.76990%;" aria-label="E. Feeding spoon &amp; case - 11167063" title="E. Feeding spoon &amp; case - 11167063"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-23" data-page="23">
+              <div class="page-head">
+                <span>Side 23</span>
+                <span>7 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-23.webp" width="1007" height="1402" alt="Katalogside 23">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184531" target="tupperware_shop" style="left:37.38547%;top:70.31194%;width:16.18335%;height:1.77019%;" aria-label="B. Rock n serve - 11184531" title="B. Rock n serve - 11184531"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184532" target="tupperware_shop" style="left:37.38547%;top:70.31194%;width:16.18335%;height:1.77019%;" aria-label="B. Rock n serve - 11184532" title="B. Rock n serve - 11184532"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184933" target="tupperware_shop" style="left:42.16989%;top:87.13991%;width:33.73623%;height:3.56827%;" aria-label="G. Rock n serve rectangular 260 ml - 11184933" title="G. Rock n serve rectangular 260 ml - 11184933"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184923" target="tupperware_shop" style="left:37.38547%;top:62.10788%;width:16.13284%;height:1.77019%;" aria-label="A. Rock n serve - 11184923" title="A. Rock n serve - 11184923"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184428" target="tupperware_shop" style="left:63.84034%;top:62.10788%;width:16.32277%;height:1.77019%;" aria-label="D. Rock n serve - 11184428" title="D. Rock n serve - 11184428"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184519" target="tupperware_shop" style="left:63.84034%;top:78.86511%;width:15.93338%;height:1.76990%;" aria-label="F. Rock n serve - 11184519" title="F. Rock n serve - 11184519"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184677" target="tupperware_shop" style="left:63.84034%;top:70.50907%;width:25.66070%;height:1.76990%;" aria-label="E. Rock n serve medium - 11184677" title="E. Rock n serve medium - 11184677"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-24" data-page="24">
+              <div class="page-head">
+                <span>Side 24</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-24.webp" width="1007" height="1402" alt="Katalogside 24">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177543" target="tupperware_shop" style="left:9.28578%;top:78.95346%;width:26.79533%;height:1.76990%;" aria-label="D. Pasta maker round 3 L - 11177543" title="D. Pasta maker round 3 L - 11177543"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11129256" target="tupperware_shop" style="left:9.28578%;top:51.27199%;width:20.55597%;height:1.76990%;" aria-label="B. MicroCook 2,25 L - 11129256" title="B. MicroCook 2,25 L - 11129256"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174474" target="tupperware_shop" style="left:37.44395%;top:25.84579%;width:26.03821%;height:1.76990%;" aria-label="A. WOW Popcorn maker - 11174474" title="A. WOW Popcorn maker - 11174474"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11128042" target="tupperware_shop" style="left:53.31021%;top:51.27199%;width:25.42578%;height:1.76990%;" aria-label="C. MicroCook pitcher 1 L - 11128042" title="C. MicroCook pitcher 1 L - 11128042"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11130599" target="tupperware_shop" style="left:53.31021%;top:78.95406%;width:25.25620%;height:1.76990%;" aria-label="E. Micro healthy delight - 11130599" title="E. Micro healthy delight - 11130599"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-25" data-page="25">
+              <div class="page-head">
+                <span>Side 25</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-25.webp" width="1007" height="1402" alt="Katalogside 25">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-26" data-page="26">
+              <div class="page-head">
+                <span>Side 26</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-26.webp" width="1007" height="1402" alt="Katalogside 26">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11133292" target="tupperware_shop" style="left:62.84668%;top:77.41173%;width:26.53697%;height:12.47558%;" aria-label="11133292 - 11133292" title="11133292 - 11133292"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-27" data-page="27">
+              <div class="page-head">
+                <span>Side 27</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-27.webp" width="1007" height="1402" alt="Katalogside 27">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-28" data-page="28">
+              <div class="page-head">
+                <span>Side 28</span>
+                <span>4 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-28.webp" width="1007" height="1402" alt="Katalogside 28">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183902" target="tupperware_shop" style="left:9.69858%;top:78.89763%;width:27.99128%;height:1.76990%;" aria-label="A.Voila™rectangulaire 1,5 l - 11183902" title="A.Voila™rectangulaire 1,5 l - 11183902"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183900" target="tupperware_shop" style="left:9.69858%;top:86.78516%;width:31.53858%;height:1.76990%;" aria-label="C.Voila™rectangulaire 650 ml - 11183900" title="C.Voila™rectangulaire 650 ml - 11183900"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183899" target="tupperware_shop" style="left:51.82452%;top:86.78516%;width:32.03955%;height:1.76990%;" aria-label="D.Voila™rectangulaire 400 ml - 11183899" title="D.Voila™rectangulaire 400 ml - 11183899"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183901" target="tupperware_shop" style="left:51.82452%;top:78.86457%;width:26.33879%;height:1.76990%;" aria-label="B.Voila™rectangulaire 1 l - 11183901" title="B.Voila™rectangulaire 1 l - 11183901"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-29" data-page="29">
+              <div class="page-head">
+                <span>Side 29</span>
+                <span>4 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-29.webp" width="1007" height="1402" alt="Katalogside 29">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11146975" target="tupperware_shop" style="left:19.49262%;top:30.06263%;width:18.29473%;height:1.77018%;" aria-label="B. Micro pro ring - 11146975" title="B. Micro pro ring - 11146975"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11167057" target="tupperware_shop" style="left:12.35914%;top:52.72864%;width:11.65372%;height:1.76990%;" aria-label="C. Air Fryer - 11167057" title="C. Air Fryer - 11167057"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=CB003KR" target="tupperware_shop" style="left:51.02251%;top:57.62488%;width:15.26444%;height:1.76990%;" aria-label="D. Ultra Pro 2 l - CB003KR" title="D. Ultra Pro 2 l - CB003KR"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS901" target="tupperware_shop" style="left:37.17157%;top:14.54024%;width:41.48824%;height:1.76990%;" aria-label="A. Micro Pro Grill &amp; Micro pro ring (free) - 26SS901" title="A. Micro Pro Grill &amp; Micro pro ring (free) - 26SS901"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-30" data-page="30">
+              <div class="page-head">
+                <span>Side 30</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-30.webp" width="1007" height="1402" alt="Katalogside 30">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-31" data-page="31">
+              <div class="page-head">
+                <span>Side 31</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-31.webp" width="1007" height="1402" alt="Katalogside 31">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=1157968" target="tupperware_shop" style="left:9.54755%;top:48.34007%;width:23.49294%;height:1.76990%;" aria-label="B.Eco+clearbowl 2.4 L - 1157968" title="B.Eco+clearbowl 2.4 L - 1157968"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157966" target="tupperware_shop" style="left:9.54755%;top:69.62623%;width:25.21979%;height:1.76990%;" aria-label="E.Eco+clearbowl 810 ml - 11157966" title="E.Eco+clearbowl 810 ml - 11157966"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158286" target="tupperware_shop" style="left:9.54755%;top:56.38910%;width:21.78996%;height:1.76990%;" aria-label="C.Eco+clearbowl 4 L - 11158286" title="C.Eco+clearbowl 4 L - 11158286"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158287" target="tupperware_shop" style="left:9.54755%;top:63.00766%;width:21.89299%;height:1.76990%;" aria-label="D.Eco+clearbowl 6 L - 11158287" title="D.Eco+clearbowl 6 L - 11158287"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158285" target="tupperware_shop" style="left:9.54755%;top:48.34007%;width:23.49294%;height:1.76990%;" aria-label="B.Eco+clearbowl 2.4 L - 11158285" title="B.Eco+clearbowl 2.4 L - 11158285"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-32" data-page="32">
+              <div class="page-head">
+                <span>Side 32</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-32.webp" width="1007" height="1402" alt="Katalogside 32">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11180364" target="tupperware_shop" style="left:43.19440%;top:68.16727%;width:27.98030%;height:1.77019%;" aria-label="E. Aloha serving dish 2.2 L - 11180364" title="E. Aloha serving dish 2.2 L - 11180364"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177780" target="tupperware_shop" style="left:9.66689%;top:73.88623%;width:19.78154%;height:1.76990%;" aria-label="C. Aloha bowl 2 L** - 11177780" title="C. Aloha bowl 2 L** - 11177780"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11147110" target="tupperware_shop" style="left:9.66689%;top:81.22689%;width:18.48074%;height:1.76990%;" aria-label="D. Aloha bowl 4 L - 11147110" title="D. Aloha bowl 4 L - 11147110"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11148370" target="tupperware_shop" style="left:9.66689%;top:26.11462%;width:33.90636%;height:1.76990%;" aria-label="A. Condiserve flip cap dispenser - 11148370" title="A. Condiserve flip cap dispenser - 11148370"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11068549" target="tupperware_shop" style="left:52.94831%;top:26.11462%;width:26.22773%;height:1.76990%;" aria-label="B. Moments milk foamer - 11068549" title="B. Moments milk foamer - 11068549"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-33" data-page="33">
+              <div class="page-head">
+                <span>Side 33</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-33.webp" width="1007" height="1402" alt="Katalogside 33">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-34" data-page="34">
+              <div class="page-head">
+                <span>Side 34</span>
+                <span>8 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-34.webp" width="1007" height="1402" alt="Katalogside 34">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS908" target="tupperware_shop" style="left:12.28009%;top:72.16342%;width:27.65820%;height:1.76990%;" aria-label="E. Big T 630 ml blackberry - 26SS908" title="E. Big T 630 ml blackberry - 26SS908"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS906" target="tupperware_shop" style="left:12.28009%;top:82.97708%;width:21.22412%;height:1.76990%;" aria-label="G. Big T 630 ml pink - 26SS906" title="G. Big T 630 ml pink - 26SS906"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS904" target="tupperware_shop" style="left:34.05016%;top:49.83932%;width:24.44623%;height:1.76990%;" aria-label="A. Big T 1.1 L blackberry - 26SS904" title="A. Big T 1.1 L blackberry - 26SS904"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS902" target="tupperware_shop" style="left:34.28329%;top:60.86513%;width:17.78792%;height:1.76990%;" aria-label="C. Big T 1.1 L pink - 26SS902" title="C. Big T 1.1 L pink - 26SS902"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS907" target="tupperware_shop" style="left:41.45755%;top:71.92135%;width:21.29665%;height:1.76990%;" aria-label="F. Big T 630 ml mint - 26SS907" title="F. Big T 630 ml mint - 26SS907"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS909" target="tupperware_shop" style="left:41.45755%;top:82.97708%;width:26.10658%;height:1.76990%;" aria-label="H. Big T 630 ml chestnut - 26SS909" title="H. Big T 630 ml chestnut - 26SS909"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS905" target="tupperware_shop" style="left:65.01909%;top:60.86562%;width:22.79765%;height:1.76990%;" aria-label="D. Big T 1.1 L chestnut - 26SS905" title="D. Big T 1.1 L chestnut - 26SS905"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS903" target="tupperware_shop" style="left:65.07809%;top:50.02592%;width:18.22051%;height:1.76990%;" aria-label="B. Big T 1.1 L mint - 26SS903" title="B. Big T 1.1 L mint - 26SS903"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-35" data-page="35">
+              <div class="page-head">
+                <span>Side 35</span>
+                <span>7 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-35.webp" width="1007" height="1402" alt="Katalogside 35">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11179809" target="tupperware_shop" style="left:46.69337%;top:52.56292%;width:27.22628%;height:10.93437%;" aria-label="11179809 - 11179809" title="11179809 - 11179809"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158623" target="tupperware_shop" style="left:46.69337%;top:58.72776%;width:18.92316%;height:1.57292%;" aria-label="D. Celery - 11158623" title="D. Celery - 11158623"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11169999" target="tupperware_shop" style="left:56.71159%;top:31.14349%;width:22.36748%;height:1.74776%;" aria-label="B. Eco+ bottle 500 ml - 11169999" title="B. Eco+ bottle 500 ml - 11169999"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168462" target="tupperware_shop" style="left:46.69337%;top:80.40941%;width:31.41150%;height:1.74776%;" aria-label="G. Premium eco bottle 750 ml - 11168462" title="G. Premium eco bottle 750 ml - 11168462"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168463" target="tupperware_shop" style="left:46.87272%;top:77.17077%;width:16.54086%;height:3.00604%;" aria-label="11168463 - 11168463" title="11168463 - 11168463"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178567" target="tupperware_shop" style="left:56.57388%;top:16.33091%;width:28.55676%;height:1.74776%;" aria-label="A. Eco bottle 2 L with straw - 11178567" title="A. Eco bottle 2 L with straw - 11178567"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172902" target="tupperware_shop" style="left:56.74935%;top:41.04112%;width:17.05292%;height:1.69019%;" aria-label="C. Eco bottle 750 - 11172902" title="C. Eco bottle 750 - 11172902"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-36" data-page="36">
+              <div class="page-head">
+                <span>Side 36</span>
+                <span>5 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-36.webp" width="1007" height="1402" alt="Katalogside 36">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183976" target="tupperware_shop" style="left:10.06874%;top:32.42832%;width:18.37565%;height:1.76990%;" aria-label="A. Slim lunch box - 11183976" title="A. Slim lunch box - 11183976"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11165385" target="tupperware_shop" style="left:12.12804%;top:80.72132%;width:13.54365%;height:1.76990%;" aria-label="C. 1 2 3 lunch - 11165385" title="C. 1 2 3 lunch - 11165385"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174730" target="tupperware_shop" style="left:39.79336%;top:69.49346%;width:21.39324%;height:1.76842%;" aria-label="D. On the go cutlery - 11174730" title="D. On the go cutlery - 11174730"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11180062" target="tupperware_shop" style="left:52.72548%;top:32.44050%;width:26.85810%;height:1.76990%;" aria-label="B. Divided lunch box 1 L** - 11180062" title="B. Divided lunch box 1 L** - 11180062"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11181137" target="tupperware_shop" style="left:57.47130%;top:80.70915%;width:19.20645%;height:1.76990%;" aria-label="E. Sweet box 1.4 L - 11181137" title="E. Sweet box 1.4 L - 11181137"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-37" data-page="37">
+              <div class="page-head">
+                <span>Side 37</span>
+                <span>6 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-37.webp" width="1007" height="1402" alt="Katalogside 37">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174866" target="tupperware_shop" style="left:14.49210%;top:85.26606%;width:57.39201%;height:9.96363%;" aria-label="11174866 - 11174866" title="11174866 - 11174866"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155980" target="tupperware_shop" style="left:31.34090%;top:36.22794%;width:14.98741%;height:3.14633%;" aria-label="11155980 - 11155980" title="11155980 - 11155980"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155982" target="tupperware_shop" style="left:31.35412%;top:50.32657%;width:14.78114%;height:3.14633%;" aria-label="11155982 - 11155982" title="11155982 - 11155982"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155981" target="tupperware_shop" style="left:29.96409%;top:69.28960%;width:41.60661%;height:1.85160%;" aria-label="E.2 Støvkluter i resirkulert mikrofiber - 11155981" title="E.2 Støvkluter i resirkulert mikrofiber - 11155981"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155977" target="tupperware_shop" style="left:31.34090%;top:20.24113%;width:14.45292%;height:3.14633%;" aria-label="11155977 - 11155977" title="11155977 - 11155977"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155978" target="tupperware_shop" style="left:30.78970%;top:54.74972%;width:44.51901%;height:1.85160%;" aria-label="D.2 Universalklut i resirkulert mikrofiber - 11155978" title="D.2 Universalklut i resirkulert mikrofiber - 11155978"></a>
+              </div>
+            </section>
+            
+            <section class="page" id="page-38" data-page="38">
+              <div class="page-head">
+                <span>Side 38</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-38.webp" width="1007" height="1402" alt="Katalogside 38">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-39" data-page="39">
+              <div class="page-head">
+                <span>Side 39</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-39.webp" width="1007" height="1402" alt="Katalogside 39">
+                
+              </div>
+            </section>
+            
+            <section class="page" id="page-40" data-page="40">
+              <div class="page-head">
+                <span>Side 40</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.71840734;">
+                <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-40.webp" width="1007" height="1402" alt="Katalogside 40">
+                
+              </div>
+            </section>
+            
+    </div>
+  </main>
+  <script>
+    const search = document.querySelector("#search");
+    const rows = [...document.querySelectorAll(".product-row")];
+    const shopLinks = [...document.querySelectorAll('a[target="tupperware_shop"]')];
+    const toggle = document.querySelector("#toggle");
+    const consultantLine = document.querySelector("#consultantLine");
+    const consultantName = document.querySelector("#consultantName");
+    const consultantCode = document.querySelector("#consultantCode");
+    let shopWindow = null;
+    let consultantReady = false;
+
+    function cleanReference(value) {
+      return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
+    }
+
+    function openShopProduct(url) {
+      shopWindow = window.open(url, "tupperware-official-store");
+      if (!shopWindow) {
+        window.location.assign(url);
+        return;
+      }
+      try {
+        shopWindow.focus();
+      } catch {
+        // Some mobile browsers ignore focus(), but retain the named store tab.
+      }
+    }
+
+    function norwegianShopUrl(value, reference) {
+      const target = new URL(value);
+      if (target.hostname === "tupperware-eu.com" || target.hostname.endsWith(".tupperware-eu.com")) {
+        if (target.pathname === "" || target.pathname === "/") {
+          target.pathname = "/no/";
+        } else if (target.pathname !== "/no" && !target.pathname.startsWith("/no/")) {
+          target.pathname = `/no${target.pathname.startsWith("/") ? target.pathname : `/${target.pathname}`}`;
+        }
+        target.searchParams.set("ref", reference);
+      }
+      return target.toString();
+    }
+
+    async function prepareConsultant() {
+      const params = new URLSearchParams(window.location.search);
+      const reference = cleanReference(params.get("ref"));
+      if (!reference) {
+        consultantLine.classList.add("invalid");
+        consultantName.textContent = "ingen konsulent valgt";
+        return;
+      }
+      try {
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}`);
+        const result = await response.json();
+        if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
+        consultantName.textContent = result.name || result.consultant?.display_name || reference;
+        consultantCode.textContent = reference;
+        shopLinks.forEach((link) => {
+          link.href = norwegianShopUrl(link.href, reference);
+        });
+        consultantReady = true;
+      } catch {
+        consultantLine.classList.add("invalid");
+        consultantName.textContent = "konsulenten kunne ikke bekreftes";
+        consultantCode.textContent = reference;
+      }
+    }
+
+    shopLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!consultantReady) {
+          window.alert("Produktet kan ikke åpnes før en gyldig konsulent er valgt.");
+          return;
+        }
+        openShopProduct(link.href);
+      });
+    });
+
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach((row) => {
+        row.style.display = !query || row.dataset.search.includes(query) ? "" : "none";
+      });
+    });
+
+    rows.forEach((row) => {
+      row.addEventListener("mouseenter", () => {
+        const page = document.querySelector(`[data-page="${row.dataset.page}"]`);
+        if (page) page.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+    });
+
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("show-links");
+      toggle.textContent = document.body.classList.contains("show-links") ? "Skjul lenkeflater" : "Vis lenkeflater";
+    });
+
+    prepareConsultant();
+  </script>
+</body>
+</html>
