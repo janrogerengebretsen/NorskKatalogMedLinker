@@ -15,7 +15,7 @@ function storedReference() {
 // A consultant is selected only through the explicit ref in the shared URL.
 const referenceCode = cleanReference(params.get("ref"));
 const shareUrls = {
-  official: new URL(`/norsk-nettkatalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
+  official: `https://tupperware-norsk-nettkatalog-v2.onrender.com/?ref=${encodeURIComponent(referenceCode)}`,
   digital: new URL(`/digital-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   own: new URL(`/egne-varer?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
 };
