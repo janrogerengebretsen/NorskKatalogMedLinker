@@ -970,7 +970,7 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
         self.wfile.write(body)
 
     def required_product(self, path):
-        if path in ("/", "/index.html"):
+        if path in ("/", "/index.html", "/norsk-nettkatalog", "/norsk-nettkatalog/"):
             return "norsk-nettkatalog"
         if path in (
             "/digital-katalog", "/digital-katalog/",
@@ -996,6 +996,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
         filenames = {
             "/": ("index.html", "text/html; charset=utf-8"),
             "/index.html": ("index.html", "text/html; charset=utf-8"),
+            "/norsk-nettkatalog": ("index.html", "text/html; charset=utf-8"),
+            "/norsk-nettkatalog/": ("index.html", "text/html; charset=utf-8"),
             "/styles.css": ("styles.css", "text/css; charset=utf-8"),
             "/app.js": ("app.js", "application/javascript; charset=utf-8"),
             "/egne-varer": ("own.html", "text/html; charset=utf-8"),
