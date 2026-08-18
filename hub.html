@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#007b68">
+  <title>Mine Tupperware-verktøy</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/hub.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
+  <script src="/hub.js" defer></script>
+</head>
+<body>
+  <header class="hub-header">
+    <a class="hub-brand" href="/mine-sider">
+      <span class="brand-mark">T</span>
+      <span>
+        <strong>Mine Tupperware-verktøy</strong>
+        <small id="hubConsultantName">Arbeidsflate for konsulent</small>
+      </span>
+    </a>
+    <a class="account-link" href="/konsulent">
+      <i data-lucide="user-round"></i>
+      Konsulentområdet
+    </a>
+  </header>
+
+  <main>
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow" id="pageConsultantName">KONSULENT</p>
+        <h1>Alle verktøy på ett sted</h1>
+      </div>
+      <div class="reference">
+        <span>Konsulentreferanse</span>
+        <strong id="hubReference">Laster ...</strong>
+      </div>
+    </section>
+
+    <section class="admin-switcher" id="adminSwitcher" aria-labelledby="adminSwitcherHeading">
+      <div class="admin-switcher-heading">
+        <span class="section-icon"><i data-lucide="shield-check"></i></span>
+        <div>
+          <p class="eyebrow">SUPERADMINISTRATOR</p>
+          <h2 id="adminSwitcherHeading">Test som konsulent</h2>
+        </div>
+      </div>
+      <form class="admin-login" id="adminLoginForm">
+        <label>
+          <span>E-postadresse</span>
+          <input id="adminEmail" type="email" value="janroger@elektron.no" autocomplete="username" required>
+        </label>
+        <label>
+          <span>Passord</span>
+          <input id="adminPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" id="adminLoginButton"><i data-lucide="log-in"></i><span>Logg inn</span></button>
+        <p class="admin-message" id="adminLoginMessage" role="status"></p>
+      </form>
+      <div class="admin-browser" id="adminBrowser" hidden>
+        <div class="admin-session-line">
+          <span><i data-lucide="badge-check"></i> <strong id="adminAccountName">Superadministrator</strong></span>
+          <button type="button" id="adminLogoutButton">Logg ut</button>
+        </div>
+        <div class="admin-search-row">
+          <label class="admin-search">
+            <i data-lucide="search"></i>
+            <input id="adminConsultantSearch" type="search" autocomplete="off" placeholder="Søk etter navn, sted eller referanse">
+          </label>
+          <span class="admin-result-count" id="adminResultCount"></span>
+        </div>
+        <div class="admin-navigation">
+          <button type="button" class="admin-icon-button" id="adminPrevious" title="Forrige konsulent" aria-label="Forrige konsulent"><i data-lucide="chevron-left"></i></button>
+          <label class="admin-consultant-select">
+            <span>Velg konsulent</span>
+            <select id="adminConsultantSelect" aria-label="Velg konsulent"></select>
+          </label>
+          <button type="button" class="admin-icon-button" id="adminNext" title="Neste konsulent" aria-label="Neste konsulent"><i data-lucide="chevron-right"></i></button>
+          <button type="button" class="admin-open-button" id="adminOpenConsultant"><i data-lucide="external-link"></i><span>Åpne valgt</span></button>
+        </div>
+        <p class="admin-current" id="adminCurrentConsultant"></p>
+        <div class="admin-product-access">
+          <div class="admin-product-heading">
+            <strong>Kjøpte produkter</strong>
+            <span>Gi eller fjern tilgang for valgt konsulent</span>
+          </div>
+          <div class="admin-product-list" id="adminProductAccessList"></div>
+        </div>
+        <div class="admin-overview">
+          <div class="admin-product-heading">
+            <strong>Konsulentoversikt</strong>
+            <span>Alle konsulenter og produkter de har tilgang til</span>
+          </div>
+          <div class="admin-overview-table-wrap">
+            <table class="admin-overview-table">
+              <thead id="adminConsultantOverviewHead"></thead>
+              <tbody id="adminConsultantOverview"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="module-section" aria-labelledby="customer-heading">
+      <header>
+        <span class="section-icon"><i data-lucide="shopping-bag"></i></span>
+        <div>
+          <p class="eyebrow">KUNDESIDER</p>
+          <h2 id="customer-heading">Nettkatalogene</h2>
+        </div>
+      </header>
+      <div class="module-list">
+        <a class="module-row" id="officialCatalogLink" href="/?ref=LISBETHOVERBYE" target="tupperware-work">
+          <span class="module-icon"><i data-lucide="layout-grid"></i></span>
+          <span class="module-copy">
+            <strong>Tupperware Norsk Nettkatalog</strong>
+            <small>Offisielle produkter fra Tupperwares nettbutikk</small>
+          </span>
+          <span class="module-status active">Publisert</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+        <a class="module-row" id="digitalCatalogLink" href="/digital-katalog?ref=LISBETHOVERBYE" target="tupperware-work">
+          <span class="module-icon"><i data-lucide="book-open"></i></span>
+          <span class="module-copy">
+            <strong>Digital produktkatalog</strong>
+            <small>Katalogheftet med søk og personlige produktlenker</small>
+          </span>
+          <span class="module-status active">Publisert</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+        <a class="module-row seller-row" id="ownCatalogModule" href="/egne-varer?ref=LISBETHOVERBYE" target="tupperware-work" hidden>
+          <span class="module-icon"><i data-lucide="package-check"></i></span>
+          <span class="module-copy">
+            <strong id="ownCatalogTitle">Konsulentens egne varer</strong>
+            <small>Varer konsulenten har på eget lager</small>
+          </span>
+          <span class="module-status seller">Eget lager</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+      </div>
+    </section>
+
+    <section class="module-section share-section" aria-labelledby="share-heading">
+      <header>
+        <span class="section-icon"><i data-lucide="qr-code"></i></span>
+        <div>
+          <p class="eyebrow">DEL MED KUNDER</p>
+          <h2 id="share-heading">Personlige lenker og QR-koder</h2>
+        </div>
+      </header>
+      <div class="share-grid">
+        <article class="share-item" data-share="official">
+          <div class="qr-frame"><img id="officialQr" alt="QR-kode til Tupperware Norsk Nettkatalog"></div>
+          <div class="share-content">
+            <strong>Tupperware Norsk Nettkatalog</strong>
+            <a class="share-url" id="officialShareUrl" target="tupperware-work"></a>
+            <div class="share-actions">
+              <button type="button" data-copy="official"><i data-lucide="copy"></i><span>Kopier</span></button>
+              <a id="officialQrDownload" download="qr-nettkatalog.png"><i data-lucide="image-down"></i><span>PNG</span></a>
+              <button type="button" class="poster-button" data-poster="official"><i data-lucide="file-down"></i><span>PDF-plakat</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="share-item" data-share="digital">
+          <div class="qr-frame"><img id="digitalQr" alt="QR-kode til digital produktkatalog"></div>
+          <div class="share-content">
+            <strong>Digital produktkatalog</strong>
+            <a class="share-url" id="digitalShareUrl" target="tupperware-work"></a>
+            <div class="share-actions">
+              <button type="button" data-copy="digital"><i data-lucide="copy"></i><span>Kopier</span></button>
+              <a id="digitalQrDownload" download="qr-digital-katalog.png"><i data-lucide="image-down"></i><span>PNG</span></a>
+              <button type="button" class="poster-button" data-poster="digital"><i data-lucide="file-down"></i><span>PDF-plakat</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="share-item seller-share" id="ownCatalogShare" data-share="own" hidden>
+          <div class="qr-frame"><img id="ownQr" alt="QR-kode til konsulentens egne varer"></div>
+          <div class="share-content">
+            <strong>Konsulentens egne varer</strong>
+            <a class="share-url" id="ownShareUrl" target="tupperware-work"></a>
+            <div class="share-actions">
+              <button type="button" data-copy="own"><i data-lucide="copy"></i><span>Kopier</span></button>
+              <a id="ownQrDownload" download="qr-egne-varer.png"><i data-lucide="image-down"></i><span>PNG</span></a>
+              <button type="button" class="poster-button" data-poster="own"><i data-lucide="file-down"></i><span>PDF-plakat</span></button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="module-section" aria-labelledby="product-register-heading">
+      <header>
+        <span class="section-icon"><i data-lucide="badge-check"></i></span>
+        <div>
+          <p class="eyebrow">PRODUKTREGISTER</p>
+          <h2 id="product-register-heading">Hvilke løsninger konsulenten har tilgang til</h2>
+        </div>
+      </header>
+      <p class="section-intro" id="productRegisterIntro">
+        Her ser du hvilke produkter som er åpne for den valgte konsulenten.
+      </p>
+      <div class="registry-list" id="productRegistryList"></div>
+    </section>
+
+    <section class="module-section" aria-labelledby="work-heading">
+      <header>
+        <span class="section-icon"><i data-lucide="briefcase-business"></i></span>
+        <div>
+          <p class="eyebrow">ARBEIDSVERKTØY</p>
+          <h2 id="work-heading">Administrasjon og innhold</h2>
+        </div>
+      </header>
+      <div class="module-list">
+        <a class="module-row" href="/konsulent" target="tupperware-work">
+          <span class="module-icon"><i data-lucide="settings-2"></i></span>
+          <span class="module-copy">
+            <strong>Konsulentområdet</strong>
+            <small>Mine varer, bestillinger og profil</small>
+          </span>
+          <span class="module-status login">Innlogging</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+        <a class="module-row" href="https://tupperware-mailverktoy.onrender.com/" target="tupperware-work">
+          <span class="module-icon"><i data-lucide="mail"></i></span>
+          <span class="module-copy">
+            <strong>Mail- og oppskriftsverktøy</strong>
+            <small>Lag produktmailer, oppskrifter og tips</small>
+          </span>
+          <span class="module-status active">Publisert</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Tupperware Norsk Nettkatalog</span>
+    <a id="footerCatalogLink" href="/?ref=LISBETHOVERBYE">Til nettkatalogen</a>
+  </footer>
+  <div class="toast" id="hubToast" role="status" aria-live="polite"></div>
+</body>
+</html>
