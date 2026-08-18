@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: echo Ready
-    startCommand: python3.14 server.py
+    startCommand: poetry run python server.py
     healthCheckPath: /api/health
     autoDeployTrigger: commit
     envVars:

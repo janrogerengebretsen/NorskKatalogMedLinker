@@ -40,7 +40,7 @@ Anbefalt oppsett:
 
 - Runtime: `Python`
 - Build command: `echo Ready`
-- Start command: `python3.14 server.py`
+- Start command: `poetry run python server.py`
 - Health check path: `/api/health`
 - Auto deploy: `On commit`
 
