@@ -157,9 +157,12 @@ def find_consultant_contact(reference_code):
     except Exception:
         return {}
     row = rows[0] if rows else {}
+    contact = {}
     if row.get("email"):
-        return {"email": row["email"]}
-    return {}
+        contact["email"] = row["email"]
+    if row.get("phone"):
+        contact["phone"] = row["phone"]
+    return contact
 
 
 def consultant_shop_status(reference_code):

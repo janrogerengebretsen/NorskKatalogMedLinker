@@ -162,34 +162,35 @@
     }
     .consultant-card-page39 {
       position: absolute;
-      left: 13.8%;
-      bottom: 7.4%;
-      width: 72.4%;
-      min-height: 8.6%;
+      left: 42.2%;
+      top: 23.8%;
+      width: 33.2%;
+      min-height: 9.8%;
       display: grid;
-      gap: .45em;
-      padding: 1.35% 2.2%;
-      background: rgba(255, 255, 255, .92);
-      border: .18em solid rgba(11, 107, 102, .82);
-      box-shadow: 0 .7em 1.7em rgba(23, 33, 36, .16);
+      align-content: center;
+      gap: .3em;
+      padding: .8% 1.2%;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
       color: #172124;
-      font-size: clamp(10px, 1.45vw, 20px);
-      line-height: 1.25;
+      font-size: clamp(9px, 1.15vw, 16px);
+      line-height: 1.22;
       text-align: center;
     }
     .consultant-card-page39 .label {
       color: #0b6b66;
-      font-size: .78em;
+      font-size: .72em;
       font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
     }
     .consultant-card-page39 .name {
-      font-size: 1.45em;
+      font-size: 1.28em;
       font-weight: 800;
     }
     .consultant-card-page39 .contact {
-      font-size: 1em;
+      font-size: .92em;
       color: #506166;
       overflow-wrap: anywhere;
     }
@@ -1754,8 +1755,9 @@
     function showPage39Consultant(result, reference) {
       const name = result.name || result.consultant?.display_name || reference;
       const email = result.email || result.consultant?.email || result.consultant?.contact_email || "";
+      const phone = result.phone || result.consultant?.phone || "";
       page39ConsultantName.textContent = name;
-      page39ConsultantContact.textContent = email ? `${email} · Ref. ${reference}` : `Ref. ${reference}`;
+      page39ConsultantContact.textContent = [phone, email].filter(Boolean).join(" · ");
       page39ConsultantCard.hidden = false;
     }
 

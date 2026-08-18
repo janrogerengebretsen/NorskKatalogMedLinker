@@ -877,6 +877,7 @@ class Handler(BaseHTTPRequestHandler):
                             "ref": registered["reference_code"],
                             "name": registered["display_name"],
                             "email": registered.get("email"),
+                            "phone": registered.get("phone"),
                             "consultant": registered,
                         },
                     )
