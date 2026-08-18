@@ -14,6 +14,7 @@ import sys
 import threading
 import time
 import unicodedata
+import mail_tool
 from datetime import datetime
 
 _local_env = Path(__file__).resolve().parent / ".env"
@@ -682,10 +683,156 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         print(f"[butikk] {self.address_string()} - {format % args}")
 
+
+    def is_mail_tool_path(self, path):
+        return (
+            path in ("/mail-verktøy", "/mail-verktøy/", "/mail-verktoy", "/mail-verktoy/")
+            or path.startswith("/mail-verktøy/api/")
+            or path.startswith("/mail-verktoy/api/")
+        )
+
+    def mail_tool_api_path(self, path):
+        for prefix in ("/mail-verktøy", "/mail-verktoy"):
+            if path.startswith(prefix):
+                return path[len(prefix):] or "/"
+        return path
+
+    def text_response(self, status, text, content_type):
+        body = text.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-cache")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def mail_tool_html(self):
+        body = mail_tool.INDEX_HTML
+        replacements = {
+            'fetch("/api/product-recipes"': 'fetch("/mail-verktøy/api/product-recipes"',
+            'fetch("/api/generate"': 'fetch("/mail-verktøy/api/generate"',
+            '`/api/catalog/search?q=${encodeURIComponent(normalizedQuery)}`': '`/mail-verktøy/api/catalog/search?q=${encodeURIComponent(normalizedQuery)}`',
+            ': "/api/catalog";': ': "/mail-verktøy/api/catalog";',
+        }
+        for old, new in replacements.items():
+            body = body.replace(old, new)
+        ref_script = """
+  <script>
+    (() => {
+      const ref = new URLSearchParams(window.location.search).get("ref");
+      const input = document.querySelector("#consultant");
+      const clean = String(ref || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
+      if (clean && input) input.value = `ref=${clean}`;
+    })();
+  </script>
+"""
+        return body.replace("</body>", f"{ref_script}</body>")
+
+    def serve_mail_tool(self, path, query):
+        api_path = self.mail_tool_api_path(path)
+        if api_path in ("", "/"):
+            return self.text_response(200, self.mail_tool_html(), "text/html; charset=utf-8")
+        if api_path == "/api/catalog":
+            try:
+                catalog = mail_tool.load_french_catalog()
+                return self.json_response(200, {
+                    "products": [
+                        {
+                            "articleNumber": item["articleNumber"],
+                            "title": item["title"],
+                            "price": item["price"],
+                            "image": item["image"],
+                            "availability": item["availability"],
+                        }
+                        for item in catalog
+                    ]
+                })
+            except Exception as error:
+                return self.json_response(500, {"error": f"Kunne ikke hente produktlisten: {mail_tool.format_error(error)}"})
+        if api_path == "/api/catalog/search":
+            try:
+                term = mail_tool.clean_text((query.get("q") or [""])[0])
+                matches = mail_tool.search_french_catalog_products(term)
+                return self.json_response(200, {
+                    "products": [
+                        {
+                            "articleNumber": item["articleNumber"],
+                            "title": item["title"],
+                            "price": item["price"],
+                            "image": item["image"],
+                            "availability": item["availability"],
+                        }
+                        for item in matches
+                    ]
+                })
+            except Exception as error:
+                return self.json_response(500, {"error": f"Kunne ikke søke i produktlisten: {mail_tool.format_error(error)}"})
+        return self.json_response(404, {"error": "Fant ikke mailverktøy-endepunktet."})
+
+    def handle_mail_tool_post(self, path):
+        api_path = self.mail_tool_api_path(path)
+        if api_path not in ("/api/generate", "/api/product-recipes"):
+            return self.json_response(404, {"error": "Fant ikke mailverktøy-endepunktet."})
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            raw_payload = self.rfile.read(length)
+            try:
+                payload_text = raw_payload.decode("utf-8")
+            except UnicodeDecodeError:
+                payload_text = raw_payload.decode("cp1252")
+            payload = json.loads(payload_text)
+            if api_path == "/api/product-recipes":
+                product = mail_tool.sanitize_product_prices(dict(payload.get("product") or {}))
+                consultant = mail_tool.clean_text(payload.get("consultant"))
+                if not product.get("sourceUrl") or not product.get("title"):
+                    raise ValueError("Mangler produktdata for oppskriftssøket.")
+                try:
+                    recipes = mail_tool.search_recipes(product)
+                except Exception:
+                    recipes = []
+                return self.json_response(200, {
+                    "product": product,
+                    "recipes": recipes,
+                    "email": mail_tool.make_email(product, recipes, consultant),
+                    "emailHtml": mail_tool.make_email_html(product, recipes, consultant),
+                })
+
+            mode = mail_tool.clean_text(payload.get("mode") or "product")
+            if mode == "recipe":
+                result = mail_tool.generate_recipe_content(
+                    mail_tool.clean_text(payload.get("recipeName")),
+                    mail_tool.clean_text(payload.get("consultant")),
+                )
+                return self.json_response(200, result)
+            product_url = mail_tool.clean_text(payload.get("productUrl"))
+            product_query = mail_tool.clean_text(payload.get("productQuery"))
+            consultant = mail_tool.clean_text(payload.get("consultant"))
+            if product_query:
+                product_url = mail_tool.resolve_product_reference(product_query, consultant)
+            elif not product_url.startswith(("http://", "https://")):
+                raise ValueError("Skriv inn artikkelnummer eller produktnavn, eller lim inn en gyldig produktlenke.")
+            product = mail_tool.parse_product(product_url)
+            if not product.get("title"):
+                raise ValueError("Fant ikke produktnavn på siden.")
+            product["sourceUrl"] = mail_tool.consultant_url(product.get("sourceUrl") or product_url, consultant)
+            recipes = []
+            return self.json_response(200, {
+                "product": product,
+                "recipes": recipes,
+                "email": mail_tool.make_email(product, recipes, consultant),
+                "emailHtml": mail_tool.make_email_html(product, recipes, consultant),
+            })
+        except Exception as error:
+            return self.json_response(400, {"error": mail_tool.format_error(error)})
+
+
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
+        mail_path = unquote(path)
+        if self.is_mail_tool_path(mail_path):
+            return self.serve_mail_tool(mail_path, query)
 
         if path == "/api/health":
             return self.json_response(
@@ -876,6 +1023,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlparse(self.path)
+        mail_path = unquote(parsed.path)
+        if self.is_mail_tool_path(mail_path):
+            return self.handle_mail_tool_post(mail_path)
         if parsed.path not in ("/api/own-products", "/api/own-orders"):
             return self.json_response(404, {"error": "Fant ikke endepunktet."})
         try:

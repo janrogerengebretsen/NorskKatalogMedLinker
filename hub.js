@@ -556,6 +556,8 @@ function setPersonalLinks(name) {
   document.querySelector("#digitalCatalogLink").href = shareUrls.digital;
   document.querySelector("#ownCatalogModule").href = shareUrls.own;
   document.querySelector("#footerCatalogLink").href = shareUrls.official;
+  const mailToolLink = document.querySelector("#mailToolLink");
+  if (mailToolLink) mailToolLink.href = `/mail-verktøy?ref=${encodeURIComponent(referenceCode)}`;
   document.querySelector("#ownCatalogTitle").textContent = `${name.split(" ")[0]}s egne varer`;
 }
 
