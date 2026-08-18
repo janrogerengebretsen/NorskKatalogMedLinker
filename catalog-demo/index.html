@@ -160,6 +160,39 @@
       background: rgba(11, 107, 102, 0.18);
       box-shadow: inset 0 0 0 2px rgba(11, 107, 102, 0.75);
     }
+    .consultant-card-page39 {
+      position: absolute;
+      left: 13.8%;
+      bottom: 7.4%;
+      width: 72.4%;
+      min-height: 8.6%;
+      display: grid;
+      gap: .45em;
+      padding: 1.35% 2.2%;
+      background: rgba(255, 255, 255, .92);
+      border: .18em solid rgba(11, 107, 102, .82);
+      box-shadow: 0 .7em 1.7em rgba(23, 33, 36, .16);
+      color: #172124;
+      font-size: clamp(10px, 1.45vw, 20px);
+      line-height: 1.25;
+      text-align: center;
+    }
+    .consultant-card-page39 .label {
+      color: #0b6b66;
+      font-size: .78em;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .consultant-card-page39 .name {
+      font-size: 1.45em;
+      font-weight: 800;
+    }
+    .consultant-card-page39 .contact {
+      font-size: 1em;
+      color: #506166;
+      overflow-wrap: anywhere;
+    }
     @media (max-width: 860px) {
       .bar { grid-template-columns: 1fr; }
       main { grid-template-columns: 1fr; }
@@ -1653,7 +1686,11 @@
               </div>
               <div class="sheet" style="--page-ratio:0.71840734;">
                 <img loading="lazy" decoding="async" src="/catalog-demo/pages/page-39.webp" width="1007" height="1402" alt="Katalogside 39">
-                
+                <div class="consultant-card-page39" id="page39ConsultantCard" hidden>
+                  <div class="label">Din Tupperware-konsulent</div>
+                  <div class="name" id="page39ConsultantName"></div>
+                  <div class="contact" id="page39ConsultantContact"></div>
+                </div>
               </div>
             </section>
             
@@ -1678,6 +1715,9 @@
     const consultantLine = document.querySelector("#consultantLine");
     const consultantName = document.querySelector("#consultantName");
     const consultantCode = document.querySelector("#consultantCode");
+    const page39ConsultantCard = document.querySelector("#page39ConsultantCard");
+    const page39ConsultantName = document.querySelector("#page39ConsultantName");
+    const page39ConsultantContact = document.querySelector("#page39ConsultantContact");
     let shopWindow = null;
     let consultantReady = false;
 
@@ -1711,6 +1751,14 @@
       return target.toString();
     }
 
+    function showPage39Consultant(result, reference) {
+      const name = result.name || result.consultant?.display_name || reference;
+      const email = result.email || result.consultant?.email || result.consultant?.contact_email || "";
+      page39ConsultantName.textContent = name;
+      page39ConsultantContact.textContent = email ? `${email} · Ref. ${reference}` : `Ref. ${reference}`;
+      page39ConsultantCard.hidden = false;
+    }
+
     async function prepareConsultant() {
       const params = new URLSearchParams(window.location.search);
       const reference = cleanReference(params.get("ref"));
@@ -1725,6 +1773,7 @@
         if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
         consultantName.textContent = result.name || result.consultant?.display_name || reference;
         consultantCode.textContent = reference;
+        showPage39Consultant(result, reference);
         shopLinks.forEach((link) => {
           link.href = norwegianShopUrl(link.href, reference);
         });

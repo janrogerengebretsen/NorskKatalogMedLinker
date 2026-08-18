@@ -29,6 +29,7 @@ from consultant_registry import (
     consultant_product_access,
     consultant_shop_status,
     find_consultant as find_registered_consultant,
+    find_consultant_contact,
     is_configured as registry_is_configured,
     list_consultants as list_registered_consultants,
     list_own_inventory,
@@ -865,6 +866,9 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 registered = find_registered_consultant(consultant_ref)
                 if registered:
+                    contact = find_consultant_contact(consultant_ref)
+                    if contact:
+                        registered = {**registered, **contact}
                     return self.json_response(
                         200,
                         {
@@ -872,6 +876,7 @@ class Handler(BaseHTTPRequestHandler):
                             "registered": True,
                             "ref": registered["reference_code"],
                             "name": registered["display_name"],
+                            "email": registered.get("email"),
                             "consultant": registered,
                         },
                     )

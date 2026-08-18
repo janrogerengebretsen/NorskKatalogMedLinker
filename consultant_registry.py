@@ -144,6 +144,24 @@ def find_consultant(reference_code):
     return rows[0] if rows else None
 
 
+def find_consultant_contact(reference_code):
+    reference_code = str(reference_code or "").strip().upper()
+    if not reference_code or not is_configured():
+        return {}
+    try:
+        rows = _request(
+            "rpc/public_consultant_contact",
+            method="POST",
+            payload={"p_reference_code": reference_code},
+        )
+    except Exception:
+        return {}
+    row = rows[0] if rows else {}
+    if row.get("email"):
+        return {"email": row["email"]}
+    return {}
+
+
 def consultant_shop_status(reference_code):
     reference_code = str(reference_code or "").strip().upper()
     if not reference_code or not is_configured():
