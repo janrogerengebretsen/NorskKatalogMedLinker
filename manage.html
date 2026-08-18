@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#007b68">
+  <title>Min varekatalog | Tupperware Norsk Nettkatalog</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/manage.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="/manage.js" defer></script>
+</head>
+<body>
+  <header class="manage-header">
+    <a class="manage-brand" href="/">
+      <span class="brand-mark">T</span>
+      <span><strong>Min varekatalog</strong><small>Tupperware Norsk Nettkatalog</small></span>
+    </a>
+    <div class="account-area" id="accountArea" hidden>
+      <span id="accountName"></span>
+      <a class="hub-link" href="/mine-sider">
+        <i data-lucide="layout-dashboard"></i> Mine sider
+      </a>
+      <button id="logoutButton" type="button"><i data-lucide="log-out"></i> Logg ut</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="login-view" id="loginView">
+      <div class="login-copy">
+        <p class="eyebrow">FOR TUPPERWARE-KONSULENTER</p>
+        <h1>Vedlikehold dine egne varer</h1>
+        <p>Her administrerer du bare varer du selv har på lager og selger direkte til kunden. Tupperwares offisielle nettkatalog endres ikke.</p>
+      </div>
+      <form class="login-form" id="loginForm">
+        <h2>Logg inn</h2>
+        <label>E-postadresse
+          <input name="email" type="email" required autocomplete="username">
+        </label>
+        <label>Passord
+          <input name="password" type="password" required autocomplete="current-password">
+        </label>
+        <button id="loginButton" type="submit">Logg inn</button>
+        <button class="password-link-button" id="resetPasswordButton" type="button">Send meg lenke for å velge nytt passord</button>
+        <p id="loginMessage" role="status"></p>
+      </form>
+      <form class="login-form" id="passwordSetupForm" hidden>
+        <h2>Velg passord</h2>
+        <p class="form-intro">Lag et passord for konsulentkontoen. Du bruker e-postadressen og dette passordet neste gang du logger inn.</p>
+        <label>Nytt passord
+          <input name="password" type="password" required minlength="10" autocomplete="new-password">
+        </label>
+        <label>Gjenta passordet
+          <input name="password_confirm" type="password" required minlength="10" autocomplete="new-password">
+        </label>
+        <button id="passwordSetupButton" type="submit">Lagre passord</button>
+        <p id="passwordSetupMessage" role="status"></p>
+      </form>
+    </section>
+
+    <section class="manage-view" id="manageView" hidden>
+      <div class="manage-intro">
+        <div>
+          <p class="eyebrow">KONSULENTENS EGET LAGER</p>
+          <h1 id="manageTitle">Mine varer</h1>
+          <p>Varene vises i en egen kundekatalog og blandes aldri med Tupperwares varer.</p>
+        </div>
+        <a class="view-catalog" id="viewCatalogLink" href="/egne-varer" target="consultant-own-catalog">
+          <i data-lucide="external-link"></i> Se kundekatalogen
+        </a>
+      </div>
+
+      <nav class="manage-tabs" aria-label="Konsulentfunksjoner">
+        <button class="active" type="button" data-view="inventory"><i data-lucide="package"></i> Mine varer</button>
+        <button type="button" data-view="orders"><i data-lucide="clipboard-list"></i> Bestillinger <span id="newOrderCount"></span></button>
+        <button type="button" data-view="profile"><i data-lucide="user-round"></i> Min profil</button>
+        <button type="button" data-view="report"><i data-lucide="chart-no-axes-combined"></i> Lagerverdi <span class="value-badge" id="inventoryValueBadge">0 kr</span></button>
+      </nav>
+
+      <section id="inventoryView">
+        <div class="inventory-actions">
+          <div>
+            <h2>Varekatalog</h2>
+            <span id="inventoryCount">0 varer</span>
+          </div>
+          <div>
+            <button class="secondary-action" id="addFromTupperware" type="button">
+              <i data-lucide="copy-plus"></i> Hent fra Tupperware
+            </button>
+            <button class="primary-action" id="addCustomProduct" type="button">
+              <i data-lucide="plus"></i> Opprett egen vare
+            </button>
+          </div>
+        </div>
+        <div class="inventory-list" id="inventoryList"></div>
+      </section>
+
+      <section id="ordersView" hidden>
+        <div class="orders-heading">
+          <div>
+            <h2>Bestillingsforespørsler</h2>
+            <p>Bekreft lagerstatus, levering og eventuell frakt direkte med kunden.</p>
+          </div>
+          <button class="secondary-action" id="refreshOrders" type="button"><i data-lucide="refresh-cw"></i> Oppdater</button>
+        </div>
+        <div class="order-list" id="orderList"></div>
+      </section>
+
+      <section id="profileView" hidden>
+        <form class="profile-form" id="profileForm">
+          <header class="profile-heading">
+            <div>
+              <h2>Min profil</h2>
+              <p>Opplysningene brukes i din nettkatalog og når kunder bestiller fra ditt eget lager.</p>
+            </div>
+            <button class="primary-action" id="saveProfile" type="submit"><i data-lucide="save"></i> Lagre profil</button>
+          </header>
+
+          <div class="profile-layout">
+            <section class="profile-section profile-identity">
+              <h3>Kontaktopplysninger</h3>
+              <div class="profile-photo-row">
+                <span class="profile-photo-preview" id="profilePhotoPreview"><i data-lucide="user-round"></i></span>
+                <label>Profilbilde
+                  <input name="profile_image_file" type="file" accept="image/jpeg,image/png,image/webp">
+                  <small>JPG, PNG eller WebP, maksimalt 5 MB.</small>
+                </label>
+              </div>
+              <div class="profile-fields">
+                <label class="wide">Fullt navn
+                  <input name="display_name" required maxlength="160" autocomplete="name">
+                </label>
+                <label>E-postadresse
+                  <input name="email" type="email" maxlength="320" autocomplete="email">
+                </label>
+                <label>Telefonnummer
+                  <input name="phone" type="tel" maxlength="40" autocomplete="tel">
+                </label>
+                <label>Kommune
+                  <input name="municipality" maxlength="120" autocomplete="address-level2">
+                </label>
+                <label>Fylke
+                  <input name="county" maxlength="120" autocomplete="address-level1">
+                </label>
+              </div>
+              <p class="profile-reference">Konsulentreferanse: <strong id="profileReference"></strong></p>
+            </section>
+
+            <section class="profile-section">
+              <h3>Synlighet i nettkatalogen</h3>
+              <label class="profile-toggle">
+                <input name="public_listing" type="checkbox">
+                <span><strong>Vis profilen i nettkatalogen</strong><small>Kunder kan finne katalogen din og dine egne varer.</small></span>
+              </label>
+              <label class="profile-toggle">
+                <input name="show_email" type="checkbox">
+                <span><strong>Vis e-postadressen</strong><small>Kan bare vises når e-postadresse er fylt ut.</small></span>
+              </label>
+              <label class="profile-toggle">
+                <input name="show_phone" type="checkbox">
+                <span><strong>Vis telefonnummeret</strong><small>Kan bare vises når telefonnummer er fylt ut.</small></span>
+              </label>
+            </section>
+
+            <section class="profile-section profile-shop">
+              <div class="profile-section-heading">
+                <div>
+                  <h3>Konsulentens ekstra butikk</h3>
+                  <p>Bestem om kundene skal se dine egne lagervarer, og hvem som får tilgang.</p>
+                </div>
+                <span class="shop-state" id="profileShopState">Ikke aktiv</span>
+              </div>
+              <label class="profile-toggle">
+                <input name="own_shop_enabled" type="checkbox">
+                <span>
+                  <strong>Aktiver ekstra butikk</strong>
+                  <small>Når den er avslått, vises verken butikkfanen eller varene dine for kunder.</small>
+                </span>
+              </label>
+              <div class="shop-access-settings" id="shopAccessSettings">
+                <label>Hvem kan se varene?
+                  <select name="own_shop_access_mode">
+                    <option value="public">Alle som åpner nettkatalogen</option>
+                    <option value="code">Bare kunder med kundekode</option>
+                  </select>
+                </label>
+                <label id="shopAccessCodeField">Ny kundekode
+                  <input name="own_shop_access_code" type="password" minlength="4" maxlength="40"
+                    autocomplete="new-password" placeholder="Minst 4 tegn">
+                  <small id="shopAccessCodeHelp">Velg en kode som du kan sende til kundene du inviterer.</small>
+                </label>
+                <div class="privacy-note">
+                  <i data-lucide="shield-check"></i>
+                  <span>Kundekoden lagres kryptert. Andre konsulenter og administratorer kan ikke lese den.</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="profile-section profile-access">
+              <div class="profile-section-heading">
+                <div>
+                  <h3>Produkttilgang</h3>
+                  <p>Dette viser hvilke løsninger som er åpne for den valgte konsulenten. Samme regler brukes i Mine sider.</p>
+                </div>
+                <span class="access-state" id="profileAccessState">Laster ...</span>
+              </div>
+              <div class="access-list" id="profileAccessList"></div>
+            </section>
+
+            <section class="profile-section profile-vat">
+              <div class="profile-section-heading">
+                <div>
+                  <h3>MVA for egne varer</h3>
+                  <p>Gjelder bare varer konsulenten selv selger. Tupperwares nettbutikk håndterer alltid sin egen MVA.</p>
+                </div>
+              </div>
+              <div class="profile-fields">
+                <label class="wide">MVA-status
+                  <select name="vat_status">
+                    <option value="not_registered">Ikke MVA-registrert</option>
+                    <option value="registered">MVA-registrert</option>
+                    <option value="exempt">Unntatt MVA</option>
+                  </select>
+                </label>
+                <label>Organisasjonsnummer
+                  <input name="organization_number" maxlength="30" inputmode="numeric">
+                </label>
+                <label>MVA-nummer
+                  <input name="vat_number" maxlength="40">
+                </label>
+                <label>MVA-sats for egne varer
+                  <span class="number-field"><input name="own_product_vat_rate" type="number" min="0" max="100" step="0.01"><b>%</b></span>
+                </label>
+                <label class="profile-toggle compact">
+                  <input name="own_product_prices_include_vat" type="checkbox">
+                  <span><strong>Prisene inkluderer MVA</strong></span>
+                </label>
+              </div>
+            </section>
+          </div>
+        </form>
+      </section>
+
+      <section class="inventory-report" id="reportView" hidden>
+        <header class="report-heading">
+          <div>
+            <p class="eyebrow">Konsulentens egne varer</p>
+            <h2>Lagerverdirapport</h2>
+            <p>Oversikt basert på registrert antall og kundepris.</p>
+          </div>
+          <button class="secondary-action" id="printInventoryReport" type="button"><i data-lucide="printer"></i> Skriv ut / lagre PDF</button>
+        </header>
+
+        <div class="report-summary">
+          <article class="report-total">
+            <span>Samlet salgsverdi</span>
+            <strong id="reportTotalValue">0 kr</strong>
+            <small><b id="reportUnitCount">0</b> enheter fordelt på <b id="reportLineCount">0</b> varelinjer</small>
+          </article>
+          <article>
+            <span>Varer som vises i butikken</span>
+            <strong id="reportVisibleValue">0 kr</strong>
+            <small id="reportVisibleCount">0 varelinjer</small>
+          </article>
+          <article>
+            <span>Skjulte varer</span>
+            <strong id="reportHiddenValue">0 kr</strong>
+            <small id="reportHiddenCount">0 varelinjer</small>
+          </article>
+        </div>
+
+        <section class="report-vat" id="reportVat" hidden>
+          <div><span>Ekskl. MVA</span><strong id="reportExVat">0 kr</strong></div>
+          <div><span>MVA</span><strong id="reportVatAmount">0 kr</strong></div>
+          <div><span>Inkl. MVA</span><strong id="reportIncVat">0 kr</strong></div>
+          <p id="reportVatNote"></p>
+        </section>
+
+        <div class="report-table-wrap">
+          <table class="report-table">
+            <thead><tr><th>Vare</th><th>Status</th><th>Antall</th><th>Pris</th><th>Salgsverdi</th></tr></thead>
+            <tbody id="inventoryReportBody"></tbody>
+            <tfoot><tr><th colspan="2">Totalt</th><th id="reportTableUnits">0</th><th></th><th id="reportTableValue">0 kr</th></tr></tfoot>
+          </table>
+        </div>
+        <p class="report-note" id="reportNote"></p>
+      </section>
+    </section>
+  </main>
+
+  <dialog class="editor-dialog" id="productEditor" aria-labelledby="editorTitle">
+    <form class="editor-shell" id="productForm">
+      <header>
+        <div>
+          <p class="eyebrow" id="editorEyebrow">EGEN VARE</p>
+          <h2 id="editorTitle">Opprett vare</h2>
+        </div>
+        <button class="icon-button" id="closeEditor" type="button" aria-label="Lukk vare">
+          <i data-lucide="x"></i>
+        </button>
+      </header>
+      <input name="id" type="hidden">
+      <input name="source_type" type="hidden" value="custom">
+      <input name="product_handle" type="hidden">
+      <div class="editor-grid">
+        <label class="wide">Produktnavn
+          <input name="product_name" required maxlength="180">
+        </label>
+        <label>Artikkelnummer
+          <input name="article_number" maxlength="80">
+        </label>
+        <label>Kategori
+          <input name="category" maxlength="100" placeholder="For eksempel oppbevaring">
+        </label>
+        <label>Pris til kunde
+          <span class="number-field"><input name="sale_price_nok" type="number" min="0" step="0.01" required><b>kr</b></span>
+        </label>
+        <label>Antall på lager
+          <input name="quantity" type="number" min="0" step="1" required value="1">
+        </label>
+        <label class="wide">Beskrivelse
+          <textarea name="description" rows="5" maxlength="2000"></textarea>
+        </label>
+        <label class="wide">Bilde
+          <input name="image_file" type="file" accept="image/jpeg,image/png,image/webp">
+          <small>JPG, PNG eller WebP, maksimalt 5 MB.</small>
+        </label>
+        <label class="wide">Eller bruk bildeadresse
+          <input name="image_url" type="url" maxlength="1000" placeholder="https://...">
+        </label>
+        <label class="wide">Lenke til opprinnelig produkt
+          <input name="source_product_url" type="url" maxlength="1000">
+        </label>
+        <label class="check-row">
+          <input name="is_for_sale" type="checkbox" checked>
+          <span>Vis varen i kundekatalogen</span>
+        </label>
+      </div>
+      <footer>
+        <button class="delete-action" id="deleteProduct" type="button" hidden><i data-lucide="trash-2"></i> Slett vare</button>
+        <button class="primary-action" id="saveProduct" type="submit"><i data-lucide="save"></i> Lagre vare</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="official-dialog" id="officialPicker" aria-labelledby="officialPickerTitle">
+    <div class="official-shell">
+      <header>
+        <div>
+          <p class="eyebrow">KOPIER PRODUKTINFORMASJON</p>
+          <h2 id="officialPickerTitle">Hent fra Tupperware</h2>
+          <p>Velg et produkt som utgangspunkt. Du bestemmer selv pris og antall på eget lager.</p>
+        </div>
+        <button class="icon-button" id="closeOfficialPicker" type="button" aria-label="Lukk produktsøk">
+          <i data-lucide="x"></i>
+        </button>
+      </header>
+      <form class="official-search" id="officialSearchForm">
+        <i data-lucide="search"></i>
+        <input id="officialSearchInput" type="search" placeholder="Søk etter navn eller artikkelnummer" required>
+        <button type="submit">Søk</button>
+      </form>
+      <div class="official-results" id="officialResults">
+        <p>Søk etter produktet du har på eget lager.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>
