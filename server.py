@@ -719,12 +719,39 @@ class Handler(BaseHTTPRequestHandler):
         for old, new in replacements.items():
             body = body.replace(old, new)
         ref_script = """
+  <style>
+    .mine-sider-shortcut {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid #007b68;
+      background: #007b68;
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .mine-sider-shortcut:hover { background: #004c45; }
+    @media (max-width: 720px) {
+      .mine-sider-shortcut { width: 100%; margin-top: 12px; }
+    }
+  </style>
   <script>
     (() => {
       const ref = new URLSearchParams(window.location.search).get("ref");
       const input = document.querySelector("#consultant");
       const clean = String(ref || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
       if (clean && input) input.value = `ref=${clean}`;
+      const target = new URL("/mine-sider", window.location.origin);
+      if (clean) target.searchParams.set("ref", clean);
+      const link = document.createElement("a");
+      link.className = "mine-sider-shortcut";
+      link.href = target.toString();
+      link.textContent = "Mine sider";
+      const header = document.querySelector("main > header");
+      if (header && !document.querySelector(".mine-sider-shortcut")) header.appendChild(link);
     })();
   </script>
 """
@@ -1181,6 +1208,10 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/manage.js": ("manage.js", "application/javascript; charset=utf-8"),
             "/mine-sider": ("hub.html", "text/html; charset=utf-8"),
             "/mine-sider/": ("hub.html", "text/html; charset=utf-8"),
+            "/mine": ("hub.html", "text/html; charset=utf-8"),
+            "/mine/": ("hub.html", "text/html; charset=utf-8"),
+            "/start": ("hub.html", "text/html; charset=utf-8"),
+            "/start/": ("hub.html", "text/html; charset=utf-8"),
             "/hub.html": ("hub.html", "text/html; charset=utf-8"),
             "/hub.css": ("hub.css", "text/css; charset=utf-8"),
             "/hub.js": ("hub.js", "application/javascript; charset=utf-8"),
