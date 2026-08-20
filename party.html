@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Party</title>
+  <style>
+    :root {
+      --bg: #f5eee4;
+      --panel: #fffaf3;
+      --ink: #2a231d;
+      --muted: #6d6257;
+      --line: #ddcfbf;
+      --accent: #b74a2b;
+      --accent-2: #f1e3d6;
+      --ok: #2f7a4f;
+      --ok-bg: #dff0e4;
+      --warn: #8a6112;
+      --warn-bg: #f9e8bb;
+      --info: #36546d;
+      --info-bg: #e5f0fa;
+      --shadow: 0 18px 48px rgba(84, 57, 30, 0.09);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, #fff7e8 0, transparent 28rem),
+        linear-gradient(180deg, #f1e8db, var(--bg));
+    }
+    button, input, select, textarea { font: inherit; }
+    .shell { max-width: 1380px; margin: 0 auto; padding: 24px; display: grid; gap: 20px; }
+    .hero, .split, .public-layout, .admin-layout, .featured-grid, .product-grid, .stack, .form-grid { display: grid; gap: 18px; }
+    .hero { grid-template-columns: 1.3fr auto; align-items: end; }
+    .split { grid-template-columns: 420px 1fr; }
+    .admin-layout { grid-template-columns: 1fr 1fr; }
+    .public-layout { grid-template-columns: 1.12fr .88fr; }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .eyebrow { margin: 0 0 10px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 40px; line-height: 1; margin-bottom: 10px; }
+    h2 { font-size: 28px; margin-bottom: 12px; }
+    h3 { font-size: 21px; margin-bottom: 10px; }
+    p { color: var(--muted); line-height: 1.5; }
+    .actions, .between, .chips, .cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .between { justify-content: space-between; }
+    .btn { border: 0; border-radius: 999px; padding: 11px 16px; background: var(--accent); color: white; cursor: pointer; }
+    .btn.alt { background: var(--accent-2); color: var(--ink); }
+    .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+    .badge, .chip {
+      display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 10px; font-size: 13px;
+      background: #f1e8df; color: var(--muted);
+    }
+    .chip.ok { background: var(--ok-bg); color: var(--ok); }
+    .chip.warn { background: var(--warn-bg); color: var(--warn); }
+    .chip.info { background: var(--info-bg); color: var(--info); }
+    .tab { border: 1px solid var(--line); background: #fff; color: var(--muted); border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+    .tab.active { background: var(--ink); color: white; border-color: var(--ink); }
+    .subtab-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .subtab {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .subtab.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .panel-list, .order-list, .featured-list, .summary-list { display: grid; gap: 12px; }
+    .party-item, .order-card, .feature-card, .summary-card, .product-card, .profile-card, .notice {
+      background: white; border: 1px solid var(--line); border-radius: 18px; padding: 14px;
+    }
+    .party-item.active { border-color: var(--accent); background: #fff8f2; }
+    .party-item button { width: 100%; border: 0; background: transparent; text-align: left; padding: 0; cursor: pointer; }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field span { color: var(--muted); font-size: 13px; }
+    .field input, .field select, .field textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; background: white;
+    }
+    .price { font-size: 24px; color: var(--accent); }
+    .mobile-frame {
+      max-width: 440px; margin: 0 auto; border: 10px solid #231d17; border-radius: 34px; overflow: hidden;
+      background: #f8f2ea; box-shadow: 0 28px 60px rgba(0, 0, 0, 0.16);
+    }
+    .mobile-screen { padding: 16px; display: grid; gap: 14px; }
+    .hero-strip {
+      aspect-ratio: 16 / 9; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0,0,0,.28), rgba(0,0,0,.06)),
+        url("https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80") center/cover;
+      display: grid; align-items: end; padding: 16px; color: white;
+    }
+    .profile-row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .avatar { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: #ead9c8; color: #6b5642; font-weight: 700; margin-bottom: 10px; }
+    .video-frame { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 16px; background: #e9ddd0; }
+    .video-fallback { display: grid; gap: 10px; }
+    .notice.warn { background: #fff6dc; color: #6f5420; }
+    .notice.info { background: #eef6ff; color: #38546c; }
+    .preview-link { display: inline-flex; align-items: center; border-radius: 999px; padding: 8px 12px; background: #f4ece2; color: var(--ink); font-size: 14px; }
+    .product-search { width: 100%; border: 1px solid var(--line); border-radius: 999px; padding: 12px 14px; background: white; }
+    .hidden { display: none !important; }
+    .cart-list li, .order-lines li, .copybox li { margin-bottom: 6px; color: var(--muted); }
+    .copybox { background: #fffdf8; border: 1px dashed #ccb6a2; border-radius: 16px; padding: 12px; }
+    .product-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; background: #f1e3d6; margin-bottom: 10px; }
+    .product-card { cursor: pointer; }
+    .product-card.selected { border-color: var(--accent); background: #fff8f2; }
+    .product-detail {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf8;
+    }
+    .qty-row { display: flex; gap: 8px; align-items: center; }
+    .qty-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: white;
+      cursor: pointer;
+    }
+    .qty-value {
+      min-width: 32px;
+      text-align: center;
+      font-weight: 700;
+    }
+    @media (max-width: 1100px) {
+      .hero, .split, .admin-layout, .public-layout, .featured-grid, .profile-row, .form-grid, .product-grid { grid-template-columns: 1fr; }
+      .shell { padding: 16px; }
+      h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">Party Demo</p>
+        <h1>Party-løsning for konsulent og kunde</h1>
+        <p>Her kan du lagre endringer, kopiere party, slette i testmodus, sende inn testbestilling og åpne kundesiden på mobilvisning.</p>
+        <div class="notice info" id="storageModeNotice" style="margin-top:12px;"></div>
+      </div>
+      <div class="actions">
+        <button class="tab active" data-view="admin">Konsulentflate</button>
+        <button class="tab" data-view="public">Kundeside</button>
+      </div>
+    </section>
+
+    <section class="split" id="adminView">
+      <aside class="card">
+        <div class="between">
+          <div>
+            <p class="eyebrow">Mine party</p>
+            <h2>Partyliste</h2>
+          </div>
+          <div class="actions">
+            <span class="badge" id="partyCount"></span>
+            <button class="btn alt" id="createPartyButton" type="button">Nytt party</button>
+          </div>
+        </div>
+        <div class="panel-list" id="partyList"></div>
+      </aside>
+
+      <div class="stack">
+        <section class="card">
+          <div class="between">
+          <div>
+            <p class="eyebrow">Partyoppsett</p>
+            <h2 id="adminTitle"></h2>
+          </div>
+            <div class="actions">
+              <button class="btn ghost" id="deletePartyButton">Slett party</button>
+              <button class="btn ghost" id="openPublicPreviewButton">Se kundesiden</button>
+              <button class="btn alt" id="copyPartyButton">Kopier party</button>
+              <button class="btn" id="savePartyButton">Lagre</button>
+            </div>
+          </div>
+          <div><span class="preview-link" id="partyLinkPreview"></span></div>
+          <div class="notice hidden" id="orderStatusBox"><strong>Status</strong><p></p></div>
+          <div class="subtab-row" style="margin:14px 0 18px;">
+            <button class="subtab active" data-admin-tab="settings">Party</button>
+            <button class="subtab" data-admin-tab="featured">Fokusprodukter</button>
+            <button class="subtab" data-admin-tab="orders">Bestillinger</button>
+          </div>
+          <section data-admin-panel="settings">
+            <div class="admin-layout">
+              <div class="stack">
+              <div class="form-grid">
+                <label class="field"><span>Partynavn</span><input id="titleInput"></label>
+                <label class="field"><span>Partytype</span><select id="typeInput"><option value="combined">Kombinert</option><option value="digital">Digitalt</option><option value="physical">Fysisk</option></select></label>
+                <label class="field"><span>Start</span><input id="startInput" type="datetime-local"></label>
+                <label class="field"><span>Slutt</span><input id="endInput" type="datetime-local"></label>
+                <label class="field"><span>Vertstype</span><select id="hostModeInput"><option value="manual">Forhåndsbestemt vert</option><option value="attendee">Velges blant påmeldte senere</option><option value="consultant">Konsulenten selv</option></select></label>
+                <label class="field"><span>Vertens navn</span><input id="hostNameInput"></label>
+                <label class="field full"><span>Sted / praktisk info</span><input id="locationInput"></label>
+                <label class="field full"><span>Velkomsttekst</span><textarea id="messageInput" rows="4"></textarea></label>
+                <label class="field full"><span>Vertspresentasjon</span><textarea id="hostIntroInput" rows="3"></textarea></label>
+                <label class="field"><span>Videolenke</span><input id="videoInput"></label>
+                <label class="field"><span>Vipps-info</span><input id="vippsInput"></label>
+              </div>
+              <div class="notice info" id="adminStorageNotice"><strong>Testmodus</strong><p>Dette lagres i demo-state i serveren, så du kan teste flyten uten Supabase først.</p></div>
+              <div class="notice hidden" id="saveStatusBox"><strong>Lagret</strong><p>Partyet er oppdatert på serveren.</p></div>
+              </div>
+              <div class="stack">
+                <div class="notice info"><p>Bruk fanen <strong>Fokusprodukter</strong> for å velge hva du vil fremheve i dette partyet.</p></div>
+              </div>
+            </div>
+          </section>
+          <section data-admin-panel="featured" class="hidden">
+            <div class="stack">
+              <div class="between">
+                <div>
+                  <h3>Fokusprodukter</h3>
+                  <p>Velg produkter fra den norske produktbasen som skal løftes frem på partysiden.</p>
+                </div>
+              </div>
+              <input class="product-search" id="adminProductSearchInput" placeholder="Søk etter navn eller artikkelnummer ...">
+              <div class="featured-list" id="featuredAdminList"></div>
+              <div class="product-grid" id="adminCatalogGrid"></div>
+            </div>
+          </section>
+          <section data-admin-panel="orders" class="hidden">
+            <div class="card" style="padding:16px;">
+              <div class="between">
+                <h3>Ordreassistent</h3>
+                <span class="badge">Testordre</span>
+              </div>
+              <div class="order-list" id="adminOrders"></div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+
+    <section class="card hidden" id="publicView">
+      <div class="between" style="margin-bottom: 12px;">
+        <div>
+          <p class="eyebrow">Mobilvisning</p>
+          <h2>Kundens partyside</h2>
+        </div>
+      </div>
+      <section class="public-layout">
+        <div class="mobile-frame">
+          <div class="mobile-screen">
+            <div class="hero-strip">
+              <div>
+                <div class="chips">
+                  <span class="chip info" id="publicTypeChip"></span>
+                  <span class="chip ok">Bestilling åpen</span>
+                </div>
+                <h3 style="color:white; margin-top:10px;" id="publicTitle"></h3>
+              </div>
+            </div>
+            <div class="subtab-row">
+              <button class="subtab active" data-public-tab="about">Om party</button>
+              <button class="subtab" data-public-tab="products">Produkter</button>
+              <button class="subtab" data-public-tab="ordered">Bestilt</button>
+            </div>
+            <section data-public-panel="about">
+              <div class="notice info" id="customerStatusBox"></div>
+              <div class="notice info" id="publicLocation"></div>
+              <div class="profile-row">
+                <div class="profile-card">
+                  <div class="avatar">LO</div>
+                  <strong>Lisbeth Overbye</strong>
+                  <p>Din konsulent. Jeg hjelper gjerne med spørsmål og oppfølging etter bestilling.</p>
+                </div>
+                <div class="profile-card">
+                  <div class="avatar">VH</div>
+                  <strong id="publicHostName"></strong>
+                  <p id="publicHostIntro"></p>
+                </div>
+              </div>
+              <div class="notice">
+                <strong>Video og velkomst</strong>
+                <p id="publicMessage"></p>
+              </div>
+              <div class="profile-card hidden" id="videoSection">
+                <h3>Video</h3>
+                <div id="videoContent"></div>
+              </div>
+            </section>
+            <section data-public-panel="products" class="hidden">
+              <div>
+                <h3>Utvalgte produkter akkurat nå</h3>
+                <div class="featured-grid" id="publicFeatured"></div>
+              </div>
+              <div>
+                <h3>Velg produkter</h3>
+                <input class="product-search" id="productSearchInput" placeholder="Søk etter navn, artikkelnummer eller etikett ...">
+                <div class="product-detail hidden" id="productDetailBox"></div>
+                <div class="product-grid" id="productGrid"></div>
+              </div>
+            </section>
+            <section data-public-panel="ordered" class="hidden">
+              <div class="profile-card">
+                <h3>Handleliste</h3>
+                <ul class="cart-list" id="cartList"></ul>
+                <div class="notice info" id="vippsMessage"></div>
+              </div>
+              <div class="profile-card">
+                <h3>Påmelding</h3>
+                <div class="form-grid">
+                  <label class="field full"><span>Navn</span><input id="customerNameInput" value="Kari Nordmann"></label>
+                  <label class="field"><span>E-post</span><input id="customerEmailInput" value="kari@example.com"></label>
+                  <label class="field"><span>Telefon</span><input id="customerPhoneInput" value="94800111"></label>
+                </div>
+              </div>
+              <div class="notice warn">
+                <strong>Forbehold</strong>
+                <p>Bestillingen sendes til konsulenten som en forespørsel. Endelig levering avhenger av tilgjengelighet hos Tupperware.</p>
+              </div>
+              <div class="cta-row">
+                <button class="btn" style="flex:1;" id="sendOrderButton">Send bestilling</button>
+                <button class="btn alt" style="flex:1;">Bare meld meg på</button>
+              </div>
+              <div class="notice hidden" id="confirmationBox"><strong>Ordrebekreftelse</strong><p>Bestillingen er sendt til konsulenten i demoen.</p></div>
+            </section>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card"><p class="eyebrow">Samlet ordre</p><h3>Oppsummering</h3><div class="summary-list" id="summaryList"></div></div>
+          <div class="card"><p class="eyebrow">Kopi til Tupperware.eu</p><h3>Kopiervenlig liste</h3><ul class="copybox" id="copyList"></ul></div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    const fallbackCatalog = [
+      { id: "1", name: "Universal Jar 1,8L", article: "11155861", price: 199, label: "Tilbud", image: "https://images.unsplash.com/photo-1584990347449-ae5f8d84f2d3?auto=format&fit=crop&w=900&q=80" },
+      { id: "2", name: "Eco drikkeflaske", article: "11158912", price: 149, label: "Vertsfavoritt", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=900&q=80" },
+      { id: "3", name: "Silikonspatel", article: "11160111", price: 89, label: "Anbefalt nå", image: "https://images.unsplash.com/photo-1571601035754-5c927f2d7edc?auto=format&fit=crop&w=900&q=80" },
+      { id: "4", name: "Rørebolle 3L", article: "11161234", price: 259, label: "", image: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=900&q=80" }
+    ];
+    const fallbackParties = [
+      {
+        id: "p1",
+        title: "Sommerparty hos Ine",
+        type: "combined",
+        startsAt: "2026-08-20T18:00",
+        endsAt: "2026-08-24T22:00",
+        hostMode: "manual",
+        hostName: "Ine L.",
+        location: "Fysisk samling hos Ine, Solsiden 14, Bergen. Du kan også bare bestille digitalt.",
+        message: "Velkommen til party med gode tilbud og favoritter for sensommeren.",
+        hostIntro: "Jeg gleder meg til å samle gjestene og dele favorittene mine.",
+        video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        vipps: "Vipps før levering etter avtale med konsulenten.",
+        featured: ["1", "2", "3"],
+        orders: []
+      }
+    ];
+
+    const state = {
+      catalog: fallbackCatalog,
+      parties: fallbackParties,
+      selectedPartyId: fallbackParties[0]?.id || null,
+      storageMode: "demo",
+      storageConfigured: false,
+      storageError: "",
+      catalogQuery: "",
+      catalogLoading: false,
+      catalogError: "",
+      cart: []
+    };
+    const useBackend = window.location.protocol.startsWith("http");
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => [...document.querySelectorAll(selector)];
+    let adminTab = "settings";
+    let publicTab = "about";
+    let selectedProductId = null;
+    let selectedProductQty = 1;
+    let customerProfile = null;
+
+    function slugify(text) {
+      return String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "nytt-party";
+    }
+    function normalizeSearch(text) {
+      return String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+    }
+    function selectedParty() {
+      return state.parties.find(item => item.id === state.selectedPartyId) || null;
+    }
+    function partyStorageKey() {
+      const party = selectedParty();
+      return party ? `party-customer-${slugify(party.title)}-${party.id}` : "";
+    }
+    function loadCustomerProfile() {
+      try {
+        const raw = partyStorageKey() ? window.localStorage.getItem(partyStorageKey()) : null;
+        customerProfile = raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        customerProfile = null;
+      }
+      return customerProfile;
+    }
+    function saveCustomerProfile() {
+      try {
+        const key = partyStorageKey();
+        if (!key) return;
+        customerProfile = {
+          name: $("#customerNameInput")?.value?.trim() || "",
+          email: $("#customerEmailInput")?.value?.trim() || "",
+          phone: $("#customerPhoneInput")?.value?.trim() || "",
+          cart: state.cart.map(item => ({ ...item })),
+          submittedOrderId: customerProfile?.submittedOrderId || "",
+          lastSeenAt: new Date().toISOString()
+        };
+        window.localStorage.setItem(key, JSON.stringify(customerProfile));
+      } catch (error) {}
+    }
+    function applyCustomerProfile() {
+      const profile = loadCustomerProfile();
+      if (!profile) return;
+      if ($("#customerNameInput")) $("#customerNameInput").value = profile.name || "";
+      if ($("#customerEmailInput")) $("#customerEmailInput").value = profile.email || "";
+      if ($("#customerPhoneInput")) $("#customerPhoneInput").value = profile.phone || "";
+      if (Array.isArray(profile.cart)) {
+        state.cart = profile.cart.map(item => ({ ...item }));
+      }
+    }
+    function currentCustomerOrder() {
+      const party = selectedParty();
+      const submittedOrderId = customerProfile?.submittedOrderId || "";
+      if (!party) return null;
+      const byId = submittedOrderId ? (party.orders || []).find(order => order.id === submittedOrderId) : null;
+      if (byId) return byId;
+      const customerName = ($("#customerNameInput")?.value || customerProfile?.name || "").trim();
+      if (!customerName) return null;
+      return (party.orders || []).find(order => order.customer === customerName) || null;
+    }
+    function orderSignatureFromLines(lines) {
+      return [...(lines || [])]
+        .map(line => ({
+          article: String(line.article || ""),
+          name: String(line.name || ""),
+          qty: Number(line.qty || 0),
+          price: Number(line.price || 0)
+        }))
+        .filter(line => line.qty > 0)
+        .sort((a, b) => `${a.article}|${a.name}|${a.qty}|${a.price}`.localeCompare(`${b.article}|${b.name}|${b.qty}|${b.price}`))
+        .map(line => `${line.article}|${line.name}|${line.qty}|${line.price.toFixed(2)}`)
+        .join("||");
+    }
+    function currentCartSignature() {
+      return orderSignatureFromLines(state.cart);
+    }
+    function existingOrderSignature(order) {
+      return orderSignatureFromLines((order?.lines || []).map(line => ({
+        article: line.article,
+        name: line.name,
+        qty: line.qty,
+        price: line.price
+      })));
+    }
+    function orderStatuses() {
+      return ["Ny", "Oppdatert", "Kan oppdateres", "Registrert hos Tupperware"];
+    }
+    function renderStorageModeNotice() {
+      const notice = $("#storageModeNotice");
+      if (!notice) return;
+      if (state.storageMode === "shared") {
+        notice.innerHTML = `<strong>Delt testmodus</strong><p>Party lagres i Supabase og kan testes fra flere maskiner via samme /party-lenke.</p>`;
+        return;
+      }
+      if (state.storageConfigured && state.storageError) {
+        notice.innerHTML = `<strong>Supabase ikke klar ennå</strong><p>Serveren falt tilbake til demo fordi delt party-lagring feilet: ${state.storageError}</p>`;
+        return;
+      }
+      notice.innerHTML = `<strong>Lokal demomodus</strong><p>Party lagres bare i serverens demo-state. For testing fra flere maskiner må vi bruke Supabase-tabellene og deploye til Render.</p>`;
+    }
+    function selectedProduct() {
+      return state.catalog.find(item => item.id === selectedProductId) || null;
+    }
+    function normalizeApiProduct(product) {
+      return {
+        id: String(product.id || product.articleNumber || product.handle || ""),
+        name: product.titleNo || product.title || "",
+        article: product.articleNumber || "",
+        price: Number(product.price || 0),
+        label: product.compareAtPrice > product.price ? "Tilbud" : (product.available ? "På lager" : "Midlertidig utsolgt"),
+        compareLabel: product.compareAtPrice > product.price ? "Tilbud" : "Fra norsk produktbase",
+        image: product.image || product.images?.[0] || "",
+        description: product.descriptionNo || product.description || "",
+        available: Boolean(product.available),
+        series: product.series || "",
+        url: product.url || ""
+      };
+    }
+    function mergeProducts(existingProducts, incomingProducts) {
+      const byId = new Map();
+      [...(existingProducts || []), ...(incomingProducts || [])].forEach(product => {
+        if (!product || !product.id) return;
+        const previous = byId.get(product.id) || {};
+        byId.set(product.id, { ...previous, ...product, image: product.image || previous.image || "" });
+      });
+      return [...byId.values()];
+    }
+    function formatType(type) {
+      return ({ combined: "Kombinert party", digital: "Digitalt party", physical: "Fysisk party" })[type] || type;
+    }
+    function fmt(value) {
+      if (!value) return "Ikke satt";
+      return new Intl.DateTimeFormat("nb-NO", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
+    }
+    function currency(value) {
+      return `${Math.round(Number(value || 0))} kr`;
+    }
+    async function fetchJson(url, options) {
+      const response = await fetch(url, options);
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || "Ukjent feil");
+      return payload;
+    }
+    function showOrderStatus(title, message, tone = "info") {
+      const box = $("#orderStatusBox");
+      if (!box) return;
+      box.className = `notice ${tone}`;
+      box.innerHTML = `<strong>${title}</strong><p>${message}</p>`;
+    }
+    async function loadCatalog(query = "") {
+      if (!useBackend) return;
+      state.catalogLoading = true;
+      state.catalogError = "";
+      state.catalogQuery = String(query || "").trim();
+      renderPublic(state.catalogQuery);
+      try {
+        const payload = await fetchJson(`/api/products?limit=${state.catalogQuery ? 48 : 600}&q=${encodeURIComponent(state.catalogQuery)}`);
+        const fetchedProducts = (payload.products || []).map(normalizeApiProduct);
+        state.catalog = mergeProducts(state.catalog, fetchedProducts);
+        if (!state.catalog.length) {
+          selectedProductId = null;
+        } else if (!state.catalog.some(item => item.id === selectedProductId)) {
+          selectedProductId = state.catalog[0].id;
+          selectedProductQty = 1;
+        }
+      } catch (error) {
+        state.catalogError = error.message || "Kunne ikke hente produkter.";
+      } finally {
+        state.catalogLoading = false;
+        renderPublic(state.catalogQuery);
+      }
+    }
+    function applySnapshot(snapshot) {
+      const snapshotProducts = (snapshot.catalog || []).map(product => {
+        const fallback = fallbackCatalog.find(item => item.id === product.id || item.article === product.article);
+        return { ...fallback, ...product, image: product.image || fallback?.image || "" };
+      });
+      state.catalog = mergeProducts(state.catalog, snapshotProducts);
+      state.parties = snapshot.parties || [];
+      state.selectedPartyId = snapshot.selectedPartyId || state.parties[0]?.id || null;
+      state.storageMode = snapshot.storageMode || "demo";
+      state.storageConfigured = Boolean(snapshot.storageConfigured);
+      state.storageError = snapshot.storageError || "";
+    }
+    function togglePublicView(showPublic) {
+      $$(".tab").forEach(item => item.classList.remove("active"));
+      document.querySelector(`.tab[data-view="${showPublic ? "public" : "admin"}"]`).classList.add("active");
+      $("#adminView").classList.toggle("hidden", showPublic);
+      $("#publicView").classList.toggle("hidden", !showPublic);
+    }
+    function setAdminTab(tabName) {
+      adminTab = tabName;
+      $$("[data-admin-tab]").forEach(button => {
+        button.classList.toggle("active", button.dataset.adminTab === tabName);
+      });
+      $$("[data-admin-panel]").forEach(panel => {
+        panel.classList.toggle("hidden", panel.dataset.adminPanel !== tabName);
+      });
+    }
+    function setPublicTab(tabName) {
+      publicTab = tabName;
+      $$("[data-public-tab]").forEach(button => {
+        button.classList.toggle("active", button.dataset.publicTab === tabName);
+      });
+      $$("[data-public-panel]").forEach(panel => {
+        panel.classList.toggle("hidden", panel.dataset.publicPanel !== tabName);
+      });
+    }
+    function embedVideoUrl(url) {
+      const trimmed = String(url || "").trim();
+      if (!trimmed) return "";
+      try {
+        const parsed = new URL(trimmed);
+        if (parsed.hostname.includes("youtube.com")) {
+          const videoId = parsed.searchParams.get("v");
+          return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+        }
+        if (parsed.hostname === "youtu.be") {
+          const videoId = parsed.pathname.replace(/^\/+/, "");
+          return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+        }
+        if (parsed.hostname.includes("vimeo.com")) {
+          const videoId = parsed.pathname.split("/").filter(Boolean).pop();
+          return videoId ? `https://player.vimeo.com/video/${videoId}` : "";
+        }
+      } catch (error) {}
+      return "";
+    }
+    function renderVideo(url) {
+      const section = $("#videoSection");
+      const content = $("#videoContent");
+      const embedUrl = embedVideoUrl(url);
+      if (!url) {
+        section.classList.add("hidden");
+        content.innerHTML = "";
+        return;
+      }
+      section.classList.remove("hidden");
+      if (embedUrl) {
+        content.innerHTML = `<iframe class="video-frame" src="${embedUrl}" title="Partyvideo" allowfullscreen loading="lazy"></iframe>`;
+      } else {
+        content.innerHTML = `<div class="video-fallback"><p>Videoen kan åpnes i egen fane.</p><a class="btn alt" href="${url}" target="_blank" rel="noopener">Åpne video</a></div>`;
+      }
+    }
+    function renderPartyList() {
+      const list = $("#partyList");
+      const active = selectedParty();
+      $("#partyCount").textContent = `${state.parties.length} party`;
+      list.innerHTML = "";
+      if (!state.parties.length) {
+        list.innerHTML = `<div class="notice info"><p>Ingen party tilgjengelig ennå. Trykk <strong>Nytt party</strong> for å opprette det første.</p></div>`;
+        return;
+      }
+      state.parties.forEach(item => {
+        const wrap = document.createElement("article");
+        wrap.className = `party-item${item.id === active?.id ? " active" : ""}`;
+        wrap.innerHTML = `<button type="button"><strong>${item.title}</strong><p>${formatType(item.type)} • ${fmt(item.startsAt)} - ${fmt(item.endsAt)}</p><p>${item.hostName} • ${(item.featured || []).length} utvalgte produkter</p></button>`;
+        wrap.querySelector("button").addEventListener("click", () => {
+          state.selectedPartyId = item.id;
+          renderAll();
+        });
+        list.appendChild(wrap);
+      });
+    }
+    function renderAdmin() {
+      const party = selectedParty();
+      const adminStorageNotice = $("#adminStorageNotice");
+      if (adminStorageNotice) {
+        if (state.storageMode === "shared") {
+          adminStorageNotice.innerHTML = `<strong>Delt lagring aktiv</strong><p>Dette partyet lagres i Supabase og kan åpnes fra flere maskiner.</p>`;
+        } else if (state.storageConfigured && state.storageError) {
+          adminStorageNotice.innerHTML = `<strong>Fallback til demo</strong><p>Delt party-lagring feilet akkurat nå: ${state.storageError}</p>`;
+        } else {
+          adminStorageNotice.innerHTML = `<strong>Testmodus</strong><p>Dette lagres i demo-state i serveren, så du kan teste flyten uten Supabase først.</p>`;
+        }
+      }
+      if (!party) {
+        $("#adminTitle").textContent = "Ingen party valgt";
+        $("#partyLinkPreview").textContent = "";
+        $("#featuredAdminList").innerHTML = `<div class="notice info"><p>Ingen produkter valgt.</p></div>`;
+        $("#adminCatalogGrid").innerHTML = `<div class="notice info"><p>Ingen produkter å vise.</p></div>`;
+        $("#adminOrders").innerHTML = `<div class="notice info"><p>Ingen bestillinger å vise.</p></div>`;
+        return;
+      }
+      $("#adminTitle").textContent = party.title || "";
+      $("#titleInput").value = party.title || "";
+      $("#typeInput").value = party.type || "combined";
+      $("#startInput").value = party.startsAt || "";
+      $("#endInput").value = party.endsAt || "";
+      $("#hostModeInput").value = party.hostMode || "manual";
+      $("#hostNameInput").value = party.hostName || "";
+      $("#locationInput").value = party.location || "";
+      $("#messageInput").value = party.message || "";
+      $("#hostIntroInput").value = party.hostIntro || "";
+      $("#videoInput").value = party.video || "";
+      $("#vippsInput").value = party.vipps || "";
+      $("#partyLinkPreview").textContent = `Kundelenke: ${party.publicPath || `/party-p/${slugify(party.title)}`}`;
+
+      const featuredList = $("#featuredAdminList");
+      featuredList.innerHTML = "";
+      (party.featured || []).map(id => state.catalog.find(item => item.id === id)).filter(Boolean).forEach(product => {
+        const node = document.createElement("article");
+        node.className = "feature-card";
+        const position = (party.featured || []).indexOf(product.id) + 1;
+        node.innerHTML = `<div class="between"><div><strong>${position}. ${product.name}</strong><p>Art.nr. ${product.article}</p></div><div class="actions"><button class="btn ghost" type="button" data-featured-up="${product.id}">Opp</button><button class="btn ghost" type="button" data-featured-down="${product.id}">Ned</button><button class="btn ghost" type="button" data-remove-featured="${product.id}">Fjern</button></div></div><div class="chips"><span class="chip warn">Fokusprodukt ${position}</span></div><div style="margin-top:10px;"><img class="product-image" src="${product.image || ""}" alt="${product.name}"></div>`;
+        featuredList.appendChild(node);
+      });
+      if (!featuredList.innerHTML) {
+        featuredList.innerHTML = `<div class="notice info"><p>Ingen utvalgte produkter enda.</p></div>`;
+      }
+      featuredList.querySelectorAll("[data-featured-up]").forEach(button => {
+        button.addEventListener("click", () => {
+          const ids = [...(party.featured || [])];
+          const index = ids.indexOf(button.dataset.featuredUp);
+          if (index > 0) {
+            [ids[index - 1], ids[index]] = [ids[index], ids[index - 1]];
+            party.featured = ids;
+            renderAdmin();
+            renderPublic($("#productSearchInput")?.value || "");
+          }
+        });
+      });
+      featuredList.querySelectorAll("[data-featured-down]").forEach(button => {
+        button.addEventListener("click", () => {
+          const ids = [...(party.featured || [])];
+          const index = ids.indexOf(button.dataset.featuredDown);
+          if (index >= 0 && index < ids.length - 1) {
+            [ids[index + 1], ids[index]] = [ids[index], ids[index + 1]];
+            party.featured = ids;
+            renderAdmin();
+            renderPublic($("#productSearchInput")?.value || "");
+          }
+        });
+      });
+      featuredList.querySelectorAll("[data-remove-featured]").forEach(button => {
+        button.addEventListener("click", () => {
+          party.featured = (party.featured || []).filter(id => id !== button.dataset.removeFeatured);
+          renderAdmin();
+          renderPublic($("#productSearchInput")?.value || "");
+        });
+      });
+
+      const adminSearch = normalizeSearch($("#adminProductSearchInput")?.value || "");
+      const adminGrid = $("#adminCatalogGrid");
+      const availableProducts = state.catalog.filter(product => {
+        if ((party.featured || []).includes(product.id)) return false;
+        if (!adminSearch) return true;
+        return normalizeSearch(`${product.name} ${product.article} ${product.series || ""}`).includes(adminSearch);
+      });
+      adminGrid.innerHTML = "";
+      if (state.catalogLoading) {
+        adminGrid.innerHTML = `<div class="notice info"><p>Laster produkter fra norsk produktbase ...</p></div>`;
+      } else if (state.catalogError) {
+        adminGrid.innerHTML = `<div class="notice warn"><p>${state.catalogError}</p></div>`;
+      } else if (!availableProducts.length) {
+        adminGrid.innerHTML = `<div class="notice info"><p>Fant ingen flere produkter som passer søket.</p></div>`;
+      }
+      availableProducts.slice(0, 24).forEach(product => {
+        const node = document.createElement("article");
+        node.className = "product-card";
+        node.innerHTML = `<img class="product-image" src="${product.image || ""}" alt="${product.name}"><div class="between"><div><strong>${product.name}</strong><p>Art.nr. ${product.article}${product.series ? ` • ${product.series}` : ""}</p></div><div class="price">${product.price} kr</div></div><div class="chips"><span class="chip ${product.available ? "ok" : "warn"}">${product.available ? "På lager" : "Midlertidig utsolgt"}</span><span class="chip info">${product.compareLabel || "Fra norsk produktbase"}</span></div><div class="cta-row"><button class="btn alt" type="button" data-add-featured-real="${product.id}">Legg til som fokus</button></div>`;
+        adminGrid.appendChild(node);
+      });
+      adminGrid.querySelectorAll("[data-add-featured-real]").forEach(button => {
+        button.addEventListener("click", () => {
+          const productId = button.dataset.addFeaturedReal;
+          party.featured = [...new Set([...(party.featured || []), productId])];
+          setAdminTab("featured");
+          renderAdmin();
+          renderPublic($("#productSearchInput")?.value || "");
+        });
+      });
+
+      const orders = $("#adminOrders");
+      orders.innerHTML = "";
+      if (!(party.orders || []).length) {
+        orders.innerHTML = `<div class="notice info"><p>Ingen kundebestillinger ennå.</p></div>`;
+      } else {
+        const totalOrders = party.orders.length;
+        const totalQty = party.orders.reduce((sum, order) => sum + Number(order.totalQty || 0), 0);
+        const totalAmount = party.orders.reduce((sum, order) => sum + Number(order.totalAmount || 0), 0);
+        const summary = document.createElement("article");
+        summary.className = "summary-card";
+        summary.innerHTML = `<div class="between"><strong>Totalt for partyet</strong><span>${totalOrders} ordre</span></div><p>${totalQty} produkter • ${currency(totalAmount)}</p>`;
+        orders.appendChild(summary);
+        party.orders.forEach(order => {
+          const node = document.createElement("article");
+          node.className = "order-card";
+          node.innerHTML = `<div class="between"><strong>${order.customer}</strong><span class="chip ${order.status === "Ny" ? "" : "ok"}">${order.status}</span></div><p>${fmt(order.createdAt)} • ${order.totalQty || 0} produkter • ${currency(order.totalAmount)}</p><ul class="order-lines">${(order.lines || []).map(line => `<li>${line.article} - ${line.name} - antall ${line.qty}${line.price ? ` - ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</li>`).join("")}</ul><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
+          orders.appendChild(node);
+        });
+        orders.querySelectorAll("[data-order-status]").forEach(select => {
+          select.addEventListener("change", async () => {
+            try {
+              const snapshot = await fetchJson("/api/party-demo-action", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "update_order_status", partyId: party.id, orderId: select.dataset.orderStatus, status: select.value })
+              });
+              applySnapshot(snapshot);
+              renderAdmin();
+              showOrderStatus("Ordre oppdatert", `Ordrestatus er satt til ${select.value}.`, "info");
+            } catch (error) {
+              showOrderStatus("Kunne ikke oppdatere ordre", error.message || "Statusendringen ble ikke lagret.", "warn");
+            }
+          });
+        });
+        orders.querySelectorAll("[data-order-delete]").forEach(button => {
+          button.addEventListener("click", async () => {
+            if (!window.confirm("Slette denne ordren?")) return;
+            try {
+              const snapshot = await fetchJson("/api/party-demo-action", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "delete_order", partyId: party.id, orderId: button.dataset.orderDelete })
+              });
+              if ((customerProfile?.submittedOrderId || "") === button.dataset.orderDelete) {
+                customerProfile = { ...(customerProfile || {}), submittedOrderId: "" };
+                saveCustomerProfile();
+              }
+              applySnapshot(snapshot);
+              renderAdmin();
+              showOrderStatus("Ordre slettet", "Ordren ble slettet fra partyet.", "info");
+            } catch (error) {
+              showOrderStatus("Kunne ikke slette ordre", error.message || "Ordren ble ikke slettet.", "warn");
+            }
+          });
+        });
+      }
+    }
+    function renderPublic(searchTerm = "") {
+      const party = selectedParty();
+      const existingCustomerOrder = currentCustomerOrder();
+      if (!party) {
+        $("#publicTitle").textContent = "Ingen party tilgjengelig";
+        $("#publicTypeChip").textContent = "";
+        $("#publicLocation").innerHTML = `<strong>Party</strong><p>Fant ingen data å vise.</p>`;
+        $("#publicHostName").textContent = "";
+        $("#publicHostIntro").textContent = "";
+        $("#publicMessage").textContent = "";
+        $("#publicFeatured").innerHTML = "";
+        $("#productDetailBox").classList.add("hidden");
+        $("#productDetailBox").innerHTML = "";
+        $("#productGrid").innerHTML = `<div class="notice info"><p>Ingen produkter å vise.</p></div>`;
+        $("#cartList").innerHTML = "";
+        $("#summaryList").innerHTML = "";
+        $("#copyList").innerHTML = "";
+        renderVideo("");
+        return;
+      }
+      $("#publicTitle").textContent = party.title || "";
+      $("#publicTypeChip").textContent = formatType(party.type);
+      if (customerProfile?.name) {
+        $("#customerStatusBox").innerHTML = `<strong>Velkommen tilbake, ${customerProfile.name}</strong><p>Vi husket handlelisten og kontaktinformasjonen din for dette partyet på denne mobilen.</p>`;
+      } else {
+        $("#customerStatusBox").innerHTML = `<strong>Ny kunde?</strong><p>Du kan se produkter først. Hvis du kommer tilbake til dette partyet på samme mobil, husker vi handlelisten og kontakten din.</p>`;
+      }
+      $("#publicLocation").innerHTML = `<strong>Tid og sted</strong><p>${party.location || ""}</p><p>${fmt(party.startsAt)} til ${fmt(party.endsAt)}</p>`;
+      $("#publicHostName").textContent = party.hostName || "";
+      $("#publicHostIntro").textContent = party.hostIntro || "";
+      $("#publicMessage").textContent = party.message || "";
+      $("#vippsMessage").innerHTML = `<strong>Vipps</strong><p>${party.vipps || "Betaling avtales med konsulenten."}</p>`;
+      renderVideo(party.video || "");
+      if (existingCustomerOrder?.status === "Registrert hos Tupperware") {
+        $("#customerStatusBox").innerHTML = `<strong>Bestilling sendt videre</strong><p>Bestillingen din er registrert hos Tupperware. Kontakt konsulenten hvis noe må endres.</p>`;
+      } else if (existingCustomerOrder) {
+        $("#customerStatusBox").innerHTML = `<strong>Bestilling mottatt</strong><p>Du kan oppdatere bestillingen din så lenge konsulenten ikke har registrert den hos Tupperware.</p>`;
+      }
+
+      const featured = $("#publicFeatured");
+      featured.innerHTML = "";
+      (party.featured || []).map(id => state.catalog.find(item => item.id === id)).filter(Boolean).forEach(product => {
+        const node = document.createElement("article");
+        node.className = "feature-card";
+        node.innerHTML = `<img class="product-image" src="${product.image || ""}" alt="${product.name}"><span class="chip warn">${product.label || "Utvalgt"}</span><strong>${product.name}</strong><p>Art.nr. ${product.article}</p><div class="price">${product.price} kr</div><div class="cta-row"><button class="btn alt" type="button" data-featured-pick="${product.id}">Se og bestill</button><button class="btn ghost" type="button" data-featured-add="${product.id}" ${product.available ? "" : "disabled"}>${product.available ? "Legg i bestilling" : "Utsolgt nå"}</button></div>`;
+        featured.appendChild(node);
+      });
+      featured.querySelectorAll("[data-featured-pick]").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedProductId = button.dataset.featuredPick;
+          selectedProductQty = 1;
+          setPublicTab("products");
+          renderPublic($("#productSearchInput")?.value || "");
+          window.requestAnimationFrame(() => {
+            $("#productDetailBox")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+      });
+      featured.querySelectorAll("[data-featured-add]").forEach(button => {
+        button.addEventListener("click", () => {
+          const product = state.catalog.find(item => item.id === button.dataset.featuredAdd);
+          if (!product || !product.available) return;
+          const existing = state.cart.find(item => item.article === product.article);
+          if (existing) existing.qty += 1;
+          else state.cart.push({ article: product.article, name: product.name, qty: 1, price: Number(product.price || 0) });
+          saveCustomerProfile();
+          setPublicTab("ordered");
+          renderCart();
+        });
+      });
+
+      const normalizedSearch = normalizeSearch(searchTerm);
+      const filteredCatalog = state.catalog.filter(product => {
+        if (!normalizedSearch) return true;
+        return normalizeSearch(`${product.name} ${product.article} ${product.label || ""}`).includes(normalizedSearch);
+      });
+      if (!selectedProduct() && filteredCatalog.length) {
+        selectedProductId = filteredCatalog[0].id;
+        selectedProductQty = 1;
+      }
+      if (selectedProduct() && !filteredCatalog.some(product => product.id === selectedProductId)) {
+        selectedProductId = filteredCatalog[0]?.id || null;
+        selectedProductQty = 1;
+      }
+
+      const detailProduct = selectedProduct();
+      const detailBox = $("#productDetailBox");
+      if (detailProduct) {
+        const inFeatured = (party.featured || []).includes(detailProduct.id);
+        detailBox.classList.remove("hidden");
+        detailBox.innerHTML = `<div class="between"><div><h3>${detailProduct.name}</h3><p>Art.nr. ${detailProduct.article}</p></div><div class="price">${detailProduct.price} kr</div></div><img class="product-image" src="${detailProduct.image || ""}" alt="${detailProduct.name}"><p>${detailProduct.description || (inFeatured ? "Utvalgt av konsulenten for dette partyet." : "Tilgjengelig fra hele katalogen.")}</p><div class="chips"><span class="chip ${detailProduct.available ? "ok" : "warn"}">${detailProduct.available ? "På lager" : "Midlertidig utsolgt"}</span><span class="chip warn">${detailProduct.label || "Produkt"}</span></div><div class="qty-row"><button type="button" class="qty-button" id="qtyDownButton">-</button><span class="qty-value" id="qtyValue">${selectedProductQty}</span><button type="button" class="qty-button" id="qtyUpButton">+</button><button type="button" class="btn" id="addSelectedProductButton" ${detailProduct.available ? "" : "disabled"}>${detailProduct.available ? "Legg i bestilling" : "Kan ikke bestilles nå"}</button></div>`;
+        $("#qtyDownButton").addEventListener("click", () => {
+          selectedProductQty = Math.max(1, selectedProductQty - 1);
+          renderPublic($("#productSearchInput")?.value || "");
+        });
+        $("#qtyUpButton").addEventListener("click", () => {
+          selectedProductQty += 1;
+          renderPublic($("#productSearchInput")?.value || "");
+        });
+        if (detailProduct.available) {
+          $("#addSelectedProductButton").addEventListener("click", () => {
+            const existing = state.cart.find(item => item.article === detailProduct.article);
+            if (existing) existing.qty += selectedProductQty;
+            else state.cart.push({ article: detailProduct.article, name: detailProduct.name, qty: selectedProductQty, price: Number(detailProduct.price || 0) });
+            saveCustomerProfile();
+            setPublicTab("ordered");
+            renderCart();
+          });
+        }
+      } else {
+        detailBox.classList.add("hidden");
+        detailBox.innerHTML = "";
+      }
+
+      const grid = $("#productGrid");
+      grid.innerHTML = "";
+      if (state.catalogLoading) {
+        grid.innerHTML = `<div class="notice info"><p>Laster produkter fra norsk produktbase ...</p></div>`;
+      } else if (state.catalogError) {
+        grid.innerHTML = `<div class="notice warn"><p>${state.catalogError}</p></div>`;
+      } else if (!filteredCatalog.length) {
+        grid.innerHTML = `<div class="notice info"><p>Fant ingen produkter som matcher søket ditt.</p></div>`;
+      }
+      filteredCatalog.forEach(product => {
+        const inFeatured = (party.featured || []).includes(product.id);
+        const node = document.createElement("article");
+        node.className = `product-card${product.id === selectedProductId ? " selected" : ""}`;
+        node.innerHTML = `<img class="product-image" src="${product.image || ""}" alt="${product.name}"><div class="between"><div><strong>${product.name}</strong><p>Art.nr. ${product.article}${inFeatured ? " • Fremhevet for dette partyet" : product.series ? ` • ${product.series}` : " • Fra produktbasen"}</p></div><div class="price">${product.price} kr</div></div><div class="chips"><span class="chip ${product.available ? "ok" : "warn"}">${product.available ? "På lager" : "Midlertidig utsolgt"}</span></div><div class="cta-row"><button class="btn alt" type="button" data-pick="${product.id}">Velg produkt</button></div>`;
+        grid.appendChild(node);
+        node.addEventListener("click", event => {
+          if (event.target.closest("button")) return;
+          if (!product.available) return;
+          const existing = state.cart.find(item => item.article === product.article);
+          if (existing) existing.qty += 1;
+          else state.cart.push({ article: product.article, name: product.name, qty: 1, price: Number(product.price || 0) });
+          saveCustomerProfile();
+          setPublicTab("ordered");
+          renderCart();
+        });
+      });
+      grid.querySelectorAll("[data-pick]").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedProductId = button.dataset.pick;
+          selectedProductQty = 1;
+          renderPublic($("#productSearchInput")?.value || "");
+          $("#productDetailBox")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+      renderCart();
+      const sendOrderButton = $("#sendOrderButton");
+      if (sendOrderButton) {
+        if (existingCustomerOrder?.status === "Registrert hos Tupperware") {
+          sendOrderButton.textContent = "Allerede sendt til Tupperware";
+          sendOrderButton.disabled = true;
+        } else if (existingCustomerOrder && currentCartSignature() && currentCartSignature() === existingOrderSignature(existingCustomerOrder)) {
+          sendOrderButton.textContent = "Allerede sendt til konsulenten";
+          sendOrderButton.disabled = true;
+        } else if (existingCustomerOrder) {
+          sendOrderButton.textContent = "Oppdater bestilling";
+          sendOrderButton.disabled = state.cart.length === 0;
+        } else {
+          sendOrderButton.textContent = "Send bestilling";
+          sendOrderButton.disabled = state.cart.length === 0;
+        }
+      }
+    }
+    function renderCart() {
+      $("#cartList").innerHTML = state.cart.map(item => `<li><div class="between"><div><strong>${item.name}</strong><div>Art.nr. ${item.article}</div><div>${currency(Number(item.price || 0) * Number(item.qty || 0))}</div></div><div class="qty-row"><button type="button" class="qty-button" data-cart-down="${item.article}">-</button><span class="qty-value">${item.qty}</span><button type="button" class="qty-button" data-cart-up="${item.article}">+</button><button type="button" class="btn ghost" data-cart-remove="${item.article}">Fjern</button></div></div></li>`).join("");
+      const totals = new Map();
+      state.cart.forEach(item => totals.set(item.article, { article: item.article, name: item.name, qty: (totals.get(item.article)?.qty || 0) + item.qty, price: Number(item.price || totals.get(item.article)?.price || 0) }));
+      $("#summaryList").innerHTML = [...totals.values()].map(item => `<article class="summary-card"><div class="between"><strong>${item.name}</strong><span>Totalt ${item.qty}</span></div><p>Art.nr. ${item.article}</p><p>${currency(Number(item.price || 0) * Number(item.qty || 0))}</p></article>`).join("");
+      $("#copyList").innerHTML = [...totals.values()].map(item => `<li>${item.article} - ${item.name} - totalt ${item.qty} - ${currency(Number(item.price || 0) * Number(item.qty || 0))}</li>`).join("");
+      $("#cartList").querySelectorAll("[data-cart-down]").forEach(button => {
+        button.addEventListener("click", () => {
+          const item = state.cart.find(entry => entry.article === button.dataset.cartDown);
+          if (!item) return;
+          item.qty -= 1;
+          if (item.qty <= 0) {
+            state.cart = state.cart.filter(entry => entry.article !== item.article);
+          }
+          saveCustomerProfile();
+          renderCart();
+        });
+      });
+      $("#cartList").querySelectorAll("[data-cart-up]").forEach(button => {
+        button.addEventListener("click", () => {
+          const item = state.cart.find(entry => entry.article === button.dataset.cartUp);
+          if (!item) return;
+          item.qty += 1;
+          saveCustomerProfile();
+          renderCart();
+        });
+      });
+      $("#cartList").querySelectorAll("[data-cart-remove]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.cart = state.cart.filter(entry => entry.article !== button.dataset.cartRemove);
+          saveCustomerProfile();
+          renderCart();
+        });
+      });
+    }
+    function renderAll() {
+      if (!selectedParty() && state.parties.length) {
+        state.selectedPartyId = state.parties[0].id;
+      }
+      if (!selectedProductId && state.catalog.length) {
+        selectedProductId = state.catalog[0].id;
+      }
+      renderStorageModeNotice();
+      renderPartyList();
+      renderAdmin();
+      renderPublic($("#productSearchInput")?.value || "");
+      $("#confirmationBox").classList.add("hidden");
+      $("#saveStatusBox").classList.add("hidden");
+      $("#orderStatusBox").classList.add("hidden");
+    }
+    async function saveCurrentParty() {
+      const party = selectedParty();
+      if (!party) return;
+      const payload = {
+        action: "save",
+        partyId: party.id,
+        title: $("#titleInput").value.trim() || party.title,
+        type: $("#typeInput").value,
+        startsAt: $("#startInput").value || party.startsAt,
+        endsAt: $("#endInput").value || party.endsAt,
+        hostMode: $("#hostModeInput").value,
+        hostName: $("#hostNameInput").value.trim() || party.hostName,
+        location: $("#locationInput").value.trim(),
+        message: $("#messageInput").value.trim(),
+        hostIntro: $("#hostIntroInput").value.trim(),
+        video: $("#videoInput").value.trim(),
+        vipps: $("#vippsInput").value.trim(),
+        featured: [...(party.featured || [])]
+      };
+      if (useBackend) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        applySnapshot(snapshot);
+      } else {
+        Object.assign(party, payload);
+      }
+      renderAll();
+      $("#saveStatusBox").classList.remove("hidden");
+    }
+    async function createParty() {
+      const payload = {
+        action: "create",
+        title: "Nytt party",
+        type: "combined",
+        startsAt: "",
+        endsAt: "",
+        hostMode: "manual",
+        hostName: "",
+        location: "",
+        message: "",
+        hostIntro: "",
+        video: "",
+        vipps: "",
+        featured: []
+      };
+      if (useBackend) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        applySnapshot(snapshot);
+      } else {
+        const newParty = {
+          id: `party-${Date.now()}`,
+          title: payload.title,
+          type: payload.type,
+          startsAt: "",
+          endsAt: "",
+          hostMode: payload.hostMode,
+          hostName: "",
+          location: "",
+          message: "",
+          hostIntro: "",
+          video: "",
+          vipps: "",
+          featured: [],
+          orders: [],
+          publicPath: `/party-p/${slugify(payload.title)}`
+        };
+        state.parties.unshift(newParty);
+        state.selectedPartyId = newParty.id;
+      }
+      setAdminTab("settings");
+      renderAll();
+      $("#saveStatusBox").classList.remove("hidden");
+    }
+    async function copyParty() {
+      const party = selectedParty();
+      if (!party) return;
+      if (useBackend) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "copy", partyId: party.id })
+        });
+        applySnapshot(snapshot);
+      } else {
+        const newParty = { ...party, id: `copy-${Date.now()}`, title: `${party.title} (kopi)`, startsAt: "", endsAt: "", orders: [], featured: [...(party.featured || [])] };
+        state.parties.unshift(newParty);
+        state.selectedPartyId = newParty.id;
+      }
+      renderAll();
+    }
+    async function deleteParty() {
+      const party = selectedParty();
+      if (!party) return;
+      if (!window.confirm(`Slette "${party.title}" i testdemoen?`)) return;
+      if (useBackend) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "delete", partyId: party.id })
+        });
+        applySnapshot(snapshot);
+      } else {
+        state.parties = state.parties.filter(item => item.id !== party.id);
+        state.selectedPartyId = state.parties[0]?.id || null;
+      }
+      renderAll();
+    }
+    async function addFeatured() {
+      const party = selectedParty();
+      if (!party) return;
+      if (useBackend) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "add_featured", partyId: party.id })
+        });
+        applySnapshot(snapshot);
+      } else {
+        const candidate = state.catalog.find(item => !(party.featured || []).includes(item.id));
+        if (candidate) party.featured.push(candidate.id);
+      }
+      renderAll();
+    }
+    async function submitOrder() {
+      const party = selectedParty();
+      const existingOrder = currentCustomerOrder();
+      if (existingOrder?.status === "Registrert hos Tupperware") {
+        $("#confirmationBox").classList.remove("hidden");
+        $("#confirmationBox").innerHTML = `<strong>Bestilling låst</strong><p>Denne bestillingen er allerede registrert hos Tupperware og kan ikke sendes inn på nytt.</p>`;
+        return;
+      }
+      if (existingOrder && currentCartSignature() === existingOrderSignature(existingOrder)) {
+        $("#confirmationBox").classList.remove("hidden");
+        $("#confirmationBox").innerHTML = `<strong>Ingen ny innsending</strong><p>Denne bestillingen er allerede sendt til konsulenten. Endre handlelisten hvis du vil oppdatere ordren.</p>`;
+        return;
+      }
+      if (useBackend && party) {
+        const snapshot = await fetchJson("/api/party-demo-action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "submit_order",
+            partyId: party.id,
+            orderId: existingOrder?.id || customerProfile?.submittedOrderId || "",
+            customer: $("#customerNameInput").value.trim() || "Ny kunde",
+            lines: state.cart.map(item => ({ article: item.article, name: item.name, qty: item.qty, price: Number(item.price || 0) }))
+          })
+        });
+        applySnapshot(snapshot);
+        const updatedParty = state.parties.find(item => item.id === party.id);
+        const matchingOrder = [...(updatedParty?.orders || [])].find(order => order.customer === ($("#customerNameInput").value.trim() || "Ny kunde"));
+        if (matchingOrder) {
+          customerProfile = { ...(customerProfile || {}), submittedOrderId: matchingOrder.id };
+        }
+        renderAdmin();
+      }
+      saveCustomerProfile();
+      $("#confirmationBox").classList.remove("hidden");
+      $("#confirmationBox").innerHTML = `<strong>Bestilling sendt</strong><p>${existingOrder ? "Bestillingen din er oppdatert hos konsulenten." : "Bestillingen din er sendt til konsulenten."}</p>`;
+    }
+
+    function on(id, eventName, handler) {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener(eventName, handler);
+    }
+
+    on("createPartyButton", "click", createParty);
+    on("savePartyButton", "click", saveCurrentParty);
+    on("copyPartyButton", "click", copyParty);
+    on("deletePartyButton", "click", deleteParty);
+    on("sendOrderButton", "click", submitOrder);
+    on("openPublicPreviewButton", "click", () => togglePublicView(true));
+    $$(".tab").forEach(tab => tab.addEventListener("click", () => togglePublicView(tab.dataset.view === "public")));
+    $$("[data-admin-tab]").forEach(tab => tab.addEventListener("click", () => setAdminTab(tab.dataset.adminTab)));
+    $$("[data-public-tab]").forEach(tab => tab.addEventListener("click", () => setPublicTab(tab.dataset.publicTab)));
+    on("adminProductSearchInput", "input", () => renderAdmin());
+    on("productSearchInput", "input", event => {
+      loadCatalog(event.target.value);
+    });
+    on("customerNameInput", "input", saveCustomerProfile);
+    on("customerEmailInput", "input", saveCustomerProfile);
+    on("customerPhoneInput", "input", saveCustomerProfile);
+
+    async function bootstrap() {
+      if (useBackend) {
+        try {
+          const snapshot = await fetchJson("/api/party-demo-state");
+          applySnapshot(snapshot);
+          await loadCatalog("");
+          if ((window.location.pathname || "").startsWith("/party-p/")) {
+            const slug = window.location.pathname.split("/").pop();
+            const match = state.parties.find(item => slugify(item.title) === slug);
+            if (match) state.selectedPartyId = match.id;
+            togglePublicView(true);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      applyCustomerProfile();
+      setAdminTab(adminTab);
+      setPublicTab(publicTab);
+      renderAll();
+    }
+    bootstrap();
+  </script>
+</body>
+</html>

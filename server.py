@@ -37,6 +37,18 @@ from consultant_registry import (
     public_config,
     submit_own_inventory_order,
 )
+from party_storage import (
+    add_featured_product as shared_add_featured_product,
+    create_party as shared_create_party,
+    copy_party as shared_copy_party,
+    delete_order as shared_delete_order,
+    delete_party as shared_delete_party,
+    is_configured as party_storage_is_configured,
+    list_parties as shared_list_parties,
+    save_party as shared_save_party,
+    submit_order as shared_submit_order,
+    update_order_status as shared_update_order_status,
+)
 from official_catalog import (
     begin_official_catalog_sync,
     finish_official_catalog_sync,
@@ -62,6 +74,74 @@ CACHE_TTL = 15 * 60
 OFFICIAL_CATALOG_SOURCE_URL = f"{BASE_URL}{SHOP_PATH}/products.json"
 CACHE = {}
 CACHE_LOCK = threading.Lock()
+
+PARTY_DEMO_STATE = {
+    "catalog": [
+        {
+            "id": "1",
+            "name": "Universal Jar 1,8L",
+            "article": "11155861",
+            "price": 199,
+            "label": "Tilbud",
+        },
+        {
+            "id": "2",
+            "name": "Eco drikkeflaske",
+            "article": "11158912",
+            "price": 149,
+            "label": "Vertsfavoritt",
+        },
+        {
+            "id": "3",
+            "name": "Silikonspatel",
+            "article": "11160111",
+            "price": 89,
+            "label": "Anbefalt nå",
+        },
+        {
+            "id": "4",
+            "name": "Rørebolle 3L",
+            "article": "11161234",
+            "price": 259,
+            "label": "",
+        },
+    ],
+    "parties": [
+        {
+            "id": "p1",
+            "title": "Sommerparty hos Ine",
+            "type": "combined",
+            "startsAt": "2026-08-20T18:00",
+            "endsAt": "2026-08-24T22:00",
+            "hostMode": "manual",
+            "hostName": "Ine L.",
+            "location": "Fysisk samling hos Ine, Solsiden 14, Bergen. Du kan også bare bestille digitalt.",
+            "message": "Velkommen til party med gode tilbud og favoritter for sensommeren.",
+            "hostIntro": "Jeg gleder meg til å samle gjestene og dele favorittene mine.",
+            "video": "https://youtube.com/example",
+            "vipps": "Vipps før levering etter avtale med konsulenten.",
+            "featured": ["1", "2", "3"],
+            "orders": [],
+        },
+        {
+            "id": "p2",
+            "title": "Digitalt høstparty",
+            "type": "digital",
+            "startsAt": "2026-09-02T19:00",
+            "endsAt": "2026-09-06T21:00",
+            "hostMode": "consultant",
+            "hostName": "Lisbeth Overbye",
+            "location": "Hele partyet går digitalt via lenken.",
+            "message": "Et enklere digitalt party med video, kampanjeprodukter og bestilling på mobil.",
+            "hostIntro": "Jeg viser favoritter i videoen og følger opp alle bestillinger personlig.",
+            "video": "https://vimeo.com/example",
+            "vipps": "Vipps etter avtale med konsulenten.",
+            "featured": ["2", "4"],
+            "orders": [],
+        },
+    ],
+    "selectedPartyId": "p1",
+}
 
 NORWEGIAN_PRODUCT_TITLES = {
     "set-voila\u2122-rectangulaire-3-l-et-ecumoire-ergo": (
@@ -179,6 +259,71 @@ def search_key(value):
     value = unicodedata.normalize("NFKD", clean_text(value).lower())
     value = "".join(char for char in value if not unicodedata.combining(char))
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+
+def slugify(value):
+    value = unicodedata.normalize("NFKD", clean_text(value).lower())
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    value = re.sub(r"[^a-z0-9]+", "-", value).strip("-")
+    return value or "nytt-party"
+
+
+def party_demo_public_path(party):
+    return f"/party-p/{slugify(party.get('title'))}"
+
+
+def party_demo_snapshot():
+    storage_error = ""
+    if party_storage_is_configured():
+        try:
+            parties = shared_list_parties()
+            selected_id = PARTY_DEMO_STATE.get("selectedPartyId")
+            if selected_id and not any(party.get("id") == selected_id for party in parties):
+                selected_id = parties[0]["id"] if parties else None
+            elif not selected_id and parties:
+                selected_id = parties[0]["id"]
+            for party in parties:
+                party["publicPath"] = party_demo_public_path(party)
+            return {
+                "catalog": json.loads(json.dumps(PARTY_DEMO_STATE["catalog"])),
+                "parties": parties,
+                "selectedPartyId": selected_id,
+                "storageMode": "shared",
+                "storageConfigured": True,
+                "storageError": "",
+            }
+        except Exception as error:
+            storage_error = clean_text(str(error))
+    parties = []
+    for party in PARTY_DEMO_STATE["parties"]:
+        copy = json.loads(json.dumps(party))
+        copy["publicPath"] = party_demo_public_path(copy)
+        parties.append(copy)
+    return {
+        "catalog": json.loads(json.dumps(PARTY_DEMO_STATE["catalog"])),
+        "parties": parties,
+        "selectedPartyId": PARTY_DEMO_STATE.get("selectedPartyId"),
+        "storageMode": "demo",
+        "storageConfigured": party_storage_is_configured(),
+        "storageError": storage_error,
+    }
+
+
+def party_demo_selected_by_slug(path):
+    if not path.startswith("/party-p/"):
+        return None
+    slug = path.rsplit("/", 1)[-1]
+    if party_storage_is_configured():
+        try:
+            for party in shared_list_parties():
+                if slugify(party.get("title")) == slug:
+                    return party.get("id")
+        except Exception:
+            pass
+    for party in PARTY_DEMO_STATE["parties"]:
+        if slugify(party.get("title")) == slug:
+            return party.get("id")
+    return None
 
 
 def product_series(title):
@@ -1019,6 +1164,15 @@ class Handler(BaseHTTPRequestHandler):
                 )
         if path == "/api/public-config":
             return self.json_response(200, public_config())
+        if path == "/api/party-demo-state":
+            snapshot = party_demo_snapshot()
+            selected = clean_text((query.get("selected") or [""])[0])
+            if selected:
+                snapshot["selectedPartyId"] = selected
+            slug_selected = party_demo_selected_by_slug(path)
+            if slug_selected:
+                snapshot["selectedPartyId"] = slug_selected
+            return self.json_response(200, snapshot)
         if path == "/api/navigation":
             try:
                 raw_collections = get_raw_collections()
@@ -1121,6 +1275,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.json_response(200, {"product": product_detail(handle)})
             except Exception as error:
                 return self.json_response(502, {"error": str(error)})
+        if path.startswith("/party-p/"):
+            return self.serve_static("/party.html", query)
 
         return self.serve_static(path, query)
 
@@ -1129,6 +1285,187 @@ class Handler(BaseHTTPRequestHandler):
         mail_path = unquote(parsed.path)
         if self.is_mail_tool_path(mail_path):
             return self.handle_mail_tool_post(mail_path)
+        if parsed.path == "/api/party-demo-action":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if length <= 0 or length > 100_000:
+                    return self.json_response(400, {"error": "Ugyldig partydata."})
+                payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                action = clean_text(payload.get("action")).lower()
+                party_id = clean_text(payload.get("partyId"))
+                party = next(
+                    (item for item in PARTY_DEMO_STATE["parties"] if item["id"] == party_id),
+                    None,
+                )
+                if action == "create":
+                    if party_storage_is_configured():
+                        created = shared_create_party(payload)
+                        PARTY_DEMO_STATE["selectedPartyId"] = created.get("id") if created else None
+                        return self.json_response(200, party_demo_snapshot())
+                    created = {
+                        "id": f"party-{int(time.time() * 1000)}",
+                        "title": clean_text(payload.get("title") or "Nytt party"),
+                        "type": clean_text(payload.get("type") or "combined") or "combined",
+                        "startsAt": clean_text(payload.get("startsAt")),
+                        "endsAt": clean_text(payload.get("endsAt")),
+                        "hostMode": clean_text(payload.get("hostMode") or "manual") or "manual",
+                        "hostName": clean_text(payload.get("hostName")),
+                        "location": clean_text(payload.get("location")),
+                        "message": clean_text(payload.get("message")),
+                        "hostIntro": clean_text(payload.get("hostIntro")),
+                        "video": clean_text(payload.get("video")),
+                        "vipps": clean_text(payload.get("vipps")),
+                        "featured": [],
+                        "orders": [],
+                    }
+                    PARTY_DEMO_STATE["parties"].insert(0, created)
+                    PARTY_DEMO_STATE["selectedPartyId"] = created["id"]
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "save":
+                    if party_storage_is_configured():
+                        shared_save_party(party_id, payload)
+                        PARTY_DEMO_STATE["selectedPartyId"] = party_id
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    for key in (
+                        "title",
+                        "type",
+                        "startsAt",
+                        "endsAt",
+                        "hostMode",
+                        "hostName",
+                        "location",
+                        "message",
+                        "hostIntro",
+                        "video",
+                        "vipps",
+                        "featured",
+                    ):
+                        if key in payload:
+                            party[key] = payload[key]
+                    PARTY_DEMO_STATE["selectedPartyId"] = party["id"]
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "copy":
+                    if party_storage_is_configured():
+                        copied = shared_copy_party(party_id)
+                        PARTY_DEMO_STATE["selectedPartyId"] = copied.get("id") if copied else None
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    copied = json.loads(json.dumps(party))
+                    copied["id"] = f"copy-{int(time.time() * 1000)}"
+                    copied["title"] = f"{party['title']} (kopi)"
+                    copied["startsAt"] = ""
+                    copied["endsAt"] = ""
+                    copied["orders"] = []
+                    PARTY_DEMO_STATE["parties"].insert(0, copied)
+                    PARTY_DEMO_STATE["selectedPartyId"] = copied["id"]
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "delete":
+                    if party_storage_is_configured():
+                        shared_delete_party(party_id)
+                        snapshot = party_demo_snapshot()
+                        PARTY_DEMO_STATE["selectedPartyId"] = snapshot.get("selectedPartyId")
+                        return self.json_response(200, snapshot)
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    PARTY_DEMO_STATE["parties"] = [
+                        item for item in PARTY_DEMO_STATE["parties"] if item["id"] != party_id
+                    ]
+                    PARTY_DEMO_STATE["selectedPartyId"] = (
+                        PARTY_DEMO_STATE["parties"][0]["id"]
+                        if PARTY_DEMO_STATE["parties"]
+                        else None
+                    )
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "add_featured":
+                    if party_storage_is_configured():
+                        product_id = clean_text(payload.get("productId"))
+                        if not product_id:
+                            next_product = next((product for product in PARTY_DEMO_STATE["catalog"]), None)
+                            product_id = next_product.get("id") if next_product else ""
+                        shared_add_featured_product(party_id, product_id)
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    next_product = next(
+                        (
+                            product for product in PARTY_DEMO_STATE["catalog"]
+                            if product["id"] not in party.get("featured", [])
+                        ),
+                        None,
+                    )
+                    if next_product:
+                        party.setdefault("featured", []).append(next_product["id"])
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "submit_order":
+                    if party_storage_is_configured():
+                        shared_submit_order(
+                            party_id,
+                            clean_text(payload.get("customer") or "Ny kunde"),
+                            payload.get("lines") or [],
+                            clean_text(payload.get("orderId")),
+                        )
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    customer = clean_text(payload.get("customer") or "Ny kunde")
+                    lines = payload.get("lines") or []
+                    order_id = clean_text(payload.get("orderId"))
+                    existing_order = next((item for item in party.setdefault("orders", []) if item.get("id") == order_id), None)
+                    if not existing_order:
+                        existing_order = next(
+                            (
+                                item
+                                for item in party.setdefault("orders", [])
+                                if clean_text(item.get("customer")) == customer
+                                and clean_text(item.get("status")).lower() != "registrert hos tupperware"
+                            ),
+                            None,
+                        )
+                    if existing_order:
+                        if clean_text(existing_order.get("status")).lower() == "registrert hos tupperware":
+                            return self.json_response(400, {"error": "Bestillingen er allerede registrert hos Tupperware og kan ikke endres."})
+                        existing_order["customer"] = customer
+                        existing_order["status"] = "Oppdatert"
+                        existing_order["lines"] = lines
+                    else:
+                        party.setdefault("orders", []).insert(
+                            0,
+                            {
+                                "id": f"order-{int(time.time() * 1000)}",
+                                "customer": customer,
+                                "status": "Ny",
+                                "lines": lines,
+                            },
+                        )
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "update_order_status":
+                    next_status = clean_text(payload.get("status") or "Ny") or "Ny"
+                    order_id = clean_text(payload.get("orderId"))
+                    if party_storage_is_configured():
+                        shared_update_order_status(party_id, order_id, next_status)
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    order = next((item for item in party.setdefault("orders", []) if item.get("id") == order_id), None)
+                    if not order:
+                        return self.json_response(404, {"error": "Fant ikke bestillingen."})
+                    order["status"] = next_status
+                    return self.json_response(200, party_demo_snapshot())
+                if action == "delete_order":
+                    order_id = clean_text(payload.get("orderId"))
+                    if party_storage_is_configured():
+                        shared_delete_order(party_id, order_id)
+                        return self.json_response(200, party_demo_snapshot())
+                    if not party:
+                        return self.json_response(404, {"error": "Fant ikke partyet."})
+                    party["orders"] = [item for item in party.setdefault("orders", []) if item.get("id") != order_id]
+                    return self.json_response(200, party_demo_snapshot())
+                return self.json_response(400, {"error": "Ukjent handling."})
+            except Exception as error:
+                return self.json_response(400, {"error": f"Kunne ikke oppdatere party-demoen: {error}"})
         if parsed.path not in ("/api/own-products", "/api/own-orders"):
             return self.json_response(404, {"error": "Fant ikke endepunktet."})
         try:
@@ -1251,6 +1588,9 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/index.html": ("index.html", "text/html; charset=utf-8"),
             "/norsk-nettkatalog": ("index.html", "text/html; charset=utf-8"),
             "/norsk-nettkatalog/": ("index.html", "text/html; charset=utf-8"),
+            "/party": ("party.html", "text/html; charset=utf-8"),
+            "/party/": ("party.html", "text/html; charset=utf-8"),
+            "/party.html": ("party.html", "text/html; charset=utf-8"),
             "/styles.css": ("styles.css", "text/css; charset=utf-8"),
             "/app.js": ("app.js", "application/javascript; charset=utf-8"),
             "/egne-varer": ("own.html", "text/html; charset=utf-8"),
