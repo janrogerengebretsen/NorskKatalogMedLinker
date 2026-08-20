@@ -38,6 +38,8 @@ from consultant_registry import (
     submit_own_inventory_order,
 )
 from official_catalog import (
+    begin_official_catalog_sync,
+    finish_official_catalog_sync,
     list_official_product_archive,
     save_official_product_translation,
     sync_is_configured,
@@ -57,6 +59,7 @@ NODE_EXE = shutil.which("node") or os.path.expanduser(
     r"~\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
 )
 CACHE_TTL = 15 * 60
+OFFICIAL_CATALOG_SOURCE_URL = f"{BASE_URL}{SHOP_PATH}/products.json"
 CACHE = {}
 CACHE_LOCK = threading.Lock()
 
@@ -251,6 +254,12 @@ def cached(key, loader):
     return value
 
 
+def clear_cache(*keys):
+    with CACHE_LOCK:
+        for key in keys:
+            CACHE.pop(key, None)
+
+
 def get_consultant(consultant_ref):
     consultant_ref = clean_text(consultant_ref)
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", consultant_ref):
@@ -342,6 +351,7 @@ def normalize_product(product):
 
 
 def normalize_archived_product(row):
+    in_official_catalog = bool(row.get("in_official_catalog"))
     title = clean_text(row.get("title"))
     article_number = clean_text(row.get("article_number"))
     description = clean_text(row.get("description"))
@@ -369,8 +379,14 @@ def normalize_archived_product(row):
         "series": series,
         "searchable": searchable,
         "url": clean_text(row.get("source_url")),
-        "isInOfficialCatalog": False,
-        "catalogStatus": "not-in-current-assortment",
+        "isInOfficialCatalog": in_official_catalog,
+        "catalogStatus": (
+            "active"
+            if in_official_catalog and bool(row.get("available"))
+            else "temporarily-unavailable"
+            if in_official_catalog
+            else "not-in-current-assortment"
+        ),
         "publishedAt": "",
         "createdAt": "",
         "sourceUpdatedAt": "",
@@ -542,48 +558,89 @@ def product_updated_timestamp(product):
         return product_added_timestamp(product)
 
 
+def refresh_official_archive_if_needed():
+    if not sync_is_configured():
+        return False
+    try:
+        decision = begin_official_catalog_sync()
+    except Exception as error:
+        print(f"Produktarkivstatus kunne ikke leses: {error}", file=sys.stderr)
+        return False
+    if not decision or not decision.get("should_sync"):
+        return False
+
+    started = time.monotonic()
+    try:
+        raw = fetch_paginated_products()
+        live_products = [normalize_product(product) for product in raw]
+        if len(live_products) < 300:
+            raise RuntimeError(f"Uventet lavt produktantall fra Tupperware: {len(live_products)}")
+        summary = sync_official_products(live_products)
+        duration_ms = int((time.monotonic() - started) * 1000)
+        finish_official_catalog_sync(
+            "success",
+            OFFICIAL_CATALOG_SOURCE_URL,
+            http_status=200,
+            duration_ms=duration_ms,
+            products_found=len(live_products),
+            details={"sync": summary or {}},
+        )
+        clear_cache("official-product-archive")
+        return True
+    except Exception as error:
+        duration_ms = int((time.monotonic() - started) * 1000)
+        message = clean_text(str(error))[:1000]
+        lower_message = message.lower()
+        status = (
+            "timeout"
+            if "timeout" in lower_message or "timed out" in lower_message
+            else "invalid_response"
+            if "uventet lavt produktantall" in lower_message
+            else "tupperware_down"
+        )
+        try:
+            finish_official_catalog_sync(
+                status,
+                OFFICIAL_CATALOG_SOURCE_URL,
+                duration_ms=duration_ms,
+                error_message=message,
+            )
+        except Exception as log_error:
+            print(f"Produktarkivfeil kunne ikke logges: {log_error}", file=sys.stderr)
+        print(f"Tupperware-katalogen kunne ikke oppdateres: {message}", file=sys.stderr)
+        return False
+
+
+def get_official_archive_products():
+    rows = cached("official-product-archive", list_official_product_archive)
+    return [normalize_archived_product(row) for row in rows]
+
+
 def get_products(collection=""):
-    key = f"products:{collection or 'all'}"
-    raw = cached(key, lambda: fetch_paginated_products(collection))
-    live_products = [normalize_product(product) for product in raw]
     if collection:
+        key = f"products:{collection}"
+        raw = cached(key, lambda: fetch_paginated_products(collection))
+        live_products = [normalize_product(product) for product in raw]
         return live_products
 
-    if sync_is_configured() and len(live_products) >= 300:
-        try:
-            cached(
-                "official-catalog-sync",
-                lambda: sync_official_products(live_products),
-            )
-        except Exception as error:
-            print(f"Produktarkivet kunne ikke synkroniseres: {error}", file=sys.stderr)
-
     try:
-        archived_rows = cached(
-            "official-product-archive",
-            list_official_product_archive,
-        )
+        refresh_official_archive_if_needed()
+        archive_products = get_official_archive_products()
+        if archive_products:
+            return archive_products
     except Exception as error:
         print(f"Produktarkivet kunne ikke leses: {error}", file=sys.stderr)
-        archived_rows = []
 
-    archived_by_handle = {
-        clean_text(row.get("handle")): row
-        for row in archived_rows
-        if clean_text(row.get("handle"))
-    }
-    live_products = [
-        attach_saved_translation(product, archived_by_handle.get(product["handle"]))
-        for product in live_products
-    ]
-
-    live_handles = {product["handle"] for product in live_products}
-    archived_products = [
-        normalize_archived_product(row)
-        for row in archived_rows
-        if clean_text(row.get("handle")) not in live_handles
-    ]
-    return live_products + archived_products
+    key = "products:all:fallback"
+    raw = cached(key, fetch_paginated_products)
+    live_products = [normalize_product(product) for product in raw]
+    if sync_is_configured() and len(live_products) >= 300:
+        try:
+            sync_official_products(live_products)
+            clear_cache("official-product-archive")
+        except Exception as error:
+            print(f"Produktarkivet kunne ikke synkroniseres: {error}", file=sys.stderr)
+    return live_products
 
 
 def get_raw_collections():

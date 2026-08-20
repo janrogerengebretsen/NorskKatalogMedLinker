@@ -4,6 +4,8 @@ from consultant_registry import _request, is_configured
 
 
 CATALOG_SYNC_TOKEN = os.environ.get("CATALOG_SYNC_TOKEN", "")
+CATALOG_SYNC_KEY = "official_products"
+CATALOG_REFRESH_SECONDS = int(os.environ.get("CATALOG_REFRESH_SECONDS", "900"))
 
 
 def archive_is_configured():
@@ -45,6 +47,49 @@ def sync_official_products(products):
         payload={
             "p_sync_token": CATALOG_SYNC_TOKEN,
             "p_products": payload,
+        },
+    )
+
+
+def begin_official_catalog_sync():
+    if not sync_is_configured():
+        return {"should_sync": False, "status": "not_configured"}
+    rows = _request(
+        "rpc/begin_catalog_sync",
+        method="POST",
+        payload={
+            "p_sync_token": CATALOG_SYNC_TOKEN,
+            "p_key": CATALOG_SYNC_KEY,
+            "p_min_age_seconds": CATALOG_REFRESH_SECONDS,
+        },
+    )
+    return rows[0] if rows else {"should_sync": False}
+
+
+def finish_official_catalog_sync(
+    status,
+    source_url,
+    http_status=None,
+    duration_ms=None,
+    error_message=None,
+    products_found=None,
+    details=None,
+):
+    if not sync_is_configured():
+        return None
+    return _request(
+        "rpc/finish_catalog_sync",
+        method="POST",
+        payload={
+            "p_sync_token": CATALOG_SYNC_TOKEN,
+            "p_key": CATALOG_SYNC_KEY,
+            "p_source_url": source_url,
+            "p_status": status,
+            "p_http_status": http_status,
+            "p_duration_ms": duration_ms,
+            "p_error_message": error_message,
+            "p_products_found": products_found,
+            "p_details": details or {},
         },
     )
 
