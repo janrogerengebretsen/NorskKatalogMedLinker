@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js?v=20260818-v2-nettkatalog" defer></script>
+  <script src="/hub.js?v=20260820-party-share" defer></script>
 </head>
 <body>
   <header class="hub-header">
@@ -111,7 +111,7 @@
         </div>
       </header>
       <div class="module-list">
-        <a class="module-row" id="officialCatalogLink" href="https://tupperware-norsk-nettkatalog-v2.onrender.com/?ref=LISBETHOVERBYE" target="tupperware-work">
+        <a class="module-row" id="officialCatalogLink" href="/?ref=LISBETHOVERBYE" target="tupperware-work">
           <span class="module-icon"><i data-lucide="layout-grid"></i></span>
           <span class="module-copy">
             <strong>Tupperware Norsk Nettkatalog</strong>
@@ -136,6 +136,15 @@
             <small>Varer konsulenten har på eget lager</small>
           </span>
           <span class="module-status seller">Eget lager</span>
+          <i class="arrow" data-lucide="arrow-up-right"></i>
+        </a>
+        <a class="module-row" id="partyModule" href="/party?ref=LISBETHOVERBYE" target="tupperware-work" hidden>
+          <span class="module-icon"><i data-lucide="party-popper"></i></span>
+          <span class="module-copy">
+            <strong>Party</strong>
+            <small>Invitasjoner, fokusprodukter og bestillinger for party</small>
+          </span>
+          <span class="module-status active">Tilleggstjeneste</span>
           <i class="arrow" data-lucide="arrow-up-right"></i>
         </a>
       </div>
@@ -183,6 +192,18 @@
               <button type="button" data-copy="own"><i data-lucide="copy"></i><span>Kopier</span></button>
               <a id="ownQrDownload" download="qr-egne-varer.png"><i data-lucide="image-down"></i><span>PNG</span></a>
               <button type="button" class="poster-button" data-poster="own"><i data-lucide="file-down"></i><span>PDF-plakat</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="share-item" data-share="party" hidden>
+          <div class="qr-frame"><img id="partyQr" alt="QR-kode til party"></div>
+          <div class="share-content">
+            <strong>Party</strong>
+            <a class="share-url" id="partyShareUrl" target="tupperware-work"></a>
+            <div class="share-actions">
+              <button type="button" data-copy="party"><i data-lucide="copy"></i><span>Kopier</span></button>
+              <a id="partyQrDownload" download="qr-party.png"><i data-lucide="image-down"></i><span>PNG</span></a>
+              <button type="button" class="poster-button" data-poster="party"><i data-lucide="file-down"></i><span>PDF-plakat</span></button>
             </div>
           </div>
         </article>
@@ -236,7 +257,7 @@
 
   <footer>
     <span>Tupperware Norsk Nettkatalog</span>
-    <a id="footerCatalogLink" href="https://tupperware-norsk-nettkatalog-v2.onrender.com/?ref=LISBETHOVERBYE">Til nettkatalogen</a>
+    <a id="footerCatalogLink" href="/?ref=LISBETHOVERBYE">Til nettkatalogen</a>
   </footer>
   <div class="toast" id="hubToast" role="status" aria-live="polite"></div>
 </body>

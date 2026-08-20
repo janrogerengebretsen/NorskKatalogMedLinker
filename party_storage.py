@@ -102,27 +102,35 @@ def _normalize_featured_ids(featured):
     return values
 
 
-def list_parties():
+def _normalize_consultant_ref(consultant_ref):
+    return str(consultant_ref or "").strip().upper()
+
+
+def list_parties(consultant_ref):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     parties = _request(
         "party_events",
         {
             "select": (
-                "id,title,party_type,starts_at,ends_at,host_mode,host_name,location,"
+                "id,title,party_type,consultant_ref,starts_at,ends_at,host_mode,host_name,location,"
                 "message,host_intro,video_url,vipps_message,featured_product_ids,"
                 "orders:party_orders(id,customer_name,status,created_at,lines:party_order_lines("
                 "product_id,product_name,article_number,quantity,observed_price_nok"
                 "))"
             ),
+            "consultant_ref": f"eq.{consultant_ref}",
             "order": "starts_at.asc.nullslast,created_at.desc",
         },
     )
     return [_map_party(row) for row in parties or []]
 
 
-def create_party(payload=None):
+def create_party(consultant_ref, payload=None):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     payload = payload or {}
     body = {
         "title": str(payload.get("title") or "Nytt party").strip() or "Nytt party",
+        "consultant_ref": consultant_ref,
         "party_type": str(payload.get("type") or "combined").strip() or "combined",
         "starts_at": payload.get("startsAt") or None,
         "ends_at": payload.get("endsAt") or None,
@@ -147,7 +155,8 @@ def create_party(payload=None):
     return rows[0]
 
 
-def save_party(party_id, payload):
+def save_party(consultant_ref, party_id, payload):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     body = {
         "title": str(payload.get("title") or "").strip(),
         "party_type": str(payload.get("type") or "combined").strip() or "combined",
@@ -164,7 +173,7 @@ def save_party(party_id, payload):
     }
     rows = _request(
         "party_events",
-        {"id": f"eq.{party_id}", "select": "*"},
+        {"id": f"eq.{party_id}", "consultant_ref": f"eq.{consultant_ref}", "select": "*"},
         method="PATCH",
         payload=body,
         prefer="return=representation",
@@ -174,16 +183,18 @@ def save_party(party_id, payload):
     return rows[0]
 
 
-def copy_party(party_id):
+def copy_party(consultant_ref, party_id):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     parties = _request(
         "party_events",
-        {"id": f"eq.{party_id}", "select": "*", "limit": "1"},
+        {"id": f"eq.{party_id}", "consultant_ref": f"eq.{consultant_ref}", "select": "*", "limit": "1"},
     )
     if not parties:
         raise RuntimeError("Fant ikke partyet i delt lagring.")
     party = parties[0]
     copied = {
         "title": f"{party.get('title') or 'Party'} (kopi)",
+        "consultant_ref": consultant_ref,
         "party_type": party.get("party_type") or "combined",
         "starts_at": None,
         "ends_at": None,
@@ -206,15 +217,17 @@ def copy_party(party_id):
     return rows[0] if rows else None
 
 
-def delete_party(party_id):
-    _request("party_events", {"id": f"eq.{party_id}"}, method="DELETE", prefer="return=minimal")
+def delete_party(consultant_ref, party_id):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
+    _request("party_events", {"id": f"eq.{party_id}", "consultant_ref": f"eq.{consultant_ref}"}, method="DELETE", prefer="return=minimal")
     return True
 
 
-def add_featured_product(party_id, product_id):
+def add_featured_product(consultant_ref, party_id, product_id):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     parties = _request(
         "party_events",
-        {"id": f"eq.{party_id}", "select": "id,featured_product_ids", "limit": "1"},
+        {"id": f"eq.{party_id}", "consultant_ref": f"eq.{consultant_ref}", "select": "id,featured_product_ids", "limit": "1"},
     )
     if not parties:
         raise RuntimeError("Fant ikke partyet i delt lagring.")
@@ -224,7 +237,7 @@ def add_featured_product(party_id, product_id):
         featured.append(product_id)
     rows = _request(
         "party_events",
-        {"id": f"eq.{party_id}", "select": "*"},
+        {"id": f"eq.{party_id}", "consultant_ref": f"eq.{consultant_ref}", "select": "*"},
         method="PATCH",
         payload={"featured_product_ids": featured},
         prefer="return=representation",
@@ -232,7 +245,8 @@ def add_featured_product(party_id, product_id):
     return rows[0] if rows else None
 
 
-def submit_order(party_id, customer, lines, order_id=None):
+def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
+    consultant_ref = _normalize_consultant_ref(consultant_ref)
     customer_name = str(customer or "").strip() or "Ny kunde"
     normalized_lines = _normalize_order_lines(lines)
     order = None
@@ -389,7 +403,8 @@ def _order_signature(lines):
     return "||".join(parts)
 
 
-def update_order_status(party_id, order_id, status):
+def update_order_status(consultant_ref, party_id, order_id, status):
+    _normalize_consultant_ref(consultant_ref)
     rows = _request(
         "party_orders",
         {"id": f"eq.{order_id}", "party_id": f"eq.{party_id}", "select": "*"},
@@ -402,7 +417,8 @@ def update_order_status(party_id, order_id, status):
     return rows[0]
 
 
-def delete_order(party_id, order_id):
+def delete_order(consultant_ref, party_id, order_id):
+    _normalize_consultant_ref(consultant_ref)
     _request(
         "party_orders",
         {"id": f"eq.{order_id}", "party_id": f"eq.{party_id}"},
@@ -441,6 +457,7 @@ def _map_party(row):
     return {
         "id": row.get("id"),
         "title": row.get("title") or "",
+        "consultantRef": row.get("consultant_ref") or "",
         "type": row.get("party_type") or "combined",
         "startsAt": _to_local_datetime(row.get("starts_at")),
         "endsAt": _to_local_datetime(row.get("ends_at")),

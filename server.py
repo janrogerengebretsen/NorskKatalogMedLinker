@@ -67,6 +67,7 @@ CONSULTANT_REF = "LISBETHOVERBYE"
 CONSULTANT_API_URL = "https://api-server-3.goaffpro.com/v1/sdk/affiliate"
 CONSULTANT_SHOP = "tupp-shop.myshopify.com"
 ROOT = Path(__file__).resolve().parent
+PARTY_ALLOWED_REFS = {"LISBETHOVERBYE"}
 NODE_EXE = shutil.which("node") or os.path.expanduser(
     r"~\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
 )
@@ -269,14 +270,26 @@ def slugify(value):
 
 
 def party_demo_public_path(party):
-    return f"/party-p/{slugify(party.get('title'))}"
+    consultant_ref = clean_text(party.get("consultantRef") or party.get("consultant_ref") or CONSULTANT_REF).upper()
+    return f"/party-p/{slugify(party.get('title'))}?ref={consultant_ref}"
 
 
-def party_demo_snapshot():
+def party_consultant_ref(query):
+    consultant_ref = clean_text(((query or {}).get("ref") or [CONSULTANT_REF])[0]).upper()
+    return consultant_ref or CONSULTANT_REF
+
+
+def party_access_allowed(consultant_ref):
+    consultant_ref = clean_text(consultant_ref).upper()
+    return bool(consultant_ref and consultant_ref in PARTY_ALLOWED_REFS)
+
+
+def party_demo_snapshot(consultant_ref=None):
+    consultant_ref = clean_text(consultant_ref or CONSULTANT_REF).upper()
     storage_error = ""
     if party_storage_is_configured():
         try:
-            parties = shared_list_parties()
+            parties = shared_list_parties(consultant_ref)
             selected_id = PARTY_DEMO_STATE.get("selectedPartyId")
             if selected_id and not any(party.get("id") == selected_id for party in parties):
                 selected_id = parties[0]["id"] if parties else None
@@ -291,6 +304,7 @@ def party_demo_snapshot():
                 "storageMode": "shared",
                 "storageConfigured": True,
                 "storageError": "",
+                "consultantRef": consultant_ref,
             }
         except Exception as error:
             storage_error = clean_text(str(error))
@@ -306,16 +320,18 @@ def party_demo_snapshot():
         "storageMode": "demo",
         "storageConfigured": party_storage_is_configured(),
         "storageError": storage_error,
+        "consultantRef": consultant_ref,
     }
 
 
-def party_demo_selected_by_slug(path):
+def party_demo_selected_by_slug(path, consultant_ref=None):
+    consultant_ref = clean_text(consultant_ref or CONSULTANT_REF).upper()
     if not path.startswith("/party-p/"):
         return None
     slug = path.rsplit("/", 1)[-1]
     if party_storage_is_configured():
         try:
-            for party in shared_list_parties():
+            for party in shared_list_parties(consultant_ref):
                 if slugify(party.get("title")) == slug:
                     return party.get("id")
         except Exception:
@@ -1165,11 +1181,14 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/public-config":
             return self.json_response(200, public_config())
         if path == "/api/party-demo-state":
-            snapshot = party_demo_snapshot()
+            consultant_ref = party_consultant_ref(query)
+            if not party_access_allowed(consultant_ref):
+                return self.json_response(403, {"error": "Denne konsulenten har ikke tilgang til party-løsningen."})
+            snapshot = party_demo_snapshot(consultant_ref)
             selected = clean_text((query.get("selected") or [""])[0])
             if selected:
                 snapshot["selectedPartyId"] = selected
-            slug_selected = party_demo_selected_by_slug(path)
+            slug_selected = party_demo_selected_by_slug(path, consultant_ref)
             if slug_selected:
                 snapshot["selectedPartyId"] = slug_selected
             return self.json_response(200, snapshot)
@@ -1293,18 +1312,22 @@ class Handler(BaseHTTPRequestHandler):
                 payload = json.loads(self.rfile.read(length).decode("utf-8"))
                 action = clean_text(payload.get("action")).lower()
                 party_id = clean_text(payload.get("partyId"))
+                consultant_ref = clean_text(payload.get("consultantRef") or party_consultant_ref(parse_qs(urlparse(self.path).query))).upper()
+                if not party_access_allowed(consultant_ref):
+                    return self.json_response(403, {"error": "Denne konsulenten har ikke tilgang til party-løsningen."})
                 party = next(
                     (item for item in PARTY_DEMO_STATE["parties"] if item["id"] == party_id),
                     None,
                 )
                 if action == "create":
                     if party_storage_is_configured():
-                        created = shared_create_party(payload)
+                        created = shared_create_party(consultant_ref, payload)
                         PARTY_DEMO_STATE["selectedPartyId"] = created.get("id") if created else None
-                        return self.json_response(200, party_demo_snapshot())
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     created = {
                         "id": f"party-{int(time.time() * 1000)}",
                         "title": clean_text(payload.get("title") or "Nytt party"),
+                        "consultantRef": consultant_ref,
                         "type": clean_text(payload.get("type") or "combined") or "combined",
                         "startsAt": clean_text(payload.get("startsAt")),
                         "endsAt": clean_text(payload.get("endsAt")),
@@ -1320,12 +1343,12 @@ class Handler(BaseHTTPRequestHandler):
                     }
                     PARTY_DEMO_STATE["parties"].insert(0, created)
                     PARTY_DEMO_STATE["selectedPartyId"] = created["id"]
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "save":
                     if party_storage_is_configured():
-                        shared_save_party(party_id, payload)
+                        shared_save_party(consultant_ref, party_id, payload)
                         PARTY_DEMO_STATE["selectedPartyId"] = party_id
-                        return self.json_response(200, party_demo_snapshot())
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     for key in (
@@ -1345,12 +1368,12 @@ class Handler(BaseHTTPRequestHandler):
                         if key in payload:
                             party[key] = payload[key]
                     PARTY_DEMO_STATE["selectedPartyId"] = party["id"]
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "copy":
                     if party_storage_is_configured():
-                        copied = shared_copy_party(party_id)
+                        copied = shared_copy_party(consultant_ref, party_id)
                         PARTY_DEMO_STATE["selectedPartyId"] = copied.get("id") if copied else None
-                        return self.json_response(200, party_demo_snapshot())
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     copied = json.loads(json.dumps(party))
@@ -1361,11 +1384,11 @@ class Handler(BaseHTTPRequestHandler):
                     copied["orders"] = []
                     PARTY_DEMO_STATE["parties"].insert(0, copied)
                     PARTY_DEMO_STATE["selectedPartyId"] = copied["id"]
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "delete":
                     if party_storage_is_configured():
-                        shared_delete_party(party_id)
-                        snapshot = party_demo_snapshot()
+                        shared_delete_party(consultant_ref, party_id)
+                        snapshot = party_demo_snapshot(consultant_ref)
                         PARTY_DEMO_STATE["selectedPartyId"] = snapshot.get("selectedPartyId")
                         return self.json_response(200, snapshot)
                     if not party:
@@ -1378,15 +1401,15 @@ class Handler(BaseHTTPRequestHandler):
                         if PARTY_DEMO_STATE["parties"]
                         else None
                     )
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "add_featured":
                     if party_storage_is_configured():
                         product_id = clean_text(payload.get("productId"))
                         if not product_id:
                             next_product = next((product for product in PARTY_DEMO_STATE["catalog"]), None)
                             product_id = next_product.get("id") if next_product else ""
-                        shared_add_featured_product(party_id, product_id)
-                        return self.json_response(200, party_demo_snapshot())
+                        shared_add_featured_product(consultant_ref, party_id, product_id)
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     next_product = next(
@@ -1398,16 +1421,17 @@ class Handler(BaseHTTPRequestHandler):
                     )
                     if next_product:
                         party.setdefault("featured", []).append(next_product["id"])
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "submit_order":
                     if party_storage_is_configured():
                         shared_submit_order(
+                            consultant_ref,
                             party_id,
                             clean_text(payload.get("customer") or "Ny kunde"),
                             payload.get("lines") or [],
                             clean_text(payload.get("orderId")),
                         )
-                        return self.json_response(200, party_demo_snapshot())
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     customer = clean_text(payload.get("customer") or "Ny kunde")
@@ -1440,29 +1464,29 @@ class Handler(BaseHTTPRequestHandler):
                                 "lines": lines,
                             },
                         )
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "update_order_status":
                     next_status = clean_text(payload.get("status") or "Ny") or "Ny"
                     order_id = clean_text(payload.get("orderId"))
                     if party_storage_is_configured():
-                        shared_update_order_status(party_id, order_id, next_status)
-                        return self.json_response(200, party_demo_snapshot())
+                        shared_update_order_status(consultant_ref, party_id, order_id, next_status)
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     order = next((item for item in party.setdefault("orders", []) if item.get("id") == order_id), None)
                     if not order:
                         return self.json_response(404, {"error": "Fant ikke bestillingen."})
                     order["status"] = next_status
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 if action == "delete_order":
                     order_id = clean_text(payload.get("orderId"))
                     if party_storage_is_configured():
-                        shared_delete_order(party_id, order_id)
-                        return self.json_response(200, party_demo_snapshot())
+                        shared_delete_order(consultant_ref, party_id, order_id)
+                        return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     party["orders"] = [item for item in party.setdefault("orders", []) if item.get("id") != order_id]
-                    return self.json_response(200, party_demo_snapshot())
+                    return self.json_response(200, party_demo_snapshot(consultant_ref))
                 return self.json_response(400, {"error": "Ukjent handling."})
             except Exception as error:
                 return self.json_response(400, {"error": f"Kunne ikke oppdatere party-demoen: {error}"})
@@ -1535,6 +1559,7 @@ class Handler(BaseHTTPRequestHandler):
             "norsk-nettkatalog": "Norsk Nettkatalog",
             "norsk-produktkatalog": "Norsk produktkatalog",
             "egne-varer": "Egne varer",
+            "party": "Party",
         }
         title = product_titles.get(product_key, "Dette produktet")
         reference = consultant_ref or "mangler"
@@ -1570,6 +1595,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             return "norsk-produktkatalog"
         if path in ("/egne-varer", "/egne-varer/", "/own.html"):
             return "egne-varer"
+        if path in ("/party", "/party/", "/party.html") or path.startswith("/party-p/"):
+            return "party"
         return None
 
     def serve_static(self, path, query=None):

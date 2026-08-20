@@ -371,6 +371,7 @@
       catalog: fallbackCatalog,
       parties: fallbackParties,
       selectedPartyId: fallbackParties[0]?.id || null,
+      consultantRef: "LISBETHOVERBYE",
       storageMode: "demo",
       storageConfigured: false,
       storageError: "",
@@ -399,7 +400,7 @@
     }
     function partyStorageKey() {
       const party = selectedParty();
-      return party ? `party-customer-${slugify(party.title)}-${party.id}` : "";
+      return party ? `party-customer-${state.consultantRef}-${slugify(party.title)}-${party.id}` : "";
     }
     function loadCustomerProfile() {
       try {
@@ -565,6 +566,7 @@
       state.catalog = mergeProducts(state.catalog, snapshotProducts);
       state.parties = snapshot.parties || [];
       state.selectedPartyId = snapshot.selectedPartyId || state.parties[0]?.id || null;
+      state.consultantRef = snapshot.consultantRef || state.consultantRef || "LISBETHOVERBYE";
       state.storageMode = snapshot.storageMode || "demo";
       state.storageConfigured = Boolean(snapshot.storageConfigured);
       state.storageError = snapshot.storageError || "";
@@ -681,7 +683,7 @@
       $("#hostIntroInput").value = party.hostIntro || "";
       $("#videoInput").value = party.video || "";
       $("#vippsInput").value = party.vipps || "";
-      $("#partyLinkPreview").textContent = `Kundelenke: ${party.publicPath || `/party-p/${slugify(party.title)}`}`;
+      $("#partyLinkPreview").textContent = `Kundelenke: ${party.publicPath || `/party-p/${slugify(party.title)}?ref=${state.consultantRef}`}`;
 
       const featuredList = $("#featuredAdminList");
       featuredList.innerHTML = "";
@@ -1102,7 +1104,7 @@
           vipps: "",
           featured: [],
           orders: [],
-          publicPath: `/party-p/${slugify(payload.title)}`
+          publicPath: `/party-p/${slugify(payload.title)}?ref=${state.consultantRef}`
         };
         state.parties.unshift(newParty);
         state.selectedPartyId = newParty.id;
@@ -1181,6 +1183,7 @@
           body: JSON.stringify({
             action: "submit_order",
             partyId: party.id,
+            consultantRef: state.consultantRef,
             orderId: existingOrder?.id || customerProfile?.submittedOrderId || "",
             customer: $("#customerNameInput").value.trim() || "Ny kunde",
             lines: state.cart.map(item => ({ article: item.article, name: item.name, qty: item.qty, price: Number(item.price || 0) }))
@@ -1224,7 +1227,9 @@
     async function bootstrap() {
       if (useBackend) {
         try {
-          const snapshot = await fetchJson("/api/party-demo-state");
+          const params = new URLSearchParams(window.location.search || "");
+          if (!params.get("ref")) params.set("ref", state.consultantRef);
+          const snapshot = await fetchJson(`/api/party-demo-state?${params.toString()}`);
           applySnapshot(snapshot);
           await loadCatalog("");
           if ((window.location.pathname || "").startsWith("/party-p/")) {

@@ -15,9 +15,10 @@ function storedReference() {
 // A consultant is selected only through the explicit ref in the shared URL.
 const referenceCode = cleanReference(params.get("ref"));
 const shareUrls = {
-  official: `https://tupperware-norsk-nettkatalog-v2.onrender.com/?ref=${encodeURIComponent(referenceCode)}`,
+  official: new URL(`/?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   digital: new URL(`/digital-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   own: new URL(`/egne-varer?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
+  party: new URL(`/party?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
 };
 const shareDetails = {
   official: {
@@ -34,6 +35,11 @@ const shareDetails = {
     title: "Velkommen til konsulentens egne varer",
     text: "Se produkter som er tilgjengelige fra konsulentens eget lager.",
     filename: "egne-varer",
+  },
+  party: {
+    title: "Velkommen til party",
+    text: "Bli med på party, se fokusprodukter og send bestilling til konsulenten.",
+    filename: "party",
   },
 };
 const productRegister = [
@@ -56,6 +62,13 @@ const productRegister = [
     title: "Egne varer",
     description: "Egen varekatalog, lagerstyring og bestillinger direkte til konsulenten.",
     accessLabel: "Tilleggsprodukt - kjøpes separat",
+    accessType: "entitlement",
+  },
+  {
+    key: "party",
+    title: "Party",
+    description: "Digital og fysisk party-lÃ¸sning med pÃ¥melding, fokusprodukter og bestillinger.",
+    accessLabel: "Tilleggsprodukt - kjÃ¸pes separat",
     accessType: "entitlement",
   },
 ];
@@ -559,6 +572,7 @@ function setPersonalLinks(name) {
   document.querySelector("#officialCatalogLink").href = shareUrls.official;
   document.querySelector("#digitalCatalogLink").href = shareUrls.digital;
   document.querySelector("#ownCatalogModule").href = shareUrls.own;
+  document.querySelector("#partyModule").href = shareUrls.party;
   document.querySelector("#footerCatalogLink").href = shareUrls.official;
   const mailToolLink = document.querySelector("#mailToolLink");
   if (mailToolLink) mailToolLink.href = `/mail-verktøy?ref=${encodeURIComponent(referenceCode)}`;
@@ -605,8 +619,11 @@ function updateVisibleModules() {
   const access = consultantProfile?.productAccess || new Set();
   document.querySelector("#officialCatalogLink").hidden = !access.has("norsk-nettkatalog");
   document.querySelector("#digitalCatalogLink").hidden = !access.has("norsk-produktkatalog");
+  document.querySelector("#ownCatalogModule").hidden = !access.has("egne-varer");
+  document.querySelector("#partyModule").hidden = !access.has("party");
   document.querySelector('[data-share="official"]').hidden = !access.has("norsk-nettkatalog");
   document.querySelector('[data-share="digital"]').hidden = !access.has("norsk-produktkatalog");
+  document.querySelector('[data-share="party"]').hidden = !access.has("party");
 }
 
 async function loadConsultant() {
@@ -626,6 +643,7 @@ async function loadConsultant() {
   const shareTasks = [];
   if (consultantProfile.productAccess.has("norsk-nettkatalog")) shareTasks.push(renderShareItem("official"));
   if (consultantProfile.productAccess.has("norsk-produktkatalog")) shareTasks.push(renderShareItem("digital"));
+  if (consultantProfile.productAccess.has("party")) shareTasks.push(renderShareItem("party"));
   await Promise.all(shareTasks);
 
   try {
