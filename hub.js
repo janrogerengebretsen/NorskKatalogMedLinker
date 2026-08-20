@@ -126,7 +126,11 @@ function clearAdminSession() {
 
 function consultantLabel(consultant) {
   const status = consultant.status === "active" ? "Aktiv" : "Ikke aktiv";
-  return `${consultant.display_name} (${consultant.reference_code}) - ${status}`;
+  return `${consultant.display_name} (${consultantLinkUseCount(consultant)}) - ${consultant.reference_code} - ${status}`;
+}
+
+function consultantLinkUseCount(consultant) {
+  return Number(consultant?.link_use_count || 0);
 }
 
 function renderAdminConsultants(search = "") {
@@ -172,7 +176,7 @@ function renderAdminOverview() {
       const active = consultant.product_access.has(product.key);
       return `<td><button type="button" class="admin-access-toggle ${active ? "is-active" : ""}" data-overview-access="${product.key}" data-access-consultant="${consultant.reference_code}" title="${active ? "Fjern tilgang" : "Gi tilgang"}" aria-label="${active ? "Fjern tilgang" : "Gi tilgang"}"><i data-lucide="${active ? "check-circle-2" : "ban"}"></i></button></td>`;
     }).join("");
-    row.innerHTML = `<td><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name}</button></td><td><code>${consultant.reference_code}</code></td>${accessCells}`;
+    row.innerHTML = `<td><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name} (${consultantLinkUseCount(consultant)})</button></td><td><code>${consultant.reference_code}</code></td>${accessCells}`;
     return row;
   }));
   if (window.lucide) window.lucide.createIcons();
@@ -240,7 +244,7 @@ async function verifySuperAdmin() {
 async function loadAdminConsultants() {
   const [consultants, productAccess] = await Promise.all([
     jsonRequest(
-      `${adminState.config.supabaseUrl}/rest/v1/consultants?select=id,reference_code,display_name,status,public_listing,municipality,county,own_shop_enabled&order=display_name.asc&limit=500`,
+      `${adminState.config.supabaseUrl}/rest/v1/consultants?select=id,reference_code,display_name,status,public_listing,municipality,county,own_shop_enabled,link_use_count&order=display_name.asc&limit=500`,
       { headers: adminHeaders() },
     ),
     jsonRequest(

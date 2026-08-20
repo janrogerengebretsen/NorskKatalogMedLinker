@@ -165,6 +165,19 @@ def find_consultant_contact(reference_code):
     return contact
 
 
+def increment_consultant_link_use(reference_code):
+    reference_code = str(reference_code or "").strip().upper()
+    if not reference_code or not is_configured():
+        return None
+    rows = _request(
+        "rpc/increment_consultant_link_use",
+        method="POST",
+        payload={"p_reference_code": reference_code},
+    )
+    row = rows[0] if rows else {}
+    return row.get("link_use_count")
+
+
 def consultant_shop_status(reference_code):
     reference_code = str(reference_code or "").strip().upper()
     if not reference_code or not is_configured():

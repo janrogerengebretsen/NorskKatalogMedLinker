@@ -30,6 +30,7 @@ from consultant_registry import (
     consultant_shop_status,
     find_consultant as find_registered_consultant,
     find_consultant_contact,
+    increment_consultant_link_use,
     is_configured as registry_is_configured,
     list_consultants as list_registered_consultants,
     list_own_inventory,
@@ -863,12 +864,23 @@ class Handler(BaseHTTPRequestHandler):
                 )
         if path == "/api/consultant":
             consultant_ref = clean_text((query.get("ref") or [""])[0])
+            should_track = clean_text((query.get("track") or [""])[0]).lower() in {
+                "1",
+                "true",
+                "yes",
+            }
             try:
                 registered = find_registered_consultant(consultant_ref)
                 if registered:
                     contact = find_consultant_contact(consultant_ref)
                     if contact:
                         registered = {**registered, **contact}
+                    link_use_count = registered.get("link_use_count")
+                    if should_track:
+                        try:
+                            link_use_count = increment_consultant_link_use(consultant_ref)
+                        except Exception:
+                            link_use_count = registered.get("link_use_count")
                     return self.json_response(
                         200,
                         {
@@ -878,6 +890,7 @@ class Handler(BaseHTTPRequestHandler):
                             "name": registered["display_name"],
                             "email": registered.get("email"),
                             "phone": registered.get("phone"),
+                            "linkUseCount": link_use_count,
                             "consultant": registered,
                         },
                     )

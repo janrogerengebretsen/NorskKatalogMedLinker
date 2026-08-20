@@ -1770,7 +1770,7 @@
         return;
       }
       try {
-        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}`);
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1`);
         const result = await response.json();
         if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
         consultantName.textContent = result.name || result.consultant?.display_name || reference;
