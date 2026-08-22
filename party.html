@@ -674,6 +674,21 @@
       if (status === "Kan oppdateres") return "warn";
       return "neutral";
     }
+    function updateSendOrderButton() {
+      const existingCustomerOrder = currentCustomerOrder();
+      const sendOrderButton = $("#sendOrderButton");
+      if (!sendOrderButton) return;
+      if (existingCustomerOrder?.status === "Registrert hos Tupperware") {
+        sendOrderButton.textContent = "Allerede sendt til Tupperware";
+        sendOrderButton.disabled = true;
+      } else if (existingCustomerOrder) {
+        sendOrderButton.textContent = "Oppdater bestilling";
+        sendOrderButton.disabled = state.cart.length === 0;
+      } else {
+        sendOrderButton.textContent = "Send bestilling";
+        sendOrderButton.disabled = state.cart.length === 0;
+      }
+    }
     function renderStorageModeNotice() {
       const notice = $("#storageModeNotice");
       if (!notice) return;
@@ -1231,22 +1246,7 @@
         });
       });
       renderCart();
-      const sendOrderButton = $("#sendOrderButton");
-      if (sendOrderButton) {
-        if (existingCustomerOrder?.status === "Registrert hos Tupperware") {
-          sendOrderButton.textContent = "Allerede sendt til Tupperware";
-          sendOrderButton.disabled = true;
-        } else if (existingCustomerOrder && currentCartSignature() && currentCartSignature() === existingOrderSignature(existingCustomerOrder)) {
-          sendOrderButton.textContent = "Allerede sendt til konsulenten";
-          sendOrderButton.disabled = true;
-        } else if (existingCustomerOrder) {
-          sendOrderButton.textContent = "Oppdater bestilling";
-          sendOrderButton.disabled = state.cart.length === 0;
-        } else {
-          sendOrderButton.textContent = "Send bestilling";
-          sendOrderButton.disabled = state.cart.length === 0;
-        }
-      }
+      updateSendOrderButton();
     }
     function renderCart() {
       const existingCustomerOrder = currentCustomerOrder();
@@ -1261,6 +1261,7 @@
         : "Ingen bestilling sendt";
       if ($("#draftOrderStatus")) $("#draftOrderStatus").textContent = draftQty ? `${draftQty} varer` : "Ingen varer valgt";
       if ($("#submittedOrderStatus")) $("#submittedOrderStatus").textContent = submittedLabel;
+      updateSendOrderButton();
       $("#cartList").querySelectorAll("[data-cart-down]").forEach(button => {
         button.addEventListener("click", () => {
           const item = state.cart.find(entry => entry.article === button.dataset.cartDown);
