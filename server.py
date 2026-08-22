@@ -1457,6 +1457,9 @@ class Handler(BaseHTTPRequestHandler):
                         existing_order["email"] = clean_text(contact.get("email"))
                         existing_order["phone"] = clean_text(contact.get("phone"))
                         existing_order["address"] = clean_text(contact.get("address"))
+                        existing_order["postalCode"] = clean_text(contact.get("postalCode"))
+                        existing_order["city"] = clean_text(contact.get("city"))
+                        existing_order["country"] = clean_text(contact.get("country"))
                         existing_order["status"] = "Oppdatert"
                         existing_order["lines"] = lines
                     else:
@@ -1468,6 +1471,9 @@ class Handler(BaseHTTPRequestHandler):
                                 "email": clean_text(contact.get("email")),
                                 "phone": clean_text(contact.get("phone")),
                                 "address": clean_text(contact.get("address")),
+                                "postalCode": clean_text(contact.get("postalCode")),
+                                "city": clean_text(contact.get("city")),
+                                "country": clean_text(contact.get("country")),
                                 "status": "Ny",
                                 "lines": lines,
                             },

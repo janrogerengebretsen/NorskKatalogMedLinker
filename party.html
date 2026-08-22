@@ -378,10 +378,13 @@
               <div class="profile-card contact-card compact-stack">
                 <h3>Kontakt og levering</h3>
                 <div class="form-grid">
-                  <label class="field full"><span>Navn</span><input id="customerNameInput" value="Kari Nordmann"></label>
-                  <label class="field"><span>E-post</span><input id="customerEmailInput" value="kari@example.com"></label>
-                  <label class="field"><span>Telefon</span><input id="customerPhoneInput" value="94800111"></label>
-                  <label class="field full"><span>Adresse</span><textarea id="customerAddressInput" rows="2" placeholder="Gateadresse, postnummer og sted"></textarea></label>
+                  <label class="field full"><span>Navn</span><input id="customerNameInput" value=""></label>
+                  <label class="field"><span>E-post</span><input id="customerEmailInput" value=""></label>
+                  <label class="field"><span>Telefon</span><input id="customerPhoneInput" value=""></label>
+                  <label class="field full"><span>Adresse</span><textarea id="customerAddressInput" rows="2" placeholder="Gateadresse"></textarea></label>
+                  <label class="field"><span>Postnummer</span><input id="customerPostalCodeInput" value=""></label>
+                  <label class="field"><span>Sted</span><input id="customerCityInput" value=""></label>
+                  <label class="field full"><span>Land</span><input id="customerCountryInput" value="" placeholder="Valgfritt"></label>
                 </div>
                 <div class="compact-note">Du kan endre kontaktinformasjonen helt frem til bestillingen er registrert hos Tupperware.</div>
               </div>
@@ -485,6 +488,9 @@
           email: $("#customerEmailInput")?.value?.trim() || "",
           phone: $("#customerPhoneInput")?.value?.trim() || "",
           address: $("#customerAddressInput")?.value?.trim() || "",
+          postalCode: $("#customerPostalCodeInput")?.value?.trim() || "",
+          city: $("#customerCityInput")?.value?.trim() || "",
+          country: $("#customerCountryInput")?.value?.trim() || "",
           cart: state.cart.map(item => ({ ...item })),
           submittedOrderId: customerProfile?.submittedOrderId || "",
           lastSeenAt: new Date().toISOString()
@@ -499,6 +505,9 @@
       if ($("#customerEmailInput")) $("#customerEmailInput").value = profile.email || "";
       if ($("#customerPhoneInput")) $("#customerPhoneInput").value = profile.phone || "";
       if ($("#customerAddressInput")) $("#customerAddressInput").value = profile.address || "";
+      if ($("#customerPostalCodeInput")) $("#customerPostalCodeInput").value = profile.postalCode || "";
+      if ($("#customerCityInput")) $("#customerCityInput").value = profile.city || "";
+      if ($("#customerCountryInput")) $("#customerCountryInput").value = profile.country || "";
       if (Array.isArray(profile.cart)) {
         state.cart = profile.cart.map(item => ({ ...item }));
       }
@@ -509,9 +518,7 @@
       if (!party) return null;
       const byId = submittedOrderId ? (party.orders || []).find(order => order.id === submittedOrderId) : null;
       if (byId) return byId;
-      const customerName = ($("#customerNameInput")?.value || customerProfile?.name || "").trim();
-      if (!customerName) return null;
-      return (party.orders || []).find(order => order.customer === customerName) || null;
+      return null;
     }
     function orderSignatureFromLines(lines) {
       return [...(lines || [])]
@@ -842,7 +849,7 @@
         party.orders.forEach(order => {
           const node = document.createElement("article");
           node.className = "order-card";
-          node.innerHTML = `<div class="between"><strong>${order.customer}</strong><span class="chip ${order.status === "Ny" ? "" : "ok"}">${order.status}</span></div><p>${fmt(order.createdAt)} • ${order.totalQty || 0} produkter • ${currency(order.totalAmount)}</p><p>${order.email ? `E-post: ${order.email}<br>` : ""}${order.phone ? `Telefon: ${order.phone}<br>` : ""}${order.address ? `Adresse: ${order.address}` : ""}</p><ul class="order-lines">${(order.lines || []).map(line => `<li>${line.article} - ${line.name} - antall ${line.qty}${line.price ? ` - ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</li>`).join("")}</ul><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
+          node.innerHTML = `<div class="between"><strong>${order.customer}</strong><span class="chip ${order.status === "Ny" ? "" : "ok"}">${order.status}</span></div><p>${fmt(order.createdAt)} • ${order.totalQty || 0} produkter • ${currency(order.totalAmount)}</p><p>${order.email ? `E-post: ${order.email}<br>` : ""}${order.phone ? `Telefon: ${order.phone}<br>` : ""}${order.address ? `Adresse: ${order.address}<br>` : ""}${order.postalCode || order.city ? `Poststed: ${(order.postalCode || "").trim()} ${(order.city || "").trim()}<br>` : ""}${order.country ? `Land: ${order.country}` : ""}</p><ul class="order-lines">${(order.lines || []).map(line => `<li>${line.article} - ${line.name} - antall ${line.qty}${line.price ? ` - ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</li>`).join("")}</ul><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
           orders.appendChild(node);
         });
         orders.querySelectorAll("[data-order-status]").forEach(select => {
@@ -1271,13 +1278,22 @@
               email: $("#customerEmailInput").value.trim(),
               phone: $("#customerPhoneInput").value.trim(),
               address: $("#customerAddressInput").value.trim(),
+              postalCode: $("#customerPostalCodeInput").value.trim(),
+              city: $("#customerCityInput").value.trim(),
+              country: $("#customerCountryInput").value.trim(),
             },
             lines: state.cart.map(item => ({ article: item.article, name: item.name, qty: item.qty, price: Number(item.price || 0) }))
           })
         });
         applySnapshot(snapshot);
         const updatedParty = state.parties.find(item => item.id === party.id);
-        const matchingOrder = [...(updatedParty?.orders || [])].find(order => order.customer === ($("#customerNameInput").value.trim() || "Ny kunde"));
+        const matchingOrder = [...(updatedParty?.orders || [])].find(order =>
+          order.customer === ($("#customerNameInput").value.trim() || "Ny kunde")
+          && (order.phone || "") === $("#customerPhoneInput").value.trim()
+          && (order.email || "") === $("#customerEmailInput").value.trim()
+        ) || [...(updatedParty?.orders || [])].find(order =>
+          order.customer === ($("#customerNameInput").value.trim() || "Ny kunde")
+        );
         if (matchingOrder) {
           customerProfile = { ...(customerProfile || {}), submittedOrderId: matchingOrder.id };
         }
@@ -1310,6 +1326,9 @@
     on("customerEmailInput", "input", saveCustomerProfile);
     on("customerPhoneInput", "input", saveCustomerProfile);
     on("customerAddressInput", "input", saveCustomerProfile);
+    on("customerPostalCodeInput", "input", saveCustomerProfile);
+    on("customerCityInput", "input", saveCustomerProfile);
+    on("customerCountryInput", "input", saveCustomerProfile);
 
     async function bootstrap() {
       if (useBackend) {

@@ -114,7 +114,7 @@ def list_parties(consultant_ref):
             "select": (
                 "id,title,party_type,consultant_ref,starts_at,ends_at,host_mode,host_name,location,"
                 "message,host_intro,video_url,vipps_message,featured_product_ids,"
-                "orders:party_orders(id,customer_name,customer_email,customer_phone,customer_address,status,created_at,lines:party_order_lines("
+                "orders:party_orders(id,customer_name,customer_email,customer_phone,customer_address,customer_postal_code,customer_city,customer_country,status,created_at,lines:party_order_lines("
                 "product_id,product_name,article_number,quantity,observed_price_nok"
                 "))"
             ),
@@ -252,6 +252,9 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None, conta
     customer_email = str(contact.get("email") or "").strip()
     customer_phone = str(contact.get("phone") or "").strip()
     customer_address = str(contact.get("address") or "").strip()
+    customer_postal_code = str(contact.get("postalCode") or "").strip()
+    customer_city = str(contact.get("city") or "").strip()
+    customer_country = str(contact.get("country") or "").strip()
     normalized_lines = _normalize_order_lines(lines)
     order = None
     if order_id:
@@ -291,6 +294,9 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None, conta
                     "customer_email": customer_email,
                     "customer_phone": customer_phone,
                     "customer_address": customer_address,
+                    "customer_postal_code": customer_postal_code,
+                    "customer_city": customer_city,
+                    "customer_country": customer_country,
                     "status": "Oppdatert",
                 },
                 prefer="return=representation",
@@ -334,6 +340,9 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None, conta
                         "customer_email": customer_email,
                         "customer_phone": customer_phone,
                         "customer_address": customer_address,
+                        "customer_postal_code": customer_postal_code,
+                        "customer_city": customer_city,
+                        "customer_country": customer_country,
                         "status": "Oppdatert",
                     },
                     prefer="return=representation",
@@ -356,6 +365,9 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None, conta
                 "customer_email": customer_email,
                 "customer_phone": customer_phone,
                 "customer_address": customer_address,
+                "customer_postal_code": customer_postal_code,
+                "customer_city": customer_city,
+                "customer_country": customer_country,
                 "status": "Ny",
             },
             prefer="return=representation",
@@ -469,6 +481,9 @@ def _map_party(row):
                 "email": order.get("customer_email") or "",
                 "phone": order.get("customer_phone") or "",
                 "address": order.get("customer_address") or "",
+                "postalCode": order.get("customer_postal_code") or "",
+                "city": order.get("customer_city") or "",
+                "country": order.get("customer_country") or "",
                 "status": order.get("status") or "Ny",
                 "createdAt": order.get("created_at") or "",
                 "totalQty": total_qty,
