@@ -1430,12 +1430,14 @@ class Handler(BaseHTTPRequestHandler):
                             clean_text(payload.get("customer") or "Ny kunde"),
                             payload.get("lines") or [],
                             clean_text(payload.get("orderId")),
+                            payload.get("contact") or {},
                         )
                         return self.json_response(200, party_demo_snapshot(consultant_ref))
                     if not party:
                         return self.json_response(404, {"error": "Fant ikke partyet."})
                     customer = clean_text(payload.get("customer") or "Ny kunde")
                     lines = payload.get("lines") or []
+                    contact = payload.get("contact") or {}
                     order_id = clean_text(payload.get("orderId"))
                     existing_order = next((item for item in party.setdefault("orders", []) if item.get("id") == order_id), None)
                     if not existing_order:
@@ -1452,6 +1454,9 @@ class Handler(BaseHTTPRequestHandler):
                         if clean_text(existing_order.get("status")).lower() == "registrert hos tupperware":
                             return self.json_response(400, {"error": "Bestillingen er allerede registrert hos Tupperware og kan ikke endres."})
                         existing_order["customer"] = customer
+                        existing_order["email"] = clean_text(contact.get("email"))
+                        existing_order["phone"] = clean_text(contact.get("phone"))
+                        existing_order["address"] = clean_text(contact.get("address"))
                         existing_order["status"] = "Oppdatert"
                         existing_order["lines"] = lines
                     else:
@@ -1460,6 +1465,9 @@ class Handler(BaseHTTPRequestHandler):
                             {
                                 "id": f"order-{int(time.time() * 1000)}",
                                 "customer": customer,
+                                "email": clean_text(contact.get("email")),
+                                "phone": clean_text(contact.get("phone")),
+                                "address": clean_text(contact.get("address")),
                                 "status": "Ny",
                                 "lines": lines,
                             },

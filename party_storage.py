@@ -114,7 +114,7 @@ def list_parties(consultant_ref):
             "select": (
                 "id,title,party_type,consultant_ref,starts_at,ends_at,host_mode,host_name,location,"
                 "message,host_intro,video_url,vipps_message,featured_product_ids,"
-                "orders:party_orders(id,customer_name,status,created_at,lines:party_order_lines("
+                "orders:party_orders(id,customer_name,customer_email,customer_phone,customer_address,status,created_at,lines:party_order_lines("
                 "product_id,product_name,article_number,quantity,observed_price_nok"
                 "))"
             ),
@@ -245,9 +245,13 @@ def add_featured_product(consultant_ref, party_id, product_id):
     return rows[0] if rows else None
 
 
-def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
+def submit_order(consultant_ref, party_id, customer, lines, order_id=None, contact=None):
     consultant_ref = _normalize_consultant_ref(consultant_ref)
     customer_name = str(customer or "").strip() or "Ny kunde"
+    contact = contact or {}
+    customer_email = str(contact.get("email") or "").strip()
+    customer_phone = str(contact.get("phone") or "").strip()
+    customer_address = str(contact.get("address") or "").strip()
     normalized_lines = _normalize_order_lines(lines)
     order = None
     if order_id:
@@ -282,7 +286,13 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
                 "party_orders",
                 {"id": f"eq.{order_id}", "select": "*"},
                 method="PATCH",
-                payload={"customer_name": customer_name, "status": "Oppdatert"},
+                payload={
+                    "customer_name": customer_name,
+                    "customer_email": customer_email,
+                    "customer_phone": customer_phone,
+                    "customer_address": customer_address,
+                    "status": "Oppdatert",
+                },
                 prefer="return=representation",
             )
             order = updated[0] if updated else order
@@ -319,7 +329,13 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
                     "party_orders",
                     {"id": f"eq.{candidate['id']}", "select": "*"},
                     method="PATCH",
-                    payload={"customer_name": customer_name, "status": "Oppdatert"},
+                    payload={
+                        "customer_name": customer_name,
+                        "customer_email": customer_email,
+                        "customer_phone": customer_phone,
+                        "customer_address": customer_address,
+                        "status": "Oppdatert",
+                    },
                     prefer="return=representation",
                 )
                 order = updated[0] if updated else candidate
@@ -337,6 +353,9 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
             payload={
                 "party_id": party_id,
                 "customer_name": customer_name,
+                "customer_email": customer_email,
+                "customer_phone": customer_phone,
+                "customer_address": customer_address,
                 "status": "Ny",
             },
             prefer="return=representation",
@@ -352,7 +371,7 @@ def submit_order(consultant_ref, party_id, customer, lines, order_id=None):
                 "product_id": str(line.get("productId") or "").strip(),
                 "product_name": str(line.get("name") or "").strip(),
                 "article_number": str(line.get("article") or "").strip(),
-                "quantity": quantity,
+                "quantity": int(line.get("qty") or 0),
                 "observed_price_nok": line.get("price"),
             }
         )
@@ -447,6 +466,9 @@ def _map_party(row):
             {
                 "id": order.get("id"),
                 "customer": order.get("customer_name") or "Kunde",
+                "email": order.get("customer_email") or "",
+                "phone": order.get("customer_phone") or "",
+                "address": order.get("customer_address") or "",
                 "status": order.get("status") or "Ny",
                 "createdAt": order.get("created_at") or "",
                 "totalQty": total_qty,

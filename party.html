@@ -92,10 +92,15 @@
     }
     .price { font-size: 24px; color: var(--accent); }
     .mobile-frame {
-      max-width: 440px; margin: 0 auto; border: 10px solid #231d17; border-radius: 34px; overflow: hidden;
-      background: #f8f2ea; box-shadow: 0 28px 60px rgba(0, 0, 0, 0.16);
+      max-width: 100%;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      background: #f8f2ea;
+      box-shadow: 0 18px 40px rgba(84, 57, 30, 0.08);
     }
-    .mobile-screen { padding: 16px; display: grid; gap: 14px; }
+    .mobile-screen { padding: 14px; display: grid; gap: 12px; }
     .hero-strip {
       aspect-ratio: 16 / 9; border-radius: 20px;
       background: linear-gradient(135deg, rgba(0,0,0,.28), rgba(0,0,0,.06)),
@@ -113,6 +118,39 @@
     .hidden { display: none !important; }
     .cart-list li, .order-lines li, .copybox li { margin-bottom: 6px; color: var(--muted); }
     .copybox { background: #fffdf8; border: 1px dashed #ccb6a2; border-radius: 16px; padding: 12px; }
+    .order-state-card { display: grid; gap: 10px; }
+    .order-state-card p { margin: 0; }
+    .order-state-list { display: grid; gap: 8px; }
+    .order-state-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+    }
+    .order-state-item strong { color: var(--ink); }
+    .compact-stack { display: grid; gap: 10px; }
+    .compact-note {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .contact-card h3,
+    .profile-card h3 { margin-bottom: 6px; }
+    .contact-card .form-grid { gap: 10px; }
+    .contact-card .field input,
+    .contact-card .field textarea {
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
+    .cta-row.compact-actions { gap: 8px; }
+    .cta-row.compact-actions .btn { flex: 1; min-width: 0; }
     .product-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; background: #f1e3d6; margin-bottom: 10px; }
     .product-card { cursor: pointer; }
     .product-card.selected { border-color: var(--accent); background: #fff8f2; }
@@ -142,6 +180,20 @@
       .hero, .split, .admin-layout, .public-layout, .featured-grid, .profile-row, .form-grid, .product-grid { grid-template-columns: 1fr; }
       .shell { padding: 16px; }
       h1 { font-size: 32px; }
+    }
+    @media (max-width: 720px) {
+      .shell { padding: 10px; gap: 12px; }
+      .card { padding: 14px; border-radius: 18px; }
+      .mobile-frame {
+        border-width: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+      }
+      .mobile-screen { padding: 0; gap: 10px; }
+      .hero-strip { border-radius: 16px; }
+      .subtab-row { gap: 6px; }
+      .subtab { padding: 8px 10px; font-size: 13px; }
     }
   </style>
 </head>
@@ -266,9 +318,9 @@
               </div>
             </div>
             <div class="subtab-row">
-              <button class="subtab active" data-public-tab="about">Om party</button>
+              <button class="subtab active" data-public-tab="about">Party</button>
               <button class="subtab" data-public-tab="products">Produkter</button>
-              <button class="subtab" data-public-tab="ordered">Bestilt</button>
+              <button class="subtab" data-public-tab="ordered">Bestilling</button>
             </div>
             <section data-public-panel="about">
               <div class="notice info" id="customerStatusBox"></div>
@@ -307,26 +359,39 @@
               </div>
             </section>
             <section data-public-panel="ordered" class="hidden">
-              <div class="profile-card">
-                <h3>Handleliste</h3>
+              <div class="notice info order-state-card" id="orderStateBox">
+                <strong>Bestillingsstatus</strong>
+                <p>Varer du legger til nå ligger som kladd på mobilen din til du sender bestillingen.</p>
+                <div class="order-state-list">
+                  <div class="order-state-item"><span>Uferdig bestilling</span><strong id="draftOrderStatus">0 varer</strong></div>
+                  <div class="order-state-item"><span>Sendt til konsulent</span><strong id="submittedOrderStatus">Ingen sendt</strong></div>
+                </div>
+              </div>
+              <div class="profile-card compact-stack">
+                <div class="between">
+                  <h3>Handleliste</h3>
+                  <span class="chip info" id="draftCartChip">Kladd</span>
+                </div>
                 <ul class="cart-list" id="cartList"></ul>
                 <div class="notice info" id="vippsMessage"></div>
               </div>
-              <div class="profile-card">
-                <h3>Påmelding</h3>
+              <div class="profile-card contact-card compact-stack">
+                <h3>Kontakt og levering</h3>
                 <div class="form-grid">
                   <label class="field full"><span>Navn</span><input id="customerNameInput" value="Kari Nordmann"></label>
                   <label class="field"><span>E-post</span><input id="customerEmailInput" value="kari@example.com"></label>
                   <label class="field"><span>Telefon</span><input id="customerPhoneInput" value="94800111"></label>
+                  <label class="field full"><span>Adresse</span><textarea id="customerAddressInput" rows="2" placeholder="Gateadresse, postnummer og sted"></textarea></label>
                 </div>
+                <div class="compact-note">Du kan endre kontaktinformasjonen helt frem til bestillingen er registrert hos Tupperware.</div>
               </div>
               <div class="notice warn">
                 <strong>Forbehold</strong>
                 <p>Bestillingen sendes til konsulenten som en forespørsel. Endelig levering avhenger av tilgjengelighet hos Tupperware.</p>
               </div>
-              <div class="cta-row">
-                <button class="btn" style="flex:1;" id="sendOrderButton">Send bestilling</button>
-                <button class="btn alt" style="flex:1;">Bare meld meg på</button>
+              <div class="cta-row compact-actions">
+                <button class="btn" id="sendOrderButton">Send bestilling</button>
+                <button class="btn alt" type="button">Bare meld meg på</button>
               </div>
               <div class="notice hidden" id="confirmationBox"><strong>Ordrebekreftelse</strong><p>Bestillingen er sendt til konsulenten i demoen.</p></div>
             </section>
@@ -419,6 +484,7 @@
           name: $("#customerNameInput")?.value?.trim() || "",
           email: $("#customerEmailInput")?.value?.trim() || "",
           phone: $("#customerPhoneInput")?.value?.trim() || "",
+          address: $("#customerAddressInput")?.value?.trim() || "",
           cart: state.cart.map(item => ({ ...item })),
           submittedOrderId: customerProfile?.submittedOrderId || "",
           lastSeenAt: new Date().toISOString()
@@ -432,6 +498,7 @@
       if ($("#customerNameInput")) $("#customerNameInput").value = profile.name || "";
       if ($("#customerEmailInput")) $("#customerEmailInput").value = profile.email || "";
       if ($("#customerPhoneInput")) $("#customerPhoneInput").value = profile.phone || "";
+      if ($("#customerAddressInput")) $("#customerAddressInput").value = profile.address || "";
       if (Array.isArray(profile.cart)) {
         state.cart = profile.cart.map(item => ({ ...item }));
       }
@@ -775,7 +842,7 @@
         party.orders.forEach(order => {
           const node = document.createElement("article");
           node.className = "order-card";
-          node.innerHTML = `<div class="between"><strong>${order.customer}</strong><span class="chip ${order.status === "Ny" ? "" : "ok"}">${order.status}</span></div><p>${fmt(order.createdAt)} • ${order.totalQty || 0} produkter • ${currency(order.totalAmount)}</p><ul class="order-lines">${(order.lines || []).map(line => `<li>${line.article} - ${line.name} - antall ${line.qty}${line.price ? ` - ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</li>`).join("")}</ul><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
+          node.innerHTML = `<div class="between"><strong>${order.customer}</strong><span class="chip ${order.status === "Ny" ? "" : "ok"}">${order.status}</span></div><p>${fmt(order.createdAt)} • ${order.totalQty || 0} produkter • ${currency(order.totalAmount)}</p><p>${order.email ? `E-post: ${order.email}<br>` : ""}${order.phone ? `Telefon: ${order.phone}<br>` : ""}${order.address ? `Adresse: ${order.address}` : ""}</p><ul class="order-lines">${(order.lines || []).map(line => `<li>${line.article} - ${line.name} - antall ${line.qty}${line.price ? ` - ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</li>`).join("")}</ul><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
           orders.appendChild(node);
         });
         orders.querySelectorAll("[data-order-status]").forEach(select => {
@@ -883,7 +950,6 @@
           if (existing) existing.qty += 1;
           else state.cart.push({ article: product.article, name: product.name, qty: 1, price: Number(product.price || 0) });
           saveCustomerProfile();
-          setPublicTab("ordered");
           renderCart();
         });
       });
@@ -922,7 +988,6 @@
             if (existing) existing.qty += selectedProductQty;
             else state.cart.push({ article: detailProduct.article, name: detailProduct.name, qty: selectedProductQty, price: Number(detailProduct.price || 0) });
             saveCustomerProfile();
-            setPublicTab("ordered");
             renderCart();
           });
         }
@@ -953,7 +1018,6 @@
           if (existing) existing.qty += 1;
           else state.cart.push({ article: product.article, name: product.name, qty: 1, price: Number(product.price || 0) });
           saveCustomerProfile();
-          setPublicTab("ordered");
           renderCart();
         });
       });
@@ -984,11 +1048,18 @@
       }
     }
     function renderCart() {
+      const existingCustomerOrder = currentCustomerOrder();
       $("#cartList").innerHTML = state.cart.map(item => `<li><div class="between"><div><strong>${item.name}</strong><div>Art.nr. ${item.article}</div><div>${currency(Number(item.price || 0) * Number(item.qty || 0))}</div></div><div class="qty-row"><button type="button" class="qty-button" data-cart-down="${item.article}">-</button><span class="qty-value">${item.qty}</span><button type="button" class="qty-button" data-cart-up="${item.article}">+</button><button type="button" class="btn ghost" data-cart-remove="${item.article}">Fjern</button></div></div></li>`).join("");
       const totals = new Map();
       state.cart.forEach(item => totals.set(item.article, { article: item.article, name: item.name, qty: (totals.get(item.article)?.qty || 0) + item.qty, price: Number(item.price || totals.get(item.article)?.price || 0) }));
       $("#summaryList").innerHTML = [...totals.values()].map(item => `<article class="summary-card"><div class="between"><strong>${item.name}</strong><span>Totalt ${item.qty}</span></div><p>Art.nr. ${item.article}</p><p>${currency(Number(item.price || 0) * Number(item.qty || 0))}</p></article>`).join("");
       $("#copyList").innerHTML = [...totals.values()].map(item => `<li>${item.article} - ${item.name} - totalt ${item.qty} - ${currency(Number(item.price || 0) * Number(item.qty || 0))}</li>`).join("");
+      const draftQty = state.cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
+      const submittedLabel = existingCustomerOrder
+        ? `${existingCustomerOrder.status || "Sendt"} - ${existingCustomerOrder.totalQty || 0} varer`
+        : "Ingen sendt";
+      if ($("#draftOrderStatus")) $("#draftOrderStatus").textContent = draftQty ? `${draftQty} varer` : "Tom kladd";
+      if ($("#submittedOrderStatus")) $("#submittedOrderStatus").textContent = submittedLabel;
       $("#cartList").querySelectorAll("[data-cart-down]").forEach(button => {
         button.addEventListener("click", () => {
           const item = state.cart.find(entry => entry.article === button.dataset.cartDown);
@@ -1165,6 +1236,16 @@
     }
     async function submitOrder() {
       const party = selectedParty();
+      if (!party) {
+        $("#confirmationBox").classList.remove("hidden");
+        $("#confirmationBox").innerHTML = `<strong>Fant ikke party</strong><p>Velg eller åpne et party før du sender bestillingen.</p>`;
+        return;
+      }
+      if (!state.cart.length) {
+        $("#confirmationBox").classList.remove("hidden");
+        $("#confirmationBox").innerHTML = `<strong>Ingen varer valgt</strong><p>Legg minst ett produkt i bestillingen før du sender.</p>`;
+        return;
+      }
       const existingOrder = currentCustomerOrder();
       if (existingOrder?.status === "Registrert hos Tupperware") {
         $("#confirmationBox").classList.remove("hidden");
@@ -1186,6 +1267,11 @@
             consultantRef: state.consultantRef,
             orderId: existingOrder?.id || customerProfile?.submittedOrderId || "",
             customer: $("#customerNameInput").value.trim() || "Ny kunde",
+            contact: {
+              email: $("#customerEmailInput").value.trim(),
+              phone: $("#customerPhoneInput").value.trim(),
+              address: $("#customerAddressInput").value.trim(),
+            },
             lines: state.cart.map(item => ({ article: item.article, name: item.name, qty: item.qty, price: Number(item.price || 0) }))
           })
         });
@@ -1195,7 +1281,7 @@
         if (matchingOrder) {
           customerProfile = { ...(customerProfile || {}), submittedOrderId: matchingOrder.id };
         }
-        renderAdmin();
+        renderAll();
       }
       saveCustomerProfile();
       $("#confirmationBox").classList.remove("hidden");
@@ -1223,6 +1309,7 @@
     on("customerNameInput", "input", saveCustomerProfile);
     on("customerEmailInput", "input", saveCustomerProfile);
     on("customerPhoneInput", "input", saveCustomerProfile);
+    on("customerAddressInput", "input", saveCustomerProfile);
 
     async function bootstrap() {
       if (useBackend) {
