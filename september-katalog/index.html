@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupperware septemberkatalog</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f2f5f4; color: #172124; }
+    header { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #dbe2e0; }
+    .consultant-line { min-height: 32px; display:flex; align-items:center; justify-content:center; gap:8px; padding:6px 18px; background:#0b6b66; color:#fff; font-size:13px; }
+    .consultant-line small { color: rgba(255,255,255,.75); }
+    .consultant-line.invalid { background:#9b332d; }
+    .bar { display:grid; grid-template-columns:minmax(210px,1fr) auto auto; gap:10px; align-items:center; max-width:1380px; margin:0 auto; padding:12px 18px; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:0; }
+    .brand-mark { width:36px; height:36px; display:grid; place-items:center; flex:0 0 auto; background:#d45a3c; color:#fff; font-size:21px; font-weight:800; }
+    h1 { margin:0; font-size:18px; letter-spacing:0; }
+    input { width:min(420px,100%); border:1px solid #cbd6d3; border-radius:8px; min-height:40px; padding:8px 10px; font:inherit; }
+    button { border:1px solid #0b6b66; background:#0b6b66; color:#fff; border-radius:8px; min-height:40px; padding:8px 12px; font:inherit; font-weight:700; cursor:pointer; }
+    main { display:grid; grid-template-columns:300px minmax(0,1fr); gap:18px; max-width:1380px; margin:0 auto; padding:18px; }
+    aside { position:sticky; top:76px; align-self:start; max-height:calc(100vh - 92px); overflow:auto; background:#fff; border:1px solid #dbe2e0; border-radius:8px; }
+    .product-row { display:grid; gap:4px; padding:10px 12px; border-bottom:1px solid #eef2f1; color:#172124; text-decoration:none; }
+    .product-row:hover { background:#edf8f6; }
+    .product-row strong { color:#0b6b66; font-size:13px; }
+    .stock-status { color:#506166; font-size:12px; font-weight:700; }
+    .stock-status.available { color:#08795f; }
+    .stock-status.unavailable { color:#9b332d; }
+    .stock-status.unknown { color:#6b5b2a; }
+    .pages { display:grid; gap:18px; }
+    .page { background:#fff; border:1px solid #dbe2e0; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(18,48,47,.08); }
+    .page-head { display:flex; justify-content:space-between; border-bottom:1px solid #e7ecea; padding:8px 12px; font-size:13px; font-weight:700; color:#506166; }
+    .sheet { position:relative; width:100%; aspect-ratio:var(--page-ratio); background:#fff; }
+    .sheet img { display:block; width:100%; height:100%; object-fit:contain; }
+    .hotspot { position:absolute; display:block; border-radius:4px; outline-offset:2px; }
+    .hotspot:focus { outline:3px solid #d45a3c; background:rgba(212,90,60,.14); }
+    body.show-links .hotspot { background:rgba(11,107,102,.18); box-shadow:inset 0 0 0 2px rgba(11,107,102,.75); }
+    .translation { position:absolute; z-index:2; font-weight:800; line-height:1.15; color:#172124; text-wrap:balance; pointer-events:none; }
+    .cover-badge { padding:1.1% 1.6%; background:rgba(255,255,255,.92); color:#0b6b66; font-size:clamp(10px,1.4vw,19px); text-transform:uppercase; letter-spacing:.04em; }
+    .cover-title { color:#fff; font-size:clamp(22px,4.3vw,54px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .cover-subtitle { color:#fff; font-size:clamp(15px,2.2vw,30px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .note-panel, .story-panel { padding:1.2% 1.5%; background:rgba(255,255,255,.92); border-left:5px solid #0b6b66; font-size:clamp(10px,1.45vw,18px); font-weight:500; box-shadow:0 8px 20px rgba(0,0,0,.12); }
+    .note-panel.compact { font-size:clamp(9px,1.08vw,15px); line-height:1.22; }
+    .note-panel.dark { background:rgba(23,33,36,.9); color:#fff; }
+    .note-panel strong, .story-panel strong { color:#0b6b66; font-weight:900; }
+    @media (max-width:860px) { .bar { grid-template-columns:1fr; } main { grid-template-columns:1fr; } aside { position:static; max-height:210px; } .consultant-line { flex-wrap:wrap; text-align:center; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="consultant-line" id="consultantLine">
+      <span>Du handler med <strong id="consultantName">Kontrollerer konsulent ...</strong></span>
+      <small id="consultantCode"></small>
+    </div>
+    <div class="bar">
+      <div class="brand"><span class="brand-mark">T</span><h1>Tupperware septemberkatalog</h1></div>
+      <input id="search" type="search" placeholder="Sok artikkelnummer eller kode">
+      <button id="toggle" type="button">Vis lenkeflater</button>
+    </div>
+  </header>
+  <main>
+    <aside>
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=C00002" target="tupperware_shop"
+           data-search="c00002 c00002" data-page="5" data-code="C00002">
+          <span>C00002</span>
+          <strong>Side 5</strong>
+          <small class="stock-status" data-stock-code="C00002">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186368" target="tupperware_shop"
+           data-search="11186368 11186368" data-page="6" data-code="11186368">
+          <span>11186368</span>
+          <strong>Side 6</strong>
+          <small class="stock-status" data-stock-code="11186368">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186369" target="tupperware_shop"
+           data-search="11186369 11186369" data-page="6" data-code="11186369">
+          <span>11186369</span>
+          <strong>Side 6</strong>
+          <small class="stock-status" data-stock-code="11186369">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186370" target="tupperware_shop"
+           data-search="11186370 11186370" data-page="6" data-code="11186370">
+          <span>11186370</span>
+          <strong>Side 6</strong>
+          <small class="stock-status" data-stock-code="11186370">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop"
+           data-search="11165083 11165083" data-page="7" data-code="11165083">
+          <span>11165083</span>
+          <strong>Side 7</strong>
+          <small class="stock-status" data-stock-code="11165083">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop"
+           data-search="11118522 11118522" data-page="7" data-code="11118522">
+          <span>11118522</span>
+          <strong>Side 7</strong>
+          <small class="stock-status" data-stock-code="11118522">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186249" target="tupperware_shop"
+           data-search="11186249 11186249" data-page="8" data-code="11186249">
+          <span>11186249</span>
+          <strong>Side 8</strong>
+          <small class="stock-status" data-stock-code="11186249">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186247" target="tupperware_shop"
+           data-search="11186247 11186247" data-page="8" data-code="11186247">
+          <span>11186247</span>
+          <strong>Side 8</strong>
+          <small class="stock-status" data-stock-code="11186247">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186251" target="tupperware_shop"
+           data-search="11186251 11186251" data-page="9" data-code="11186251">
+          <span>11186251</span>
+          <strong>Side 9</strong>
+          <small class="stock-status" data-stock-code="11186251">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11186250" target="tupperware_shop"
+           data-search="11186250 11186250" data-page="9" data-code="11186250">
+          <span>11186250</span>
+          <strong>Side 9</strong>
+          <small class="stock-status" data-stock-code="11186250">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop"
+           data-search="11170305 11170305" data-page="11" data-code="11170305">
+          <span>11170305</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11170305">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop"
+           data-search="11131820 11131820" data-page="11" data-code="11131820">
+          <span>11131820</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11131820">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11169697" target="tupperware_shop"
+           data-search="11169697 11169697" data-page="11" data-code="11169697">
+          <span>11169697</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11169697">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop"
+           data-search="11178789 11178789" data-page="12" data-code="11178789">
+          <span>11178789</span>
+          <strong>Side 12</strong>
+          <small class="stock-status" data-stock-code="11178789">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop"
+           data-search="11168886 11168886" data-page="12" data-code="11168886">
+          <span>11168886</span>
+          <strong>Side 12</strong>
+          <small class="stock-status" data-stock-code="11168886">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop"
+           data-search="11178323 11178323" data-page="12" data-code="11178323">
+          <span>11178323</span>
+          <strong>Side 12</strong>
+          <small class="stock-status" data-stock-code="11178323">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop"
+           data-search="11166328 11166328" data-page="13" data-code="11166328">
+          <span>11166328</span>
+          <strong>Side 13</strong>
+          <small class="stock-status" data-stock-code="11166328">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop"
+           data-search="11167063 11167063" data-page="13" data-code="11167063">
+          <span>11167063</span>
+          <strong>Side 13</strong>
+          <small class="stock-status" data-stock-code="11167063">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop"
+           data-search="11162264 11162264" data-page="14" data-code="11162264">
+          <span>11162264</span>
+          <strong>Side 14</strong>
+          <small class="stock-status" data-stock-code="11162264">Sjekker lagerstatus ...</small>
+        </a></aside>
+    <div class="pages">
+            <section class="page" id="page-1" data-page="1">
+              <div class="page-head">
+                <span>Side 1</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-01.webp" width="1191" height="1685" alt="Septemberkatalog side 1">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-2" data-page="2">
+              <div class="page-head">
+                <span>Side 2</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-02.webp" width="1191" height="1685" alt="Septemberkatalog side 2">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-3" data-page="3">
+              <div class="page-head">
+                <span>Side 3</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-03.webp" width="1191" height="1685" alt="Septemberkatalog side 3">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-4" data-page="4">
+              <div class="page-head">
+                <span>Side 4</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-04.webp" width="1191" height="1685" alt="Septemberkatalog side 4">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-5" data-page="5">
+              <div class="page-head">
+                <span>Side 5</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-05.webp" width="1191" height="1685" alt="Septemberkatalog side 5">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=C00002" target="tupperware_shop" style="left:60.4128%;top:61.3376%;width:27.8732%;height:8.9029%;" aria-label="C00002" title="C00002" data-code="C00002"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-6" data-page="6">
+              <div class="page-head">
+                <span>Side 6</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-06.webp" width="1191" height="1685" alt="Septemberkatalog side 6">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186368" target="tupperware_shop" style="left:62.3419%;top:63.1647%;width:27.3034%;height:10.3649%;" aria-label="11186368" title="11186368" data-code="11186368"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186369" target="tupperware_shop" style="left:62.3419%;top:69.9422%;width:27.2651%;height:12.5000%;" aria-label="11186369" title="11186369" data-code="11186369"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186370" target="tupperware_shop" style="left:62.3419%;top:80.1385%;width:27.5211%;height:12.5000%;" aria-label="11186370" title="11186370" data-code="11186370"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-7" data-page="7">
+              <div class="page-head">
+                <span>Side 7</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-07.webp" width="1191" height="1685" alt="Septemberkatalog side 7">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop" style="left:6.8574%;top:25.4408%;width:24.9454%;height:10.5954%;" aria-label="11165083" title="11165083" data-code="11165083"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop" style="left:67.3674%;top:81.3525%;width:26.6543%;height:8.9029%;" aria-label="11118522" title="11118522" data-code="11118522"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-8" data-page="8">
+              <div class="page-head">
+                <span>Side 8</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-08.webp" width="1191" height="1685" alt="Septemberkatalog side 8">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186249" target="tupperware_shop" style="left:10.7287%;top:32.5161%;width:36.0805%;height:8.9029%;" aria-label="11186249" title="11186249" data-code="11186249"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186247" target="tupperware_shop" style="left:11.0770%;top:43.1035%;width:35.9697%;height:8.9029%;" aria-label="11186247" title="11186247" data-code="11186247"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-9" data-page="9">
+              <div class="page-head">
+                <span>Side 9</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-09.webp" width="1191" height="1685" alt="Septemberkatalog side 9">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186251" target="tupperware_shop" style="left:7.9978%;top:66.9610%;width:32.2665%;height:8.9029%;" aria-label="11186251" title="11186251" data-code="11186251"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186250" target="tupperware_shop" style="left:7.9978%;top:77.3233%;width:35.3246%;height:8.9029%;" aria-label="11186250" title="11186250" data-code="11186250"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-10" data-page="10">
+              <div class="page-head">
+                <span>Side 10</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-10.webp" width="1191" height="1685" alt="Septemberkatalog side 10">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-11" data-page="11">
+              <div class="page-head">
+                <span>Side 11</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-11.webp" width="1191" height="1685" alt="Septemberkatalog side 11">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop" style="left:8.5000%;top:62.2053%;width:25.7751%;height:8.9029%;" aria-label="11170305" title="11170305" data-code="11170305"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop" style="left:8.5000%;top:72.4015%;width:25.7745%;height:8.9029%;" aria-label="11131820" title="11131820" data-code="11131820"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11169697" target="tupperware_shop" style="left:8.5000%;top:82.5567%;width:25.8105%;height:10.5954%;" aria-label="11169697" title="11169697" data-code="11169697"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-12" data-page="12">
+              <div class="page-head">
+                <span>Side 12</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-12.webp" width="1191" height="1685" alt="Septemberkatalog side 12">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop" style="left:8.5000%;top:62.2053%;width:36.2156%;height:8.9029%;" aria-label="11178789" title="11178789" data-code="11178789"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop" style="left:3.5000%;top:71.5347%;width:28.0000%;height:10.5954%;" aria-label="11168886" title="11168886" data-code="11168886"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop" style="left:8.5000%;top:82.5567%;width:32.6656%;height:10.5954%;" aria-label="11178323" title="11178323" data-code="11178323"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-13" data-page="13">
+              <div class="page-head">
+                <span>Side 13</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-13.webp" width="1191" height="1685" alt="Septemberkatalog side 13">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop" style="left:59.2358%;top:8.8600%;width:27.9969%;height:10.5954%;" aria-label="11166328" title="11166328" data-code="11166328"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop" style="left:45.0620%;top:80.5483%;width:31.7162%;height:10.5954%;" aria-label="11167063" title="11167063" data-code="11167063"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-14" data-page="14">
+              <div class="page-head">
+                <span>Side 14</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/september-katalog/pages/page-14.webp" width="1191" height="1685" alt="Septemberkatalog side 14">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop" style="left:9.9101%;top:77.0033%;width:32.2806%;height:8.9029%;" aria-label="11162264" title="11162264" data-code="11162264"></a>
+                
+              </div>
+            </section></div>
+  </main>
+  <script>
+    const search = document.querySelector("#search");
+    const rows = [...document.querySelectorAll(".product-row")];
+    const shopLinks = [...document.querySelectorAll('a[target="tupperware_shop"]')];
+    const toggle = document.querySelector("#toggle");
+    const consultantLine = document.querySelector("#consultantLine");
+    const consultantName = document.querySelector("#consultantName");
+    const consultantCode = document.querySelector("#consultantCode");
+    let shopWindow = null;
+    let consultantReady = false;
+    function cleanReference(value) { return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80); }
+    function openShopProduct(url) {
+      shopWindow = window.open(url, "tupperware-official-store");
+      if (!shopWindow) { window.location.assign(url); return; }
+      try { shopWindow.focus(); } catch {}
+    }
+    function norwegianShopUrl(value, reference) {
+      const target = new URL(value);
+      if (target.hostname === "tupperware-eu.com" || target.hostname.endsWith(".tupperware-eu.com")) {
+        if (target.pathname === "" || target.pathname === "/") target.pathname = "/no/";
+        else if (target.pathname !== "/no" && !target.pathname.startsWith("/no/")) target.pathname = `/no${target.pathname.startsWith("/") ? target.pathname : `/${target.pathname}`}`;
+        target.searchParams.set("ref", reference);
+      }
+      return target.toString();
+    }
+    async function prepareConsultant() {
+      const params = new URLSearchParams(window.location.search);
+      const reference = cleanReference(params.get("ref"));
+      if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }
+      try {
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1`);
+        const result = await response.json();
+        if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
+        consultantName.textContent = result.name || result.consultant?.display_name || reference;
+        consultantCode.textContent = reference;
+        shopLinks.forEach((link) => { link.href = norwegianShopUrl(link.href, reference); });
+        consultantReady = true;
+      } catch {
+        consultantLine.classList.add("invalid"); consultantName.textContent = "konsulenten kunne ikke bekreftes"; consultantCode.textContent = reference;
+      }
+    }
+    function statusLabel(product) {
+      if (!product) return ["unknown", "Ikke funnet i produktbasen"];
+      if (product.catalogStatus === "not-in-current-assortment") return ["unknown", "Ikke i dagens sortiment"];
+      if (product.available) return ["available", "På lager"];
+      return ["unavailable", "Midlertidig utsolgt"];
+    }
+    async function loadStockStatuses() {
+      const codes = [...new Set(rows.map(row => row.dataset.code).filter(Boolean))];
+      await Promise.all(codes.map(async (code) => {
+        let product = null;
+        try {
+          const response = await fetch(`/api/products?q=${encodeURIComponent(code)}&limit=8`);
+          const payload = await response.json();
+          if (response.ok && Array.isArray(payload.products)) {
+            product = payload.products.find(item => String(item.articleNumber || "").toUpperCase() === code)
+              || payload.products[0]
+              || null;
+          }
+        } catch {}
+        const [statusClass, text] = statusLabel(product);
+        document.querySelectorAll(`[data-stock-code="${code}"]`).forEach((item) => {
+          item.textContent = text;
+          item.classList.remove("available", "unavailable", "unknown");
+          item.classList.add(statusClass);
+        });
+        document.querySelectorAll(`.hotspot[data-code="${code}"]`).forEach((item) => {
+          item.title = `${code} - ${text}`;
+          item.setAttribute("aria-label", `${code} - ${text}`);
+        });
+      }));
+    }
+    shopLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!consultantReady) { window.alert("Produktet kan ikke apnes for en gyldig konsulent er valgt."); return; }
+        openShopProduct(link.href);
+      });
+    });
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach((row) => { row.style.display = !query || row.dataset.search.includes(query) ? "" : "none"; });
+    });
+    rows.forEach((row) => {
+      row.addEventListener("mouseenter", () => {
+        const page = document.querySelector(`[data-page="${row.dataset.page}"]`);
+        if (page) page.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+    });
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("show-links");
+      toggle.textContent = document.body.classList.contains("show-links") ? "Skjul lenkeflater" : "Vis lenkeflater";
+    });
+    prepareConsultant();
+    loadStockStatuses();
+  </script>
+</body>
+</html>

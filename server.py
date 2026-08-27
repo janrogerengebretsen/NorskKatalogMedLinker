@@ -1603,6 +1603,7 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             return "norsk-nettkatalog"
         if path in (
             "/digital-katalog", "/digital-katalog/",
+            "/september-katalog", "/september-katalog/",
             "/kataloghefte-test", "/kataloghefte-test/",
             "/catalog-demo/", "/catalog-demo/index.html",
         ):
@@ -1657,11 +1658,15 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/kataloghefte-test/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/digital-katalog": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/digital-katalog/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
+            "/september-katalog": ("september-katalog/index.html", "text/html; charset=utf-8"),
+            "/september-katalog/": ("september-katalog/index.html", "text/html; charset=utf-8"),
             "/catalog-demo/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/catalog-demo/index.html": ("catalog-demo/index.html", "text/html; charset=utf-8"),
         }
         item = filenames.get(path)
         if not item and re.fullmatch(r"/catalog-demo/pages/page-\d{2}\.webp", path):
+            item = (path.lstrip("/"), "image/webp")
+        if not item and re.fullmatch(r"/september-katalog/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")
         if not item:
             if path.startswith("/api/"):
