@@ -855,6 +855,111 @@
     function orderFreightAmount(order) {
       return (order?.totalQty || 0) > 0 ? 69 : 0;
     }
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+    function openOrderPdfView(order, party) {
+      if (!order) return;
+      const freightAmount = orderFreightAmount(order);
+      const grandTotal = Number(order.totalAmount || 0) + freightAmount;
+      const rows = (order.lines || []).map(line => `
+        <tr>
+          <td>${escapeHtml(line.name || "")}</td>
+          <td>${escapeHtml(line.article || "")}</td>
+          <td class="num">${escapeHtml(line.qty || 0)}</td>
+          <td class="num">${escapeHtml(currency(line.price || 0))}</td>
+          <td class="num">${escapeHtml(currency(Number(line.price || 0) * Number(line.qty || 0)))}</td>
+        </tr>
+      `).join("");
+      const html = `<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <title>Bestillingsskjema - ${escapeHtml(order.customer || "Kunde")}</title>
+  <style>
+    body { font-family: Georgia, "Times New Roman", serif; margin: 24px; color: #2a231d; }
+    .sheet { max-width: 900px; margin: 0 auto; }
+    .head, .meta, .totals { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .meta { color: #6d6257; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin: 20px 0; }
+    .field.full { grid-column: 1 / -1; }
+    .label { font-size: 12px; text-transform: uppercase; color: #6d6257; margin-bottom: 6px; }
+    .value { border: 1px solid #ddcfbf; border-radius: 10px; min-height: 38px; padding: 10px 12px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { border: 1px solid #ddcfbf; padding: 10px 12px; text-align: left; vertical-align: top; }
+    th { background: #f5eee4; color: #6d6257; }
+    .num { text-align: right; white-space: nowrap; }
+    .totals { margin-top: 16px; margin-left: auto; width: 320px; display: grid; }
+    .total-row { display: flex; justify-content: space-between; border: 1px solid #ddcfbf; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+    .total-row strong:last-child { color: #b74a2b; }
+    .notes { margin-top: 18px; color: #6d6257; font-size: 14px; display: grid; gap: 8px; }
+    .actions { margin: 0 0 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 999px; padding: 10px 14px; background: #b74a2b; color: #fff; cursor: pointer; font: inherit; }
+    button.alt { background: #efe2d6; color: #2a231d; }
+    @media print {
+      .actions { display: none; }
+      body { margin: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="actions">
+      <button onclick="window.print()">Lagre som PDF / skriv ut</button>
+      <button class="alt" onclick="window.close()">Lukk</button>
+    </div>
+    <div class="head">
+      <div class="brand">Tupperware bestillingsskjema</div>
+      <div class="meta">
+        <span>Party: ${escapeHtml(party?.title || "")}</span>
+        <span>Ordredato: ${escapeHtml(fmt(order.createdAt))}</span>
+        <span>Status: ${escapeHtml(order.status || "")}</span>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="field"><div class="label">Navn</div><div class="value">${escapeHtml(order.customer || "Ikke angitt")}</div></div>
+      <div class="field"><div class="label">Telefon / mobil</div><div class="value">${escapeHtml(order.phone || "Ikke angitt")}</div></div>
+      <div class="field full"><div class="label">Adresse</div><div class="value">${escapeHtml(order.address || "Ikke angitt")}</div></div>
+      <div class="field"><div class="label">Postnr.</div><div class="value">${escapeHtml(order.postalCode || "Ikke angitt")}</div></div>
+      <div class="field"><div class="label">Sted</div><div class="value">${escapeHtml(order.city || "Ikke angitt")}</div></div>
+      <div class="field"><div class="label">E-post</div><div class="value">${escapeHtml(order.email || "Ikke angitt")}</div></div>
+      <div class="field"><div class="label">Land</div><div class="value">${escapeHtml(order.country || "Ikke angitt")}</div></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Produktnavn</th><th>Produktnr</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Beløp</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="totals">
+      <div class="total-row"><span>Varesum</span><strong>${escapeHtml(currency(order.totalAmount))}</strong></div>
+      <div class="total-row"><span>Frakt</span><strong>${escapeHtml(currency(freightAmount))}</strong></div>
+      <div class="total-row"><span>Totalbeløp</span><strong>${escapeHtml(currency(grandTotal))}</strong></div>
+    </div>
+    <div class="notes">
+      <div>[ ] Kunden ønsker å holde party</div>
+      <div>[ ] Kunden ønsker informasjon om å bli konsulent</div>
+      <div>[ ] Kunden ønsker nyheter og tilbud</div>
+    </div>
+  </div>
+</body>
+</html>`;
+      const popup = window.open("", "_blank", "noopener,noreferrer,width=980,height=900");
+      if (!popup) {
+        showOrderStatus("Kunne ikke åpne PDF-visning", "Nettleseren blokkerte vinduet. Tillat popup-vinduer og prøv igjen.", "warn");
+        return;
+      }
+      popup.document.open();
+      popup.document.write(html);
+      popup.document.close();
+      popup.focus();
+    }
     async function fetchJson(url, options) {
       const response = await fetch(url, options);
       const payload = await response.json();
@@ -1115,8 +1220,14 @@
           const grandTotal = Number(order.totalAmount || 0) + freightAmount;
           const node = document.createElement("article");
           node.className = "order-card";
-          node.innerHTML = `<div class="order-card-head"><div class="between"><strong>${order.customer}</strong><span class="chip ${orderStatusTone(order.status)}">${order.status}</span></div><div class="order-meta"><span>${fmt(order.createdAt)}</span><span>${order.totalQty || 0} produkter</span><span>${currency(order.totalAmount)}</span></div></div><div class="order-form-sheet"><div class="order-form-head"><div class="order-form-brand">Tupperware bestillingsskjema</div><div class="order-meta"><span>Ordredato: ${fmt(order.createdAt)}</span><span>Status: ${order.status}</span></div></div><div class="order-form-grid"><div class="order-form-field"><span class="order-form-label">Navn</span><div class="order-form-value">${order.customer || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Telefon / mobil</span><div class="order-form-value">${order.phone || "Ikke angitt"}</div></div><div class="order-form-field full"><span class="order-form-label">Adresse</span><div class="order-form-value">${order.address || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Postnr.</span><div class="order-form-value">${order.postalCode || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Sted</span><div class="order-form-value">${order.city || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">E-post</span><div class="order-form-value">${order.email || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Land</span><div class="order-form-value">${order.country || "Ikke angitt"}</div></div></div><table class="order-table"><thead><tr><th>Produktnavn</th><th>Produktnr</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Beløp</th></tr></thead><tbody>${(order.lines || []).map(line => `<tr><td>${line.name || ""}</td><td>${line.article || ""}</td><td class="num">${line.qty || 0}</td><td class="num">${currency(line.price || 0)}</td><td class="num">${currency(Number(line.price || 0) * Number(line.qty || 0))}</td></tr>`).join("")}</tbody></table><div class="order-form-totals"><div class="order-form-total-row"><span>Varesum</span><strong>${currency(order.totalAmount)}</strong></div><div class="order-form-total-row"><span>Frakt</span><strong>${currency(freightAmount)}</strong></div><div class="order-form-total-row"><span>Totalbeløp</span><strong>${currency(grandTotal)}</strong></div></div><div class="order-form-notes"><div>[ ] Kunden ønsker å holde party</div><div>[ ] Kunden ønsker informasjon om å bli konsulent</div><div>[ ] Kunden ønsker nyheter og tilbud</div></div></div><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
+          node.innerHTML = `<div class="order-card-head"><div class="between"><strong>${order.customer}</strong><span class="chip ${orderStatusTone(order.status)}">${order.status}</span></div><div class="order-meta"><span>${fmt(order.createdAt)}</span><span>${order.totalQty || 0} produkter</span><span>${currency(order.totalAmount)}</span></div></div><div class="order-form-sheet"><div class="order-form-head"><div class="order-form-brand">Tupperware bestillingsskjema</div><div class="order-meta"><span>Ordredato: ${fmt(order.createdAt)}</span><span>Status: ${order.status}</span></div></div><div class="order-form-grid"><div class="order-form-field"><span class="order-form-label">Navn</span><div class="order-form-value">${order.customer || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Telefon / mobil</span><div class="order-form-value">${order.phone || "Ikke angitt"}</div></div><div class="order-form-field full"><span class="order-form-label">Adresse</span><div class="order-form-value">${order.address || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Postnr.</span><div class="order-form-value">${order.postalCode || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Sted</span><div class="order-form-value">${order.city || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">E-post</span><div class="order-form-value">${order.email || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Land</span><div class="order-form-value">${order.country || "Ikke angitt"}</div></div></div><table class="order-table"><thead><tr><th>Produktnavn</th><th>Produktnr</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Beløp</th></tr></thead><tbody>${(order.lines || []).map(line => `<tr><td>${line.name || ""}</td><td>${line.article || ""}</td><td class="num">${line.qty || 0}</td><td class="num">${currency(line.price || 0)}</td><td class="num">${currency(Number(line.price || 0) * Number(line.qty || 0))}</td></tr>`).join("")}</tbody></table><div class="order-form-totals"><div class="order-form-total-row"><span>Varesum</span><strong>${currency(order.totalAmount)}</strong></div><div class="order-form-total-row"><span>Frakt</span><strong>${currency(freightAmount)}</strong></div><div class="order-form-total-row"><span>Totalbeløp</span><strong>${currency(grandTotal)}</strong></div></div><div class="order-form-notes"><div>[ ] Kunden ønsker å holde party</div><div>[ ] Kunden ønsker informasjon om å bli konsulent</div><div>[ ] Kunden ønsker nyheter og tilbud</div></div></div><div class="cta-row"><button class="btn alt" type="button" data-order-pdf="${order.id}">PDF / utskrift</button><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
           orders.appendChild(node);
+        });
+        orders.querySelectorAll("[data-order-pdf]").forEach(button => {
+          button.addEventListener("click", () => {
+            const order = (party.orders || []).find(item => item.id === button.dataset.orderPdf);
+            openOrderPdfView(order, party);
+          });
         });
         orders.querySelectorAll("[data-order-status]").forEach(select => {
           select.addEventListener("change", async () => {
