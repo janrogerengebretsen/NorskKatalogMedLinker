@@ -163,6 +163,99 @@
       color: var(--muted);
       font-size: 14px;
     }
+    .order-form-sheet {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid #e7d7c6;
+      border-radius: 16px;
+      background: #fffdf9;
+    }
+    .order-form-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      flex-wrap: wrap;
+    }
+    .order-form-brand {
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .order-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 14px;
+    }
+    .order-form-field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+    .order-form-field.full { grid-column: 1 / -1; }
+    .order-form-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+    .order-form-value {
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #eadccd;
+      background: #fff;
+      color: var(--ink);
+    }
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #eadccd;
+      background: #fff;
+    }
+    .order-table th,
+    .order-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0e3d7;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .order-table th {
+      background: #f8efe6;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .order-table td.num,
+    .order-table th.num { text-align: right; white-space: nowrap; }
+    .order-table tr:last-child td { border-bottom: 0; }
+    .order-form-totals {
+      margin-left: auto;
+      width: min(100%, 320px);
+      display: grid;
+      gap: 8px;
+    }
+    .order-form-total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #eadccd;
+      background: #fff;
+    }
+    .order-form-total-row strong:last-child { color: var(--accent); }
+    .order-form-notes {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
     .order-state-card { display: grid; gap: 10px; }
     .order-state-card p { margin: 0; }
     .order-state-list { display: grid; gap: 8px; }
@@ -293,6 +386,8 @@
       .product-detail { grid-template-columns: 1fr; }
       .offer-strip .featured-grid { grid-template-columns: 1fr; }
       .status-overview { grid-template-columns: 1fr 1fr; }
+      .order-form-grid { grid-template-columns: 1fr; }
+      .order-form-totals { width: 100%; }
     }
   </style>
 </head>
@@ -757,6 +852,9 @@
     function currency(value) {
       return `${Math.round(Number(value || 0))} kr`;
     }
+    function orderFreightAmount(order) {
+      return (order?.totalQty || 0) > 0 ? 69 : 0;
+    }
     async function fetchJson(url, options) {
       const response = await fetch(url, options);
       const payload = await response.json();
@@ -1013,9 +1111,11 @@
         summary.innerHTML = `<div class="between"><strong>Totalt for partyet</strong><span>${totalOrders} ordre</span></div><p>${totalQty} produkter • ${currency(totalAmount)}</p><div class="status-overview"><div class="status-pill"><strong>${statusCounts.ny}</strong><span>Nye</span></div><div class="status-pill"><strong>${statusCounts.updated}</strong><span>Oppdaterte</span></div><div class="status-pill"><strong>${statusCounts.editable}</strong><span>Kan oppdateres</span></div><div class="status-pill"><strong>${statusCounts.locked}</strong><span>Registrert hos Tupperware</span></div></div>`;
         orders.appendChild(summary);
         party.orders.forEach(order => {
+          const freightAmount = orderFreightAmount(order);
+          const grandTotal = Number(order.totalAmount || 0) + freightAmount;
           const node = document.createElement("article");
           node.className = "order-card";
-          node.innerHTML = `<div class="order-card-head"><div class="between"><strong>${order.customer}</strong><span class="chip ${orderStatusTone(order.status)}">${order.status}</span></div><div class="order-meta"><span>${fmt(order.createdAt)}</span><span>${order.totalQty || 0} produkter</span><span>${currency(order.totalAmount)}</span></div></div><p>${order.email ? `E-post: ${order.email}<br>` : ""}${order.phone ? `Telefon: ${order.phone}<br>` : ""}${order.address ? `Adresse: ${order.address}<br>` : ""}${order.postalCode || order.city ? `Poststed: ${(order.postalCode || "").trim()} ${(order.city || "").trim()}<br>` : ""}${order.country ? `Land: ${order.country}` : ""}</p><div class="order-lines">${(order.lines || []).map(line => { const product = state.catalog.find(item => item.article === line.article) || {}; return `<div class="order-line-card"><img class="order-line-thumb" src="${product.image || ""}" alt="${line.name}"><div class="order-line-copy"><strong>${line.name}</strong><span>Art.nr. ${line.article}</span><span>Antall ${line.qty}${line.price ? ` • ${currency(Number(line.price) * Number(line.qty || 0))}` : ""}</span></div></div>`; }).join("")}</div><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
+          node.innerHTML = `<div class="order-card-head"><div class="between"><strong>${order.customer}</strong><span class="chip ${orderStatusTone(order.status)}">${order.status}</span></div><div class="order-meta"><span>${fmt(order.createdAt)}</span><span>${order.totalQty || 0} produkter</span><span>${currency(order.totalAmount)}</span></div></div><div class="order-form-sheet"><div class="order-form-head"><div class="order-form-brand">Tupperware bestillingsskjema</div><div class="order-meta"><span>Ordredato: ${fmt(order.createdAt)}</span><span>Status: ${order.status}</span></div></div><div class="order-form-grid"><div class="order-form-field"><span class="order-form-label">Navn</span><div class="order-form-value">${order.customer || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Telefon / mobil</span><div class="order-form-value">${order.phone || "Ikke angitt"}</div></div><div class="order-form-field full"><span class="order-form-label">Adresse</span><div class="order-form-value">${order.address || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Postnr.</span><div class="order-form-value">${order.postalCode || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Sted</span><div class="order-form-value">${order.city || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">E-post</span><div class="order-form-value">${order.email || "Ikke angitt"}</div></div><div class="order-form-field"><span class="order-form-label">Land</span><div class="order-form-value">${order.country || "Ikke angitt"}</div></div></div><table class="order-table"><thead><tr><th>Produktnavn</th><th>Produktnr</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Beløp</th></tr></thead><tbody>${(order.lines || []).map(line => `<tr><td>${line.name || ""}</td><td>${line.article || ""}</td><td class="num">${line.qty || 0}</td><td class="num">${currency(line.price || 0)}</td><td class="num">${currency(Number(line.price || 0) * Number(line.qty || 0))}</td></tr>`).join("")}</tbody></table><div class="order-form-totals"><div class="order-form-total-row"><span>Varesum</span><strong>${currency(order.totalAmount)}</strong></div><div class="order-form-total-row"><span>Frakt</span><strong>${currency(freightAmount)}</strong></div><div class="order-form-total-row"><span>Totalbeløp</span><strong>${currency(grandTotal)}</strong></div></div><div class="order-form-notes"><div>[ ] Kunden ønsker å holde party</div><div>[ ] Kunden ønsker informasjon om å bli konsulent</div><div>[ ] Kunden ønsker nyheter og tilbud</div></div></div><div class="cta-row"><select data-order-status="${order.id}">${orderStatuses().map(status => `<option value="${status}" ${status === order.status ? "selected" : ""}>${status}</option>`).join("")}</select><button class="btn ghost" type="button" data-order-delete="${order.id}">Slett ordre</button></div>`;
           orders.appendChild(node);
         });
         orders.querySelectorAll("[data-order-status]").forEach(select => {
