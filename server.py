@@ -54,6 +54,7 @@ from official_catalog import (
     finish_official_catalog_sync,
     list_official_product_archive,
     list_price_history,
+    list_price_history_rows,
     save_official_product_translation,
     sync_is_configured,
     sync_official_products,
@@ -575,6 +576,71 @@ def normalize_price_history(row):
     }
 
 
+def parse_timestamp(value):
+    try:
+        return datetime.fromisoformat(clean_text(value).replace("Z", "+00:00")).timestamp()
+    except (TypeError, ValueError):
+        return 0
+
+
+def price_value(value):
+    return float(value or 0)
+
+
+def recent_price_changes(days=14):
+    rows = cached("recent-price-changes", lambda: list_price_history_rows(3000))
+    grouped = {}
+    for row in rows:
+        key = clean_text(row.get("product_handle")) or clean_text(row.get("article_number"))
+        if key:
+            grouped.setdefault(key, []).append(row)
+
+    cutoff = time.time() - max(1, int(days or 14)) * 86400
+    changes = {}
+    for history in grouped.values():
+        history.sort(key=lambda item: parse_timestamp(item.get("observed_at")), reverse=True)
+        if len(history) < 2:
+            continue
+        latest = history[0]
+        previous = history[1]
+        if parse_timestamp(latest.get("observed_at")) < cutoff:
+            continue
+        if (
+            price_value(latest.get("price_nok")) == price_value(previous.get("price_nok"))
+            and price_value(latest.get("compare_at_price_nok"))
+            == price_value(previous.get("compare_at_price_nok"))
+        ):
+            continue
+        change = {
+            "priceChanged": True,
+            "priceChangedAt": clean_text(latest.get("observed_at")),
+            "previousPrice": price_value(previous.get("price_nok")),
+            "previousCompareAtPrice": price_value(previous.get("compare_at_price_nok")),
+        }
+        handle = clean_text(latest.get("product_handle"))
+        article = clean_text(latest.get("article_number"))
+        if handle:
+            changes[handle] = change
+        if article:
+            changes[article] = change
+    return changes
+
+
+def attach_price_change_status(products):
+    try:
+        changes = recent_price_changes()
+    except Exception as error:
+        print(f"Prishistorikk kunne ikke leses: {error}", file=sys.stderr)
+        return products
+    for product in products:
+        change = changes.get(clean_text(product.get("handle"))) or changes.get(
+            clean_text(product.get("articleNumber"))
+        )
+        if change:
+            product.update(change)
+    return products
+
+
 def attach_saved_translation(product, row):
     if not row:
         return product
@@ -823,23 +889,23 @@ def get_products(collection=""):
         key = f"products:{collection}"
         raw = cached(key, lambda: fetch_paginated_products(collection))
         live_products = [normalize_product(product) for product in raw]
-        return live_products
+        return attach_price_change_status(live_products)
 
     try:
         refresh_official_archive_if_needed()
         archive_products = get_official_archive_products()
         if archive_products:
             if archive_is_recent(archive_products):
-                return archive_products
+                return attach_price_change_status(archive_products)
             print(
                 "Produktarkivet er eldre enn forventet. Bruker direkte Tupperware-data.",
                 file=sys.stderr,
             )
-            return live_products_with_archive_sync()
+            return attach_price_change_status(live_products_with_archive_sync())
     except Exception as error:
         print(f"Produktarkivet kunne ikke leses: {error}", file=sys.stderr)
 
-    return live_products_with_archive_sync()
+    return attach_price_change_status(live_products_with_archive_sync())
 
 
 def get_raw_collections():
@@ -1276,13 +1342,17 @@ class Handler(BaseHTTPRequestHandler):
                         "active",
                         "temporarily-unavailable",
                         "not-in-current-assortment",
+                        "price-changed",
                     }
                     if status in allowed_statuses:
-                        products = [
-                            product
-                            for product in products
-                            if product.get("catalogStatus") == status
-                        ]
+                        if status == "price-changed":
+                            products = [product for product in products if product.get("priceChanged")]
+                        else:
+                            products = [
+                                product
+                                for product in products
+                                if product.get("catalogStatus") == status
+                            ]
                 if sort == "newest":
                     products.sort(
                         key=lambda item: (

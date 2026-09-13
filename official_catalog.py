@@ -138,6 +138,27 @@ def list_price_history(article_number="", handle="", limit=12):
         raise
 
 
+def list_price_history_rows(limit=2000):
+    if not archive_is_configured():
+        return []
+    try:
+        return _request(
+            "price_history",
+            {
+                "select": (
+                    "product_handle,article_number,price_nok,compare_at_price_nok,"
+                    "available,observed_at,source_url"
+                ),
+                "order": "observed_at.desc",
+                "limit": str(max(1, min(int(limit or 2000), 5000))),
+            },
+        )
+    except RuntimeError as error:
+        if "permission denied for table price_history" in str(error):
+            return []
+        raise
+
+
 def save_official_product_translation(
     handle,
     source_title,

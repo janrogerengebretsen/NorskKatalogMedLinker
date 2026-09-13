@@ -551,6 +551,7 @@ function updateHeading() {
   const child = group?.children?.find(item => item.handle === state.activeCollection);
   const statusTitles = {
     active: "Tilgjengelige produkter",
+    "price-changed": "Produkter med ny pris",
     "temporarily-unavailable": "Midlertidig utsolgt",
     "not-in-current-assortment": "Ikke i dagens sortiment",
   };
@@ -572,6 +573,7 @@ function updateHeading() {
     : child ? `i ${group.title}` : "";
   const statusLabels = {
     active: "tilgjengelige",
+    "price-changed": "med ny pris",
     "temporarily-unavailable": "midlertidig utsolgte",
     "not-in-current-assortment": "ikke i dagens sortiment",
   };
@@ -614,6 +616,7 @@ function productCard(product) {
       <div class="product-badges">
         ${archived ? `<span class="badge archived">Ikke i dagens sortiment</span>` : ""}
         ${discount ? `<span class="badge sale">-${discount}%</span>` : ""}
+        ${product.priceChanged ? `<span class="badge price-change">Ny pris</span>` : ""}
         ${isNew ? `<span class="badge new">Nyhet</span>` : ""}
       </div>
       <button class="product-image" data-detail="${escapeHtml(product.handle)}" aria-label="Vis ${escapeHtml(product.title)}">
@@ -645,6 +648,8 @@ function productCard(product) {
           ${!archived && product.compareAtPrice ? `<span class="compare-price">${formatNok(product.compareAtPrice)}</span>` : ""}
           ${discount ? `<span class="discount">Spar ${discount}%</span>` : ""}
         </div>
+        ${product.priceChanged && product.previousPrice ? `
+          <div class="price-change-note">Før ${formatNok(product.previousPrice)}</div>` : ""}
         <button class="price-history-button" type="button"
           data-price-history
           data-history-handle="${escapeHtml(product.handle)}"
