@@ -502,6 +502,28 @@ main {
   color: white;
 }
 
+.catalog-notice {
+  margin: 14px 0 18px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #d7e6e1;
+  border-left: 4px solid var(--brand);
+  background: #f2faf7;
+  color: #34423f;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.catalog-notice svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  color: var(--brand);
+  margin-top: 1px;
+}
+
 .toolbar {
   min-height: 76px;
   display: flex;

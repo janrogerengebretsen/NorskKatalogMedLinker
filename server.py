@@ -362,18 +362,26 @@ def product_series(title):
 
 
 def fetch_url(url, timeout=35):
-    if sys.platform.startswith("win") and url.startswith("https://"):
-        return fetch_url_node(url, timeout)
-    request = Request(
-        url,
-        headers={
-            "User-Agent": "Mozilla/5.0",
-            "Accept-Language": "no,en;q=0.8",
-            "Accept": "application/json,text/html;q=0.8",
-        },
-    )
-    with urlopen(request, timeout=timeout) as response:
-        return response.read().decode("utf-8", errors="replace")
+    last_error = None
+    for attempt in range(3):
+        try:
+            if sys.platform.startswith("win") and url.startswith("https://"):
+                return fetch_url_node(url, timeout)
+            request = Request(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0",
+                    "Accept-Language": "no,en;q=0.8",
+                    "Accept": "application/json,text/html;q=0.8",
+                },
+            )
+            with urlopen(request, timeout=timeout) as response:
+                return response.read().decode("utf-8", errors="replace")
+        except Exception as error:
+            last_error = error
+            if attempt < 2:
+                time.sleep(0.8 * (attempt + 1))
+    raise last_error
 
 
 def fetch_url_node(url, timeout):
