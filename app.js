@@ -127,6 +127,9 @@ function productUrl(value) {
   try {
     const url = new URL(value);
     if (url.hostname === "tupperware-eu.com" || url.hostname.endsWith(".tupperware-eu.com")) {
+      ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "srsltid"].forEach(param => {
+        url.searchParams.delete(param);
+      });
       const productMatch = url.pathname.match(/\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?products\/(.+)$/i);
       if (productMatch) {
         url.pathname = `/no/products/${productMatch[1]}`;
@@ -140,6 +143,7 @@ function productUrl(value) {
       } else {
         url.searchParams.delete("ref");
       }
+      url.searchParams.set("country", "NO");
     }
     return url.toString();
   } catch {

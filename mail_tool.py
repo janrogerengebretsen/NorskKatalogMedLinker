@@ -1277,16 +1277,54 @@ def product_capacity_litres(title):
     return float(match.group(1).replace(",", "."))
 
 
+def norwegian_tupperware_url(product_url):
+    parsed = urlparse(product_url)
+    query = parse_qs(parsed.query)
+    host = parsed.netloc.lower().split(":", 1)[0]
+    if host == "tupperware-eu.com" or host.endswith(".tupperware-eu.com"):
+        for key in (
+            "utm_source",
+            "utm_medium",
+            "utm_campaign",
+            "utm_content",
+            "utm_term",
+            "fbclid",
+            "gclid",
+            "srsltid",
+        ):
+            query.pop(key, None)
+        path = parsed.path or "/"
+        product_match = re.match(r"/(?:[a-z]{2}(?:-[a-z]{2})?/)?products/(.+)$", path, flags=re.IGNORECASE)
+        if product_match:
+            path = f"/no/products/{product_match.group(1)}"
+        elif path in ("", "/"):
+            path = "/no/"
+        elif path != "/no" and not path.startswith("/no/"):
+            path = f"/no/{path.lstrip('/')}"
+        query["country"] = ["NO"]
+        parsed = parsed._replace(path=path, query=urlencode(query, doseq=True))
+    return urlunparse(parsed)
+
+
+def consultant_code_from_url(value):
+    parsed = urlparse(value)
+    query = parse_qs(parsed.query)
+    if clean_text((query.get("ref") or [""])[0]):
+        return f"ref={clean_text(query['ref'][0])}"
+    code = clean_text(parsed.path.strip("/").split("/")[-1])
+    return f"ref={code}" if code and code.lower() != "no" else ""
+
+
 def consultant_url(product_url, consultant):
     consultant = clean_text(consultant) or "ref=LISBETHOVERBYE"
     if consultant.startswith("http://") or consultant.startswith("https://"):
-        return consultant
-    parsed = urlparse(product_url)
+        consultant = consultant_code_from_url(consultant) or "ref=LISBETHOVERBYE"
+    parsed = urlparse(norwegian_tupperware_url(product_url))
     query = parse_qs(parsed.query)
     if "=" in consultant:
         key, value = consultant.split("=", 1)
     else:
-        key, value = "consultant", consultant
+        key, value = "ref", consultant
     query[key.strip()] = [value.strip()]
     new_query = urlencode(query, doseq=True)
     return urlunparse(parsed._replace(query=new_query))
