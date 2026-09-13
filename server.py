@@ -790,6 +790,34 @@ def get_official_archive_products():
     return [normalize_archived_product(row) for row in rows]
 
 
+def archive_latest_seen_timestamp(products):
+    timestamps = [
+        product_updated_timestamp(product)
+        for product in products
+        if product.get("isInOfficialCatalog") is not False
+    ]
+    return max(timestamps, default=0)
+
+
+def archive_is_recent(products):
+    latest = archive_latest_seen_timestamp(products)
+    if not latest:
+        return False
+    return latest >= time.time() - max(CACHE_TTL * 2, 1800)
+
+
+def live_products_with_archive_sync():
+    raw = cached("products:all:fallback", fetch_paginated_products)
+    live_products = [normalize_product(product) for product in raw]
+    if sync_is_configured() and len(live_products) >= 300:
+        try:
+            sync_official_products(live_products)
+            clear_cache("official-product-archive")
+        except Exception as error:
+            print(f"Produktarkivet kunne ikke synkroniseres: {error}", file=sys.stderr)
+    return live_products
+
+
 def get_products(collection=""):
     if collection:
         key = f"products:{collection}"
@@ -801,20 +829,17 @@ def get_products(collection=""):
         refresh_official_archive_if_needed()
         archive_products = get_official_archive_products()
         if archive_products:
-            return archive_products
+            if archive_is_recent(archive_products):
+                return archive_products
+            print(
+                "Produktarkivet er eldre enn forventet. Bruker direkte Tupperware-data.",
+                file=sys.stderr,
+            )
+            return live_products_with_archive_sync()
     except Exception as error:
         print(f"Produktarkivet kunne ikke leses: {error}", file=sys.stderr)
 
-    key = "products:all:fallback"
-    raw = cached(key, fetch_paginated_products)
-    live_products = [normalize_product(product) for product in raw]
-    if sync_is_configured() and len(live_products) >= 300:
-        try:
-            sync_official_products(live_products)
-            clear_cache("official-product-archive")
-        except Exception as error:
-            print(f"Produktarkivet kunne ikke synkroniseres: {error}", file=sys.stderr)
-    return live_products
+    return live_products_with_archive_sync()
 
 
 def get_raw_collections():
