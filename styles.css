@@ -781,6 +781,35 @@ main {
 .shop-button:hover { background: var(--brand-strong); }
 .shop-button svg { width: 15px; }
 
+.price-history-button {
+  width: 100%;
+  min-height: 34px;
+  margin: 8px 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #bfc1c4;
+  background: white;
+  color: var(--brand-strong);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.price-history-button:hover {
+  border-color: var(--brand);
+  background: #f1f8f5;
+}
+
+.price-history-button svg { width: 15px; height: 15px; }
+.price-history-button.compact {
+  width: auto;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 12px;
+}
+
 .archive-detail-button {
   width: 100%;
   min-height: 42px;
@@ -1046,6 +1075,92 @@ main {
 }
 
 .translation-note svg { width: 15px; height: 15px; }
+
+.price-history-section {
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: #f7faf8;
+}
+
+.price-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.price-history-heading h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.price-history-section > p,
+.history-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.history-list {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.history-row {
+  min-height: 48px;
+  padding: 9px 0;
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(130px, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+}
+
+.history-row strong {
+  display: inline-block;
+  margin-right: 7px;
+  font-size: 13px;
+}
+
+.history-row span {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.history-stock {
+  color: var(--brand);
+  font-weight: 800;
+}
+
+.history-stock.out { color: #b34b42; }
+
+.history-empty,
+.history-loading {
+  margin-top: 12px;
+  padding: 13px;
+  background: white;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.history-dialog {
+  padding: 42px;
+}
+
+.history-dialog h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.history-dialog > p {
+  margin: 8px 0 16px;
+  color: var(--muted);
+}
 
 .catalog-disclaimer {
   margin-top: 42px;

@@ -53,6 +53,7 @@ from official_catalog import (
     begin_official_catalog_sync,
     finish_official_catalog_sync,
     list_official_product_archive,
+    list_price_history,
     save_official_product_translation,
     sync_is_configured,
     sync_official_products,
@@ -559,6 +560,18 @@ def normalize_archived_product(row):
         "translationSourceLanguage": clean_text(row.get("translation_source_language")),
         "translationSourceTitle": clean_text(row.get("translation_source_title")),
         "translationSourceDescription": clean_text(row.get("translation_source_description")),
+    }
+
+
+def normalize_price_history(row):
+    return {
+        "handle": clean_text(row.get("product_handle")),
+        "articleNumber": clean_text(row.get("article_number")),
+        "price": float(row.get("price_nok") or 0),
+        "compareAtPrice": float(row.get("compare_at_price_nok") or 0),
+        "available": bool(row.get("available")),
+        "observedAt": clean_text(row.get("observed_at")),
+        "sourceUrl": clean_text(row.get("source_url")),
     }
 
 
@@ -1284,6 +1297,29 @@ class Handler(BaseHTTPRequestHandler):
                         "series": series,
                         "offset": offset,
                         "hasMore": offset + len(products) < total,
+                    },
+                )
+            except Exception as error:
+                return self.json_response(502, {"error": str(error)})
+        if path == "/api/price-history":
+            try:
+                article_number = clean_text((query.get("article") or [""])[0])
+                handle = clean_text((query.get("handle") or [""])[0])
+                try:
+                    limit = min(30, max(1, int((query.get("limit") or ["12"])[0])))
+                except ValueError:
+                    limit = 12
+                if not article_number and not handle:
+                    return self.json_response(
+                        400,
+                        {"error": "Mangler artikkelnummer eller produkthandle."},
+                    )
+                rows = list_price_history(article_number, handle, limit)
+                return self.json_response(
+                    200,
+                    {
+                        "history": [normalize_price_history(row) for row in rows],
+                        "count": len(rows),
                     },
                 )
             except Exception as error:

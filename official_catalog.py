@@ -113,6 +113,31 @@ def list_official_product_archive():
     )
 
 
+def list_price_history(article_number="", handle="", limit=12):
+    if not archive_is_configured():
+        return []
+    params = {
+        "select": (
+            "product_handle,article_number,price_nok,compare_at_price_nok,"
+            "available,observed_at,source_url"
+        ),
+        "order": "observed_at.desc",
+        "limit": str(max(1, min(int(limit or 12), 30))),
+    }
+    if handle:
+        params["product_handle"] = f"eq.{handle}"
+    elif article_number:
+        params["article_number"] = f"eq.{article_number}"
+    else:
+        return []
+    try:
+        return _request("price_history", params)
+    except RuntimeError as error:
+        if "permission denied for table price_history" in str(error):
+            return []
+        raise
+
+
 def save_official_product_translation(
     handle,
     source_title,

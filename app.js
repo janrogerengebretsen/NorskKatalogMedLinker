@@ -110,6 +110,19 @@ function formatNok(value) {
   }).format(Number(value || 0));
 }
 
+function formatHistoryDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("nb-NO", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function productUrl(value) {
   try {
     const url = new URL(value);
@@ -632,6 +645,13 @@ function productCard(product) {
           ${!archived && product.compareAtPrice ? `<span class="compare-price">${formatNok(product.compareAtPrice)}</span>` : ""}
           ${discount ? `<span class="discount">Spar ${discount}%</span>` : ""}
         </div>
+        <button class="price-history-button" type="button"
+          data-price-history
+          data-history-handle="${escapeHtml(product.handle)}"
+          data-history-article="${escapeHtml(product.articleNumber || "")}"
+          data-history-title="${escapeHtml(product.title)}">
+          <i data-lucide="history"></i> Prishistorikk
+        </button>
         ${archived ? `
           <button class="archive-detail-button" data-detail="${escapeHtml(product.handle)}">
             <i data-lucide="archive"></i> Se produktinformasjon
@@ -858,6 +878,18 @@ function detailMarkup(product) {
         ${product.textSource === "automatic-translation" ? `
           <p class="translation-note"><i data-lucide="languages"></i> Automatisk oversatt til norsk fra Tupperwares produkttekst.</p>
         ` : ""}
+        <section class="price-history-section" id="priceHistoryPanel"
+          data-history-handle="${escapeHtml(product.handle)}"
+          data-history-article="${escapeHtml(product.articleNumber || "")}"
+          data-history-title="${escapeHtml(product.title)}">
+          <div class="price-history-heading">
+            <h3>Prishistorikk</h3>
+            <button class="price-history-button compact" type="button" data-price-history>
+              <i data-lucide="history"></i> Hent historikk
+            </button>
+          </div>
+          <p>Tupperware-nettbutikken er alltid fasit for dagens pris.</p>
+        </section>
         ${archived ? `
         <div class="archive-note">
           <i data-lucide="archive"></i>
@@ -883,6 +915,80 @@ function detailMarkup(product) {
         </div>
       </div>
     </div>`;
+}
+
+function priceHistoryRows(history) {
+  if (!history.length) {
+    return `<div class="history-empty">Ingen prishistorikk registrert ennå.</div>`;
+  }
+  return `
+    <div class="history-list">
+      ${history.map(item => `
+        <div class="history-row">
+          <div>
+            <strong>${formatNok(item.price)}</strong>
+            ${item.compareAtPrice ? `<span>${formatNok(item.compareAtPrice)}</span>` : ""}
+          </div>
+          <div>${escapeHtml(formatHistoryDate(item.observedAt) || "Ukjent dato")}</div>
+          <div class="${item.available ? "history-stock" : "history-stock out"}">
+            ${item.available ? "På lager" : "Ikke på lager"}
+          </div>
+        </div>`).join("")}
+    </div>`;
+}
+
+async function openPriceHistory(button) {
+  const source = button.closest("[data-history-handle], [data-history-article]") || button;
+  const handle = source.dataset.historyHandle || button.dataset.historyHandle || "";
+  const article = source.dataset.historyArticle || button.dataset.historyArticle || "";
+  const title = source.dataset.historyTitle || button.dataset.historyTitle || "produktet";
+  const params = new URLSearchParams({ limit: "12" });
+  if (handle) params.set("handle", handle);
+  if (article) params.set("article", article);
+
+  const panel = document.querySelector("#priceHistoryPanel");
+  if (panel) {
+    panel.insertAdjacentHTML("beforeend", `<div class="history-loading">Henter prishistorikk ...</div>`);
+  } else {
+    els.dialogContent.innerHTML = `
+      <div class="history-dialog">
+        <h2>Prishistorikk</h2>
+        <p>${escapeHtml(title)}</p>
+        <div class="history-loading">Henter prishistorikk ...</div>
+      </div>`;
+    els.productDialog.showModal();
+  }
+
+  try {
+    const payload = await fetchJson(`/api/price-history?${params}`);
+    const content = `
+      <div class="history-result">
+        <p class="history-note">Prisene er lagret når vår katalogkopi har sett en endring. Tupperware-nettbutikken er alltid fasit.</p>
+        ${priceHistoryRows(payload.history || [])}
+      </div>`;
+    if (panel) {
+      panel.querySelector(".history-loading")?.remove();
+      panel.querySelector(".history-result")?.remove();
+      panel.insertAdjacentHTML("beforeend", content);
+    } else {
+      els.dialogContent.innerHTML = `
+        <div class="history-dialog">
+          <h2>Prishistorikk</h2>
+          <p>${escapeHtml(title)}</p>
+          ${content}
+        </div>`;
+    }
+    refreshIcons();
+  } catch (error) {
+    const message = `<div class="history-empty">Kunne ikke hente prishistorikk: ${escapeHtml(error.message)}</div>`;
+    if (panel) {
+      panel.querySelector(".history-loading")?.remove();
+      panel.querySelector(".history-result")?.remove();
+      panel.insertAdjacentHTML("beforeend", message);
+    } else {
+      els.dialogContent.innerHTML = `<div class="history-dialog"><h2>Prishistorikk</h2>${message}</div>`;
+    }
+  }
 }
 
 async function openProduct(handle) {
@@ -1060,6 +1166,11 @@ els.consultantResults.addEventListener("click", event => {
 });
 
 els.productGrid.addEventListener("click", event => {
+  const historyButton = event.target.closest("[data-price-history]");
+  if (historyButton) {
+    openPriceHistory(historyButton);
+    return;
+  }
   const seriesButton = event.target.closest("[data-product-series]");
   if (seriesButton) {
     chooseSeries(seriesButton.dataset.productSeries);
@@ -1081,6 +1192,11 @@ els.productDialog.addEventListener("click", event => {
 });
 
 els.dialogContent.addEventListener("click", async event => {
+  const historyButton = event.target.closest("[data-price-history]");
+  if (historyButton) {
+    await openPriceHistory(historyButton);
+    return;
+  }
   const thumbnail = event.target.closest("[data-image]");
   if (thumbnail) {
     const main = document.querySelector("#detailMainImage");
