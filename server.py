@@ -236,6 +236,14 @@ NAVIGATION = [
     },
 ]
 
+SPECIAL_OFFER_COLLECTIONS = {
+    "special-sales",
+    "soldes-tupperware",
+    "weekly-offer",
+}
+
+WEEKLY_OFFER_COLLECTION = "weekly-offer"
+
 
 class TextParser(HTMLParser):
     def __init__(self):
@@ -641,6 +649,79 @@ def attach_price_change_status(products):
     return products
 
 
+def product_identity(product):
+    return (
+        clean_text(product.get("handle"))
+        or clean_text(product.get("articleNumber"))
+        or str(product.get("id") or "")
+    )
+
+
+def unique_products(products):
+    seen = set()
+    unique = []
+    for product in products:
+        key = product_identity(product)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        unique.append(product)
+    return unique
+
+
+def is_discounted_product(product):
+    price = price_value(product.get("price"))
+    compare_at = price_value(product.get("compareAtPrice"))
+    return price > 0 and compare_at > price
+
+
+def is_weekly_offer_product(product):
+    tags = [clean_text(tag).lower() for tag in (product.get("tags") or [])]
+    searchable = clean_text(product.get("searchable")).lower()
+    return (
+        "weekly" in tags
+        or "weekly-offer" in tags
+        or "ukens tilbud" in searchable
+    )
+
+
+def special_offer_products(collection):
+    all_products = get_products()
+    weekly_products = []
+    try:
+        weekly_raw = cached(
+            f"products:{WEEKLY_OFFER_COLLECTION}",
+            lambda: fetch_paginated_products(WEEKLY_OFFER_COLLECTION),
+        )
+        weekly_products = [normalize_product(product) for product in weekly_raw]
+    except Exception as error:
+        print(f"Ukens tilbud kunne ikke hentes direkte: {error}", file=sys.stderr)
+
+    weekly_keys = {product_identity(product) for product in weekly_products}
+    if collection == "weekly-offer":
+        products = [
+            product
+            for product in all_products
+            if product_identity(product) in weekly_keys or is_weekly_offer_product(product)
+        ]
+        return attach_price_change_status(unique_products(weekly_products + products))
+
+    if collection == "soldes-tupperware":
+        products = [product for product in all_products if is_discounted_product(product)]
+        return attach_price_change_status(unique_products(products))
+
+    products = [
+        product
+        for product in all_products
+        if (
+            product_identity(product) in weekly_keys
+            or is_weekly_offer_product(product)
+            or is_discounted_product(product)
+        )
+    ]
+    return attach_price_change_status(unique_products(weekly_products + products))
+
+
 def attach_saved_translation(product, row):
     if not row:
         return product
@@ -886,6 +967,8 @@ def live_products_with_archive_sync():
 
 def get_products(collection=""):
     if collection:
+        if collection in SPECIAL_OFFER_COLLECTIONS:
+            return special_offer_products(collection)
         key = f"products:{collection}"
         raw = cached(key, lambda: fetch_paginated_products(collection))
         live_products = [normalize_product(product) for product in raw]
