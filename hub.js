@@ -535,26 +535,56 @@ async function downloadPoster(key) {
   const detailLines = wrapCanvasText(context, details.text, 1250);
   drawCenteredLines(context, detailLines, centerX, titleBottom + 100, 52);
 
-  const qrSize = 760;
-  const qrY = titleBottom + 235;
+  const qrSize = 560;
+  const qrY = titleBottom + 220;
   context.strokeStyle = "#d7dedb";
-  context.lineWidth = 5;
-  context.strokeRect((canvas.width - qrSize) / 2 - 28, qrY - 28, qrSize + 56, qrSize + 56);
+  context.lineWidth = 4;
+  context.strokeRect((canvas.width - qrSize) / 2 - 24, qrY - 24, qrSize + 48, qrSize + 48);
   context.drawImage(qrImage, (canvas.width - qrSize) / 2, qrY, qrSize, qrSize);
 
+  const instructionY = qrY + qrSize + 85;
+  const instructionX = 180;
+  const instructionWidth = canvas.width - 360;
+  const instructionHeight = 410;
+  const actionText = key === "store"
+    ? "Handle i Tupperwares norske nettbutikk."
+    : key === "own"
+      ? "Se varene konsulenten har på eget lager."
+      : "Se katalogen og velg produktene du er interessert i.";
+
+  context.fillStyle = "#edf7f4";
+  context.fillRect(instructionX, instructionY, instructionWidth, instructionHeight);
+  context.fillStyle = "#007b68";
+  context.fillRect(instructionX, instructionY, 12, instructionHeight);
   context.fillStyle = "#202825";
-  context.font = "700 43px Arial";
-  context.fillText("Skann QR-koden med mobilkameraet", centerX, qrY + qrSize + 110);
-  context.fillStyle = "#4a5450";
-  context.font = "400 29px Arial";
-  context.fillText("Trykk på lenken som vises på skjermen for å åpne katalogen.", centerX, qrY + qrSize + 166);
+  context.textAlign = "left";
+  context.font = "700 39px Arial";
+  context.fillText("Slik gjør du", instructionX + 58, instructionY + 62);
+  context.font = "400 28px Arial";
+  const instructions = [
+    "1. Åpne kameraet på mobilen og pek det mot QR-koden.",
+    "2. Trykk på lenken som vises på skjermen.",
+    `3. ${actionText}`,
+    "4. Konsulentens referanse følger lenken automatisk.",
+  ];
+  instructions.forEach((instruction, index) => {
+    context.fillText(instruction, instructionX + 58, instructionY + 125 + (index * 57));
+  });
+  context.fillStyle = "#465651";
+  context.font = "700 24px Arial";
+  context.fillText(
+    "Pris og lagerstatus hos Tupperware gjelder alltid ved bestilling.",
+    instructionX + 58,
+    instructionY + 365,
+  );
+  context.textAlign = "center";
 
   if (key === "own") {
     context.fillStyle = "#faf1f3";
-    context.fillRect(180, qrY + qrSize + 220, canvas.width - 360, 112);
+    context.fillRect(180, instructionY + instructionHeight + 24, canvas.width - 360, 86);
     context.fillStyle = "#802535";
-    context.font = "700 27px Arial";
-    context.fillText("Varene kommer fra konsulentens eget lager, ikke Tupperwares sentrallager.", centerX, qrY + qrSize + 288);
+    context.font = "700 25px Arial";
+    context.fillText("Varene kommer fra konsulentens eget lager, ikke Tupperwares sentrallager.", centerX, instructionY + instructionHeight + 77);
   }
 
   context.strokeStyle = "#d7dedb";
@@ -567,10 +597,10 @@ async function downloadPoster(key) {
   context.font = "700 34px Arial";
   context.fillText(`Din Tupperware-konsulent: ${consultantName}`, centerX, 2120);
   context.fillStyle = "#4a5450";
-  context.font = "400 24px Arial";
+  context.font = "400 19px Arial";
   context.fillText(`Konsulentreferanse: ${referenceCode}`, centerX, 2170);
-  const urlLines = wrapCanvasText(context, shareUrls[key], 1300);
-  drawCenteredLines(context, urlLines, centerX, 2220, 34);
+  const urlLines = wrapCanvasText(context, shareUrls[key], 1180);
+  drawCenteredLines(context, urlLines, centerX, 2215, 28);
 
   const pdfBlob = jpegPdfBlob(canvas.toDataURL("image/jpeg", 0.94), canvas.width, canvas.height);
   const downloadUrl = URL.createObjectURL(pdfBlob);
