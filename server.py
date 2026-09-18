@@ -17,6 +17,8 @@ import unicodedata
 import mail_tool
 from datetime import datetime
 
+ACTIVE_MONTHLY_CATALOG_PATH = "/september-katalog"
+
 _local_env = Path(__file__).resolve().parent / ".env"
 if _local_env.is_file():
     for _line in _local_env.read_text(encoding="utf-8").splitlines():
@@ -1794,6 +1796,7 @@ class Handler(BaseHTTPRequestHandler):
         product_titles = {
             "norsk-nettkatalog": "Norsk Nettkatalog",
             "norsk-produktkatalog": "Norsk produktkatalog",
+            "maanedstilbud": "Siste månedstilbud",
             "egne-varer": "Egne varer",
             "party": "Party",
         }
@@ -1825,11 +1828,16 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             return "norsk-nettkatalog"
         if path in (
             "/digital-katalog", "/digital-katalog/",
-            "/september-katalog", "/september-katalog/",
             "/kataloghefte-test", "/kataloghefte-test/",
             "/catalog-demo/", "/catalog-demo/index.html",
         ):
             return "norsk-produktkatalog"
+        if path in (
+            "/siste-maanedstilbud", "/siste-maanedstilbud/",
+            "/siste-manedstilbud", "/siste-manedstilbud/",
+            "/september-katalog", "/september-katalog/",
+        ):
+            return "maanedstilbud"
         if path in ("/egne-varer", "/egne-varer/", "/own.html"):
             return "egne-varer"
         if path in ("/party", "/party/", "/party.html") or path.startswith("/party-p/"):
@@ -1846,6 +1854,20 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
                 access = []
             if not consultant_ref or required_product not in access:
                 return self.product_access_denied(consultant_ref, required_product)
+
+        if path in (
+            "/siste-maanedstilbud", "/siste-maanedstilbud/",
+            "/siste-manedstilbud", "/siste-manedstilbud/",
+        ):
+            query_string = urlencode(query or {}, doseq=True)
+            location = ACTIVE_MONTHLY_CATALOG_PATH
+            if query_string:
+                location = f"{location}?{query_string}"
+            self.send_response(302)
+            self.send_header("Location", location)
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            return
 
         filenames = {
             "/": ("index.html", "text/html; charset=utf-8"),

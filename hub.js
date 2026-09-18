@@ -17,7 +17,7 @@ const referenceCode = cleanReference(params.get("ref"));
 const shareUrls = {
   official: new URL(`/?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   digital: new URL(`/digital-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
-  september: new URL(`/september-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
+  september: new URL(`/siste-maanedstilbud?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   own: new URL(`/egne-varer?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   party: new URL(`/party?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
 };
@@ -33,9 +33,9 @@ const shareDetails = {
     filename: "digital-produktkatalog",
   },
   september: {
-    title: "Velkommen til septemberkatalogen",
-    text: "Se septemberkampanjen med personlige produktlenker.",
-    filename: "september-katalog",
+    title: "Velkommen til månedens tilbud",
+    text: "Se den nyeste månedskatalogen med personlige produktlenker.",
+    filename: "siste-maanedstilbud",
   },
   own: {
     title: "Velkommen til konsulentens egne varer",
@@ -75,6 +75,13 @@ const productRegister = [
     title: "Party",
     description: "Digital og fysisk party-lÃ¸sning med pÃ¥melding, fokusprodukter og bestillinger.",
     accessLabel: "Tilleggsprodukt - kjÃ¸pes separat",
+    accessType: "entitlement",
+  },
+  {
+    key: "maanedstilbud",
+    title: "Siste månedstilbud",
+    description: "Abonnement på den nyeste månedskatalogen med aktuelle tilbud.",
+    accessLabel: "Abonnement",
     accessType: "entitlement",
   },
 ];
@@ -626,12 +633,12 @@ function updateVisibleModules() {
   const access = consultantProfile?.productAccess || new Set();
   document.querySelector("#officialCatalogLink").hidden = !access.has("norsk-nettkatalog");
   document.querySelector("#digitalCatalogLink").hidden = !access.has("norsk-produktkatalog");
-  document.querySelector("#septemberCatalogLink").hidden = !access.has("norsk-produktkatalog");
+  document.querySelector("#septemberCatalogLink").hidden = !access.has("maanedstilbud");
   document.querySelector("#ownCatalogModule").hidden = !access.has("egne-varer");
   document.querySelector("#partyModule").hidden = !access.has("party");
   document.querySelector('[data-share="official"]').hidden = !access.has("norsk-nettkatalog");
   document.querySelector('[data-share="digital"]').hidden = !access.has("norsk-produktkatalog");
-  document.querySelector('[data-share="september"]').hidden = !access.has("norsk-produktkatalog");
+  document.querySelector('[data-share="september"]').hidden = !access.has("maanedstilbud");
   document.querySelector('[data-share="party"]').hidden = !access.has("party");
 }
 
@@ -652,7 +659,7 @@ async function loadConsultant() {
   const shareTasks = [];
   if (consultantProfile.productAccess.has("norsk-nettkatalog")) shareTasks.push(renderShareItem("official"));
   if (consultantProfile.productAccess.has("norsk-produktkatalog")) shareTasks.push(renderShareItem("digital"));
-  if (consultantProfile.productAccess.has("norsk-produktkatalog")) shareTasks.push(renderShareItem("september"));
+  if (consultantProfile.productAccess.has("maanedstilbud")) shareTasks.push(renderShareItem("september"));
   if (consultantProfile.productAccess.has("party")) shareTasks.push(renderShareItem("party"));
   await Promise.all(shareTasks);
 
