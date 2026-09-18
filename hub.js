@@ -15,6 +15,7 @@ function storedReference() {
 // A consultant is selected only through the explicit ref in the shared URL.
 const referenceCode = cleanReference(params.get("ref"));
 const shareUrls = {
+  store: new URL(`/no/?ref=${encodeURIComponent(referenceCode)}&country=NO`, "https://tupperware-eu.com").toString(),
   official: new URL(`/?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   digital: new URL(`/digital-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   september: new URL(`/siste-maanedstilbud?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
@@ -22,6 +23,11 @@ const shareUrls = {
   party: new URL(`/party?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
 };
 const shareDetails = {
+  store: {
+    title: "Handle hos din Tupperware-konsulent",
+    text: "Åpne Tupperwares norske nettbutikk med konsulentens personlige referanse.",
+    filename: "konsulentens-tupperware-side",
+  },
   official: {
     title: "Velkommen til Tupperware Norsk Nettkatalog",
     text: "Se Tupperwares produkter og finn dine favoritter.",
@@ -582,6 +588,7 @@ function setPersonalLinks(name) {
   document.querySelector("#hubConsultantName").textContent = `Arbeidsflate for ${name}`;
   document.querySelector("#pageConsultantName").textContent = name;
   document.querySelector("#hubReference").textContent = referenceCode;
+  document.querySelector("#consultantStoreLink").href = shareUrls.store;
   document.querySelector("#officialCatalogLink").href = shareUrls.official;
   document.querySelector("#digitalCatalogLink").href = shareUrls.digital;
   document.querySelector("#septemberCatalogLink").href = shareUrls.september;
@@ -657,6 +664,7 @@ async function loadConsultant() {
   renderProductRegistry(result);
   updateVisibleModules();
   const shareTasks = [];
+  shareTasks.push(renderShareItem("store"));
   if (consultantProfile.productAccess.has("norsk-nettkatalog")) shareTasks.push(renderShareItem("official"));
   if (consultantProfile.productAccess.has("norsk-produktkatalog")) shareTasks.push(renderShareItem("digital"));
   if (consultantProfile.productAccess.has("maanedstilbud")) shareTasks.push(renderShareItem("september"));
