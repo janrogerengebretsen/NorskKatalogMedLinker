@@ -1408,6 +1408,12 @@ class Handler(BaseHTTPRequestHandler):
                 collection = clean_text((query.get("collection") or [""])[0])
                 series = clean_text((query.get("series") or [""])[0])
                 search = search_key((query.get("q") or [""])[0])
+                article_numbers = {
+                    clean_text(value).upper()
+                    for raw_value in query.get("articles") or []
+                    for value in raw_value.split(",")
+                    if clean_text(value)
+                }
                 sort = clean_text((query.get("sort") or ["newest"])[0])
                 status = clean_text((query.get("status") or ["all"])[0])
                 try:
@@ -1416,6 +1422,12 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError:
                     offset, limit = 0, 48
                 products = get_products(collection)
+                if article_numbers:
+                    products = [
+                        product
+                        for product in products
+                        if clean_text(product.get("articleNumber")).upper() in article_numbers
+                    ]
                 if series:
                     series_key = search_key(series)
                     products = [

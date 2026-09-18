@@ -394,30 +394,48 @@
       if (product.available) return ["available", "På lager"];
       return ["unavailable", "Midlertidig utsolgt"];
     }
+    function updateStockStatus(code, product) {
+      const [statusClass, text] = statusLabel(product);
+      document.querySelectorAll(`[data-stock-code="${code}"]`).forEach((item) => {
+        item.textContent = text;
+        item.classList.remove("available", "unavailable", "unknown");
+        item.classList.add(statusClass);
+      });
+      document.querySelectorAll(`.hotspot[data-code="${code}"]`).forEach((item) => {
+        item.title = `${code} - ${text}`;
+        item.setAttribute("aria-label", `${code} - ${text}`);
+      });
+    }
     async function loadStockStatuses() {
       const codes = [...new Set(rows.map(row => row.dataset.code).filter(Boolean))];
-      await Promise.all(codes.map(async (code) => {
-        let product = null;
+      const cacheKey = `september-stock:${codes.join(",")}`;
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+        if (cached && Date.now() - cached.savedAt < 15 * 60 * 1000 && Array.isArray(cached.products)) {
+          const productsByCode = new Map(cached.products.map(product => [String(product.articleNumber || "").toUpperCase(), product]));
+          codes.forEach(code => updateStockStatus(code, productsByCode.get(code) || null));
+          return;
+        }
+      } catch {}
+
+      let products = [];
+      let loaded = false;
+      try {
+        const articles = encodeURIComponent(codes.join(","));
+        const response = await fetch(`/api/products?articles=${articles}&limit=${codes.length}`);
+        const payload = await response.json();
+        if (response.ok && Array.isArray(payload.products)) {
+          products = payload.products;
+          loaded = true;
+        }
+      } catch {}
+      const productsByCode = new Map(products.map(product => [String(product.articleNumber || "").toUpperCase(), product]));
+      codes.forEach(code => updateStockStatus(code, productsByCode.get(code) || null));
+      if (loaded) {
         try {
-          const response = await fetch(`/api/products?q=${encodeURIComponent(code)}&limit=8`);
-          const payload = await response.json();
-          if (response.ok && Array.isArray(payload.products)) {
-            product = payload.products.find(item => String(item.articleNumber || "").toUpperCase() === code)
-              || payload.products[0]
-              || null;
-          }
+          localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), products }));
         } catch {}
-        const [statusClass, text] = statusLabel(product);
-        document.querySelectorAll(`[data-stock-code="${code}"]`).forEach((item) => {
-          item.textContent = text;
-          item.classList.remove("available", "unavailable", "unknown");
-          item.classList.add(statusClass);
-        });
-        document.querySelectorAll(`.hotspot[data-code="${code}"]`).forEach((item) => {
-          item.title = `${code} - ${text}`;
-          item.setAttribute("aria-label", `${code} - ${text}`);
-        });
-      }));
+      }
     }
     shopLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
