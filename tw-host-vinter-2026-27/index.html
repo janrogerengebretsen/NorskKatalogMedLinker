@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupperware høst/vinter 2026-2027</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f2f5f4; color: #172124; }
+    header { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #dbe2e0; }
+    .consultant-line { min-height: 32px; display:flex; align-items:center; justify-content:center; gap:8px; padding:6px 18px; background:#0b6b66; color:#fff; font-size:13px; }
+    .consultant-line small { color: rgba(255,255,255,.75); }
+    .consultant-line.invalid { background:#9b332d; }
+    .bar { display:grid; grid-template-columns:minmax(210px,1fr) auto auto; gap:10px; align-items:center; max-width:1380px; margin:0 auto; padding:12px 18px; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:0; }
+    .brand-mark { width:36px; height:36px; display:grid; place-items:center; flex:0 0 auto; background:#d45a3c; color:#fff; font-size:21px; font-weight:800; }
+    h1 { margin:0; font-size:18px; letter-spacing:0; }
+    input { width:min(420px,100%); border:1px solid #cbd6d3; border-radius:8px; min-height:40px; padding:8px 10px; font:inherit; }
+    button { border:1px solid #0b6b66; background:#0b6b66; color:#fff; border-radius:8px; min-height:40px; padding:8px 12px; font:inherit; font-weight:700; cursor:pointer; }
+    main { display:grid; grid-template-columns:300px minmax(0,1fr); gap:18px; max-width:1380px; margin:0 auto; padding:18px; }
+    aside { position:sticky; top:76px; align-self:start; max-height:calc(100vh - 92px); overflow:auto; background:#fff; border:1px solid #dbe2e0; border-radius:8px; }
+    .product-row { display:grid; gap:4px; padding:10px 12px; border-bottom:1px solid #eef2f1; color:#172124; text-decoration:none; }
+    .product-row:hover { background:#edf8f6; }
+    .product-row strong { color:#0b6b66; font-size:13px; }
+    .stock-status { color:#506166; font-size:12px; font-weight:700; }
+    .stock-status.available { color:#08795f; }
+    .stock-status.unavailable { color:#9b332d; }
+    .stock-status.unknown { color:#6b5b2a; }
+    .pages { display:grid; gap:18px; }
+    .page { background:#fff; border:1px solid #dbe2e0; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(18,48,47,.08); }
+    .page-head { display:flex; justify-content:space-between; border-bottom:1px solid #e7ecea; padding:8px 12px; font-size:13px; font-weight:700; color:#506166; }
+    .sheet { position:relative; width:100%; aspect-ratio:var(--page-ratio); background:#fff; }
+    .sheet img { display:block; width:100%; height:100%; object-fit:contain; }
+    .hotspot { position:absolute; display:block; border-radius:4px; outline-offset:2px; }
+    .hotspot:focus { outline:3px solid #d45a3c; background:rgba(212,90,60,.14); }
+    body.show-links .hotspot { background:rgba(11,107,102,.18); box-shadow:inset 0 0 0 2px rgba(11,107,102,.75); }
+    .translation { position:absolute; z-index:2; font-weight:800; line-height:1.15; color:#172124; text-wrap:balance; pointer-events:none; }
+    .cover-badge { padding:1.1% 1.6%; background:rgba(255,255,255,.92); color:#0b6b66; font-size:clamp(10px,1.4vw,19px); text-transform:uppercase; letter-spacing:.04em; }
+    .cover-title { color:#fff; font-size:clamp(22px,4.3vw,54px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .cover-subtitle { color:#fff; font-size:clamp(15px,2.2vw,30px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .note-panel, .story-panel { padding:1.2% 1.5%; background:rgba(255,255,255,.92); border-left:5px solid #0b6b66; font-size:clamp(10px,1.45vw,18px); font-weight:500; box-shadow:0 8px 20px rgba(0,0,0,.12); }
+    .note-panel.compact { font-size:clamp(9px,1.08vw,15px); line-height:1.22; }
+    .note-panel.dark { background:rgba(23,33,36,.9); color:#fff; }
+    .note-panel strong, .story-panel strong { color:#0b6b66; font-weight:900; }
+    @media (max-width:860px) { .bar { grid-template-columns:1fr; } main { grid-template-columns:1fr; } aside { position:static; max-height:210px; } .consultant-line { flex-wrap:wrap; text-align:center; } }
+  
+    .translation-panel { position:absolute; z-index:3; padding:2.1%; background:rgba(249,248,239,.96); color:#262626; border-left:6px solid #d96822; box-shadow:0 8px 22px rgba(0,0,0,.14); font-size:clamp(9px,1.12vw,16px); line-height:1.3; pointer-events:none; }
+    .translation-panel h2,.translation-panel h3,.translation-panel p { margin:0 0 .65em; }
+    .translation-panel h2 { font-size:1.65em; }
+    .translation-panel h3 { font-size:1.05em; }
+    .cover-translation { left:12%; top:13%; width:76%; text-align:center; background:rgba(30,24,18,.78); color:#fff; border:0; }
+    .cover-translation strong,.cover-translation span { display:block; }
+    .cover-translation strong { font-size:1.7em; }
+    .page-two-translation { left:40%; top:5%; width:54%; height:86%; font-size:clamp(9px,1.28vw,17px); }
+    .full-text-translation { left:7%; top:6%; width:86%; height:84%; }
+    .join-translation { height:61%; }
+    .recipe-intro { left:4%; top:48%; width:92%; }
+    .recipe-bottom { left:32%; top:62%; width:63%; height:31%; }
+    .recipe-top { left:31%; top:7%; width:64%; height:46%; }
+    .recipe-lower { left:7%; top:61%; width:62%; height:29%; }
+    .hummus-translation { left:5%; top:4%; width:45%; height:26%; }
+    .consultant-details { position:absolute; z-index:3; left:16%; top:50%; width:62%; min-height:24%; display:flex; flex-direction:column; justify-content:center; gap:.7em; padding:3%; background:rgba(249,248,239,.97); color:#262626; text-align:center; font-size:clamp(11px,1.7vw,22px); }
+    .consultant-details strong { font-size:1.25em; text-transform:uppercase; }
+        </style>
+</head>
+<body>
+  <header>
+    <div class="consultant-line" id="consultantLine">
+      <span>Du handler med <strong id="consultantName">Kontrollerer konsulent ...</strong></span>
+      <small id="consultantCode"></small>
+    </div>
+    <div class="bar">
+      <div class="brand"><span class="brand-mark">T</span><h1>Tupperware høst/vinter 2026-2027</h1></div>
+      <input id="search" type="search" placeholder="Sok artikkelnummer eller kode">
+      <button id="toggle" type="button">Vis lenkeflater</button>
+    </div>
+  </header>
+  <main><aside><a class="product-row" href="https://tupperware-eu.com/no/search?q=11186044" target="tupperware_shop"
+      data-search="set freezer mates 450 ml (4) 15,2 x 11,4 x 6,2 cm h 11186044" data-page="8" data-code="11186044">
+      <span>Set Freezer mates 450 ml (4) 15,2 x 11,4 x 6,2 cm h</span><strong>11186044 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11186044">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168759" target="tupperware_shop"
+      data-search="a a. ultimate silicone bag s 17 x 5,5 x 14 cm h - 540 ml 11168759" data-page="8" data-code="11168759">
+      <span>A A. Ultimate silicone bag S 17 x 5,5 x 14 cm h - 540 ml</span><strong>11168759 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11168759">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168760" target="tupperware_shop"
+      data-search="b. ultimate silicone bag m 20 x 8,1 x 16 cm h - 1 l 11168760" data-page="8" data-code="11168760">
+      <span>B. Ultimate silicone bag M 20 x 8,1 x 16 cm h - 1 l</span><strong>11168760 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11168760">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168761" target="tupperware_shop"
+      data-search="c. ultimate silicone bag l 23 x 10,4 x 20 cm h - 1,8 l 11168761" data-page="8" data-code="11168761">
+      <span>C. Ultimate silicone bag L 23 x 10,4 x 20 cm h - 1,8 l</span><strong>11168761 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11168761">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168762" target="tupperware_shop"
+      data-search="d. ultimate silicone bag xl 27 x 12,7 x 22 cm h - 2,9 l 11168762" data-page="8" data-code="11168762">
+      <span>D. Ultimate silicone bag XL 27 x 12,7 x 22 cm h - 2,9 l</span><strong>11168762 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11168762">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174029" target="tupperware_shop"
+      data-search="e. ultimate silicone bag slim s 17,7 x 11,5 cm h / 300 ml 11174029" data-page="8" data-code="11174029">
+      <span>E. Ultimate silicone bag slim S 17,7 x 11,5 cm h / 300 ml</span><strong>11174029 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11174029">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174026" target="tupperware_shop"
+      data-search="f. ultimate silicone bag slim m 18,7 x 18,4 cm h / 980 ml 11174026" data-page="8" data-code="11174026">
+      <span>F. Ultimate silicone bag slim M 18,7 x 18,4 cm h / 980 ml</span><strong>11174026 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11174026">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174028" target="tupperware_shop"
+      data-search="g. ultimate silicone bag slim l 19,7 x 23,5 cm h / 1,6 l 11174028" data-page="8" data-code="11174028">
+      <span>G. Ultimate silicone bag slim L 19,7 x 23,5 cm h / 1,6 l</span><strong>11174028 · Side 8</strong>
+      <small class="stock-status" data-stock-code="11174028">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11156002" target="tupperware_shop"
+      data-search="ventsmart 375 ml 14,2 x 9,8 x 6,8 cm h 11156002" data-page="9" data-code="11156002">
+      <span>Ventsmart 375 ml 14,2 x 9,8 x 6,8 cm h</span><strong>11156002 · Side 9</strong>
+      <small class="stock-status" data-stock-code="11156002">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155861" target="tupperware_shop"
+      data-search="375 ml ventsmart 800 ml 6,8 cm h 18,8 x 14,2 x 6,8 cm h 11155861" data-page="9" data-code="11155861">
+      <span>375 ml Ventsmart 800 ml 6,8 cm h 18,8 x 14,2 x 6,8 cm h</span><strong>11155861 · Side 9</strong>
+      <small class="stock-status" data-stock-code="11155861">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184913" target="tupperware_shop"
+      data-search="ventsmart low 1,8 l 28,5 x 19 x 7 cm h 11184913" data-page="9" data-code="11184913">
+      <span>Ventsmart low 1,8 l 28,5 x 19 x 7 cm h</span><strong>11184913 · Side 9</strong>
+      <small class="stock-status" data-stock-code="11184913">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184916" target="tupperware_shop"
+      data-search="low 1,8 l ventsmart 1,8 l high cm h 18,8 x 14,2 x 13,4 cm h 11184916" data-page="9" data-code="11184916">
+      <span>low 1,8 l Ventsmart 1,8 l high cm h 18,8 x 14,2 x 13,4 cm h</span><strong>11184916 · Side 9</strong>
+      <small class="stock-status" data-stock-code="11184916">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184921" target="tupperware_shop"
+      data-search="ventsmart 4,4 l 1,8 l high 13,4 cm h 28,3 x 18,8 x 13,4 cm h 11184921" data-page="9" data-code="11184921">
+      <span>Ventsmart 4,4 l 1,8 l high 13,4 cm h 28,3 x 18,8 x 13,4 cm h</span><strong>11184921 · Side 9</strong>
+      <small class="stock-status" data-stock-code="11184921">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11169011" target="tupperware_shop"
+      data-search="2x ø 13,3 x 5 cm h / 300 ml 1x ø 19,5 x 8,5 cm h / 1,4 l 11169011" data-page="10" data-code="11169011">
+      <span>2x Ø 13,3 x 5 cm h / 300 ml 1x Ø 19,5 x 8,5 cm h / 1,4 l</span><strong>11169011 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11169011">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184136" target="tupperware_shop"
+      data-search="modular bowl 1 l 19,2 x 20,7 x 6,1 cm h 11184136" data-page="10" data-code="11184136">
+      <span>Modular bowl 1 l 19,2 x 20,7 x 6,1 cm h</span><strong>11184136 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184136">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184135" target="tupperware_shop"
+      data-search="modular bowl 1,5 l bowl 1 l x 6,1 cm h 19,2 x 20,7 x 8,9 cm h 11184135" data-page="10" data-code="11184135">
+      <span>Modular bowl 1,5 l bowl 1 l x 6,1 cm h 19,2 x 20,7 x 8,9 cm h</span><strong>11184135 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184135">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184137" target="tupperware_shop"
+      data-search="bowl 1,5 l modular bowl 2 l x 8,9 cm h 19,2 x 20,7 x 11,7 cm h 11184137" data-page="10" data-code="11184137">
+      <span>bowl 1,5 l Modular bowl 2 l x 8,9 cm h 19,2 x 20,7 x 11,7 cm h</span><strong>11184137 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184137">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184119" target="tupperware_shop"
+      data-search="fridge container 650 ml * 22,7 x 15,1 x 3,8 cm h 11184119" data-page="10" data-code="11184119">
+      <span>Fridge container 650 ml * 22,7 x 15,1 x 3,8 cm h</span><strong>11184119 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184119">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184120" target="tupperware_shop"
+      data-search="container 650 ml * fridge container 1,3 l x 3,8 cm h 30,3 x 22,6 x 3,9 cm h 11184120" data-page="10" data-code="11184120">
+      <span>container 650 ml * Fridge container 1,3 l x 3,8 cm h 30,3 x 22,6 x 3,9 cm h</span><strong>11184120 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184120">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184204" target="tupperware_shop"
+      data-search="container 1,3 l fridge container 3,4 l x 3,9 cm h 30 x 23 x 8,5 cm h 11184204" data-page="10" data-code="11184204">
+      <span>container 1,3 l Fridge container 3,4 l x 3,9 cm h 30 x 23 x 8,5 cm h</span><strong>11184204 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184204">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184105" target="tupperware_shop"
+      data-search="modular bowl 630 ml ø 16,5 x 6 cm h 11184105" data-page="10" data-code="11184105">
+      <span>Modular bowl 630 ml Ø 16,5 x 6 cm h</span><strong>11184105 · Side 10</strong>
+      <small class="stock-status" data-stock-code="11184105">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183903" target="tupperware_shop"
+      data-search="refrigerator bowl 380 ml (4) ø 11,5 x 8,2 cm h 11183903" data-page="11" data-code="11183903">
+      <span>Refrigerator bowl 380 ml (4) Ø 11,5 x 8,2 cm h</span><strong>11183903 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11183903">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178253" target="tupperware_shop"
+      data-search="bowl 380 ml (4) slim line pitcher 1 l cm h 12 x 12 x 15 cm h 11178253" data-page="11" data-code="11178253">
+      <span>bowl 380 ml (4) Slim line pitcher 1 l cm h 12 x 12 x 15 cm h</span><strong>11178253 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11178253">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184200" target="tupperware_shop"
+      data-search="l slim line pitcher 2 l pitcher 1 l 11,8 x 11,8 x 29,7 cm h cm h 11184200" data-page="11" data-code="11184200">
+      <span>L Slim line pitcher 2 l pitcher 1 l 11,8 x 11,8 x 29,7 cm h cm h</span><strong>11184200 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11184200">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop"
+      data-search="3 to 6 cheeses, odour-free 30,6 x 20,4 x 8,3 cm h 11165083" data-page="11" data-code="11165083">
+      <span>3 to 6 cheeses, odour-free 30,6 x 20,4 x 8,3 cm h</span><strong>11165083 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11165083">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11160057" target="tupperware_shop"
+      data-search="homemade preparations odour-free ø 9.1 x 12,5 cm h 8,3 cm h 11160057" data-page="11" data-code="11160057">
+      <span>homemade preparations odour-free Ø 9.1 x 12,5 cm h 8,3 cm h</span><strong>11160057 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11160057">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11157472" target="tupperware_shop"
+      data-search="preparations dressing in the lid cm h ø 9.1 x 17 cm h 11157472" data-page="11" data-code="11157472">
+      <span>preparations dressing in the lid cm h Ø 9.1 x 17 cm h</span><strong>11157472 · Side 11</strong>
+      <small class="stock-status" data-stock-code="11157472">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176764" target="tupperware_shop"
+      data-search="ultra clear 500 ml 16,2 x 11,3 x 5,6 cm h 11176764" data-page="12" data-code="11176764">
+      <span>Ultra Clear 500 ml 16,2 x 11,3 x 5,6 cm h</span><strong>11176764 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176764">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176862" target="tupperware_shop"
+      data-search="500 ml ultra clear 825 ml 5,6 cm h 16,6 x 17,6 x 5,7 cm h 11176862" data-page="12" data-code="11176862">
+      <span>500 ml Ultra Clear 825 ml 5,6 cm h 16,6 x 17,6 x 5,7 cm h</span><strong>11176862 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176862">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176765" target="tupperware_shop"
+      data-search="825 ml ultra clear 1 l 5,7 cm h 16,2 x 11,3 x 10,6 cm h 11176765" data-page="12" data-code="11176765">
+      <span>825 ml Ultra Clear 1 l 5,7 cm h 16,2 x 11,3 x 10,6 cm h</span><strong>11176765 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176765">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176870" target="tupperware_shop"
+      data-search="ultra clear 1,7 l keep your 16,6 x 17,6 x 10,6 cm h perfectly organized. 11176870" data-page="12" data-code="11176870">
+      <span>Ultra Clear 1,7 l keep your 16,6 x 17,6 x 10,6 cm h perfectly organized.</span><strong>11176870 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176870">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176775" target="tupperware_shop"
+      data-search="1,7 l ultra clear 2,2 l 10,6 cm h 16,2 x 11,3 x 20,4 cm h 11176775" data-page="12" data-code="11176775">
+      <span>1,7 l Ultra Clear 2,2 l 10,6 cm h 16,2 x 11,3 x 20,4 cm h</span><strong>11176775 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176775">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11176871" target="tupperware_shop"
+      data-search="ultra clear 3,6 l 16,6 x 17,6 x 20,5 cm h 11176871" data-page="12" data-code="11176871">
+      <span>Ultra Clear 3,6 l 16,6 x 17,6 x 20,5 cm h</span><strong>11176871 · Side 12</strong>
+      <small class="stock-status" data-stock-code="11176871">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184167" target="tupperware_shop"
+      data-search="one touch fresh® 540 ml 16,5 x 12,1 x 6,5 cm h 11184167" data-page="13" data-code="11184167">
+      <span>One touch fresh® 540 ml 16,5 x 12,1 x 6,5 cm h</span><strong>11184167 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11184167">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184177" target="tupperware_shop"
+      data-search="one touch fresh® 1,1 l fresh® 540 ml 16,5 x 12,1 x 12,3 cm h 6,5 cm h 11184177" data-page="13" data-code="11184177">
+      <span>One touch fresh® 1,1 l fresh® 540 ml 16,5 x 12,1 x 12,3 cm h 6,5 cm h</span><strong>11184177 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11184177">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184104" target="tupperware_shop"
+      data-search="one touch fresh® 1,8 l 16,5 x 12,1 x 18,1 cm h 11184104" data-page="13" data-code="11184104">
+      <span>One touch fresh® 1,8 l 16,5 x 12,1 x 18,1 cm h</span><strong>11184104 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11184104">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11159416" target="tupperware_shop"
+      data-search="paper towels within easy reach. 18,7 x 14 x 24 cm h 11159416" data-page="13" data-code="11159416">
+      <span>Paper towels within easy reach. 18,7 x 14 x 24 cm h</span><strong>11159416 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11159416">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11175889" target="tupperware_shop"
+      data-search="a. potato smart 5,5 l 28,5 x 19 x 23 cm h 11175889" data-page="13" data-code="11175889">
+      <span>A. Potato Smart 5,5 l 28,5 x 19 x 23 cm h</span><strong>11175889 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11175889">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop"
+      data-search="practical for keeping the work 24,8 x 25,7 x 14,8 cm h / 2,5 l 11162264" data-page="13" data-code="11162264">
+      <span>Practical for keeping the work 24,8 x 25,7 x 14,8 cm h / 2,5 l</span><strong>11162264 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11162264">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11181136" target="tupperware_shop"
+      data-search="surface clean. b. garlic n all keeper 2,3 l 22 x 18,6 x 11,8 cm h 11181136" data-page="13" data-code="11181136">
+      <span>surface clean. B. Garlic N all keeper 2,3 l 22 x 18,6 x 11,8 cm h</span><strong>11181136 · Side 13</strong>
+      <small class="stock-status" data-stock-code="11181136">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop"
+      data-search="sbf queen ø 31 x 4 cm h 11170305" data-page="14" data-code="11170305">
+      <span>SBF Queen Ø 31 x 4 cm h</span><strong>11170305 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11170305">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11180469" target="tupperware_shop"
+      data-search="sbf mini hearts h ø 23 x 4,3 cm h 11180469" data-page="14" data-code="11180469">
+      <span>SBF mini hearts h Ø 23 x 4,3 cm h</span><strong>11180469 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11180469">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11181082" target="tupperware_shop"
+      data-search="hearts sbf heart h 20,5 x 5,2 cm h 11181082" data-page="14" data-code="11181082">
+      <span>hearts SBF heart h 20,5 x 5,2 cm h</span><strong>11181082 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11181082">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11164847" target="tupperware_shop"
+      data-search="ultimate mixing bowl 1 l ø 17,8 x 7,7 cm h 11164847" data-page="14" data-code="11164847">
+      <span>Ultimate mixing bowl 1 l Ø 17,8 x 7,7 cm h</span><strong>11164847 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11164847">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11187510" target="tupperware_shop"
+      data-search="mixing bowl 1 l ultimate mixing bowl 9.5 l * cm h ø 34,8 x 19,5 cm h 11187510" data-page="14" data-code="11187510">
+      <span>mixing bowl 1 l Ultimate mixing bowl 9.5 l * cm h Ø 34,8 x 19,5 cm h</span><strong>11187510 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11187510">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184201" target="tupperware_shop"
+      data-search="mixing bowl 9.5 l * mixing bowl 2 l cm h ø 19,4 x 11,6 cm h 11184201" data-page="14" data-code="11184201">
+      <span>mixing bowl 9.5 l * Mixing bowl 2 l cm h Ø 19,4 x 11,6 cm h</span><strong>11184201 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11184201">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11153129" target="tupperware_shop"
+      data-search="ultimate splash guard ø 24,9 x 2,4 cm h 11153129" data-page="14" data-code="11153129">
+      <span>Ultimate Splash Guard Ø 24,9 x 2,4 cm h</span><strong>11153129 · Side 14</strong>
+      <small class="stock-status" data-stock-code="11153129">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155655" target="tupperware_shop"
+      data-search="pastry sheet 64 x 46 cm h 11155655" data-page="15" data-code="11155655">
+      <span>Pastry sheet 64 x 46 cm h</span><strong>11155655 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11155655">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11171211" target="tupperware_shop"
+      data-search="cook&amp;#x27;s maid 9,7 x 13,2 x 10,5 cm h 11171211" data-page="15" data-code="11171211">
+      <span>Cook&#x27;s maid 9,7 x 13,2 x 10,5 cm h</span><strong>11171211 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11171211">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11156006" target="tupperware_shop"
+      data-search="easylogics basting brush 10,5 cm h 20 x 4,1 x 3,6 cm h 11156006" data-page="15" data-code="11156006">
+      <span>Easylogics basting brush 10,5 cm h 20 x 4,1 x 3,6 cm h</span><strong>11156006 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11156006">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11156082" target="tupperware_shop"
+      data-search="basting brush rolling pin cm h ø 8,7 x 50 cm 11156082" data-page="15" data-code="11156082">
+      <span>basting brush Rolling pin cm h Ø 8,7 x 50 cm</span><strong>11156082 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11156082">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11127276" target="tupperware_shop"
+      data-search="deco pen 5,8 cm x 5,3 x 16,6 cm h 11127276" data-page="15" data-code="11127276">
+      <span>Deco pen 5,8 cm x 5,3 x 16,6 cm h</span><strong>11127276 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11127276">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186944" target="tupperware_shop"
+      data-search="then place quick shake 500 ml to set the 12,1 x 9,6 x 20,4 cm h 11186944" data-page="15" data-code="11186944">
+      <span>then place Quick shake 500 ml to set the 12,1 x 9,6 x 20,4 cm h</span><strong>11186944 · Side 15</strong>
+      <small class="stock-status" data-stock-code="11186944">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11156647" target="tupperware_shop"
+      data-search="quantities. ø 15,6 x 19,5 cm h / 1,35 l 11156647" data-page="18" data-code="11156647">
+      <span>quantities. Ø 15,6 x 19,5 cm h / 1,35 l</span><strong>11156647 · Side 18</strong>
+      <small class="stock-status" data-stock-code="11156647">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11157463" target="tupperware_shop"
+      data-search="recipes in no time! ø 10,8 x 9,2 cm h / 300 ml 11157463" data-page="18" data-code="11157463">
+      <span>recipes in no time! Ø 10,8 x 9,2 cm h / 300 ml</span><strong>11157463 · Side 18</strong>
+      <small class="stock-status" data-stock-code="11157463">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop"
+      data-search="open: 39.3 x 14,6 x 15,1 cm h folded: 35,9 x 14,6 x 8.1 cm h 11109598" data-page="18" data-code="11109598">
+      <span>Open: 39.3 x 14,6 x 15,1 cm h Folded: 35,9 x 14,6 x 8.1 cm h</span><strong>11109598 · Side 18</strong>
+      <small class="stock-status" data-stock-code="11109598">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop"
+      data-search="and quick slicing. 9.3 x 7.4 x 25 cm h 11131820" data-page="18" data-code="11131820">
+      <span>and quick slicing. 9.3 x 7.4 x 25 cm h</span><strong>11131820 · Side 18</strong>
+      <small class="stock-status" data-stock-code="11131820">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11172601" target="tupperware_shop"
+      data-search="26 x 11 x 13 cm h base : 26 x 10 x 7 cm h 11172601" data-page="19" data-code="11172601">
+      <span>26 x 11 x 13 cm h Base : 26 x 10 x 7 cm h</span><strong>11172601 · Side 19</strong>
+      <small class="stock-status" data-stock-code="11172601">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=BE004" target="tupperware_shop"
+      data-search="vegetables. ø 7,9 x 12,8 cm h be004" data-page="19" data-code="BE004">
+      <span>vegetables. Ø 7,9 x 12,8 cm h</span><strong>BE004 · Side 19</strong>
+      <small class="stock-status" data-stock-code="BE004">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11169697" target="tupperware_shop"
+      data-search="grate n store 13 x 11,5 x 15 cm h 11169697" data-page="19" data-code="11169697">
+      <span>Grate N Store 13 x 11,5 x 15 cm h</span><strong>11169697 · Side 19</strong>
+      <small class="stock-status" data-stock-code="11169697">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184997" target="tupperware_shop"
+      data-search="small: 34 x 20,3 x 4 cm / 400 ml large: 36 x 23 x 11,4 cm / 2 l cm h 11184997" data-page="19" data-code="11184997">
+      <span>Small: 34 x 20,3 x 4 cm / 400 ml Large: 36 x 23 x 11,4 cm / 2 l cm h</span><strong>11184997 · Side 19</strong>
+      <small class="stock-status" data-stock-code="11184997">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11177880" target="tupperware_shop"
+      data-search="20,3 x 4 cm / 400 ml grate n measure 23 x 11,4 cm / 2 l 11,4 x 22,2 cm h 11177880" data-page="19" data-code="11177880">
+      <span>20,3 x 4 cm / 400 ml Grate N Measure 23 x 11,4 cm / 2 l 11,4 x 22,2 cm h</span><strong>11177880 · Side 19</strong>
+      <small class="stock-status" data-stock-code="11177880">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11126299" target="tupperware_shop"
+      data-search="kpt silicone spatula thin 28,5 x 2,6 cm h 11126299" data-page="20" data-code="11126299">
+      <span>KPT silicone spatula thin 28,5 x 2,6 cm h</span><strong>11126299 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11126299">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11146149" target="tupperware_shop"
+      data-search="bit. 27,9 x 4,6 cm h 11146149" data-page="20" data-code="11146149">
+      <span>bit. 27,9 x 4,6 cm h</span><strong>11146149 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11146149">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11069728" target="tupperware_shop"
+      data-search="beater stirrer 29,5 x 6,2 x 6,5 cm h h 11069728" data-page="20" data-code="11069728">
+      <span>Beater Stirrer 29,5 x 6,2 x 6,5 cm h h</span><strong>11069728 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11069728">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11130070" target="tupperware_shop"
+      data-search="kpt simple spoon 31 x 6,5 x 1,1 cm h 6,5 cm h 11130070" data-page="20" data-code="11130070">
+      <span>KPT simple spoon 31 x 6,5 x 1,1 cm h 6,5 cm h</span><strong>11130070 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11130070">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11163030" target="tupperware_shop"
+      data-search="23,5 x 6,8 x 6,6 cm h 45 ml 11163030" data-page="20" data-code="11163030">
+      <span>23,5 x 6,8 x 6,6 cm h 45 ml</span><strong>11163030 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11163030">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184123" target="tupperware_shop"
+      data-search="potato masher ∅ 9 cm x 28 cm h 11184123" data-page="20" data-code="11184123">
+      <span>Potato masher ∅ 9 cm x 28 cm h</span><strong>11184123 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11184123">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11163027" target="tupperware_shop"
+      data-search="kpt master tongs cm h 29,5 x 6,2 x 6,5 cm h 11163027" data-page="20" data-code="11163027">
+      <span>KPT master tongs cm h 29,5 x 6,2 x 6,5 cm h</span><strong>11163027 · Side 20</strong>
+      <small class="stock-status" data-stock-code="11163027">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186681" target="tupperware_shop"
+      data-search="twistable peeler 15,5 cm h 11186681" data-page="21" data-code="11186681">
+      <span>Twistable peeler 15,5 cm h</span><strong>11186681 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11186681">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11172984" target="tupperware_shop"
+      data-search="ergo tools ladle peeler 31 x 10,3 cm h / 120 ml 11172984" data-page="21" data-code="11172984">
+      <span>Ergo tools ladle peeler 31 x 10,3 cm h / 120 ml</span><strong>11172984 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11172984">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11164566" target="tupperware_shop"
+      data-search="ladle kpt tool holder h / 120 ml 12,7 x 12,7 x 16 cm h 11164566" data-page="21" data-code="11164566">
+      <span>ladle KPT tool holder h / 120 ml 12,7 x 12,7 x 16 cm h</span><strong>11164566 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11164566">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11138015" target="tupperware_shop"
+      data-search="kpt garlic star * 17,5 x 3,5 x 7,6 cm h 11138015" data-page="21" data-code="11138015">
+      <span>KPT Garlic star * 17,5 x 3,5 x 7,6 cm h</span><strong>11138015 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11138015">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11172982" target="tupperware_shop"
+      data-search="star * ergo tools skimmer 7,6 cm h 31,3 x 11 cm h 11172982" data-page="21" data-code="11172982">
+      <span>star * Ergo Tools Skimmer 7,6 cm h 31,3 x 11 cm h</span><strong>11172982 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11172982">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11157678" target="tupperware_shop"
+      data-search="skimmer ergologics zest n press h 22,3 x 7,5 x 5,5 cm h 11157678" data-page="21" data-code="11157678">
+      <span>Skimmer Ergologics zest n press h 22,3 x 7,5 x 5,5 cm h</span><strong>11157678 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11157678">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11106331" target="tupperware_shop"
+      data-search="ergologics ice cream scoop 20 x 5 cm h 11106331" data-page="21" data-code="11106331">
+      <span>Ergologics Ice Cream Scoop 20 x 5 cm h</span><strong>11106331 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11106331">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop"
+      data-search="ice cream scoop ergologics corkscrew 16 x 8,1 x 4,2 cm h 11118522" data-page="21" data-code="11118522">
+      <span>Ice Cream Scoop Ergologics corkscrew 16 x 8,1 x 4,2 cm h</span><strong>11118522 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11118522">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11116527" target="tupperware_shop"
+      data-search="corkscrew ergologics can guru cm h 20 x 8,5 x 5,3 cm h 11116527" data-page="21" data-code="11116527">
+      <span>corkscrew Ergologics can guru cm h 20 x 8,5 x 5,3 cm h</span><strong>11116527 · Side 21</strong>
+      <small class="stock-status" data-stock-code="11116527">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11161873" target="tupperware_shop"
+      data-search="small, precise cuts. blade: 8 cm 11161873" data-page="22" data-code="11161873">
+      <span>Small, precise cuts. Blade: 8 cm</span><strong>11161873 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11161873">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11161880" target="tupperware_shop"
+      data-search="cuts. everyday cutting tasks. blade : 10,5 cm 11161880" data-page="22" data-code="11161880">
+      <span>cuts. everyday cutting tasks. Blade : 10,5 cm</span><strong>11161880 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11161880">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11161879" target="tupperware_shop"
+      data-search="cutting tasks. skinned foods. cm blade : 13 cm 11161879" data-page="22" data-code="11161879">
+      <span>cutting tasks. skinned foods. cm Blade : 13 cm</span><strong>11161879 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11161879">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11161867" target="tupperware_shop"
+      data-search="precision. blade : 19 cm 11161867" data-page="22" data-code="11161867">
+      <span>precision. Blade : 19 cm</span><strong>11161867 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11161867">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11161869" target="tupperware_shop"
+      data-search="and mince. blade : 19 cm 11161869" data-page="22" data-code="11161869">
+      <span>and mince. Blade : 19 cm</span><strong>11161869 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11161869">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11090050" target="tupperware_shop"
+      data-search="thanks to its flexibility. 38 x 29 cm h 11090050" data-page="22" data-code="11090050">
+      <span>thanks to its flexibility. 38 x 29 cm h</span><strong>11090050 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11090050">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11164878" target="tupperware_shop"
+      data-search="and serrated blades. 11,7 x 7 x 5,9 cm h 11164878" data-page="22" data-code="11164878">
+      <span>and serrated blades. 11,7 x 7 x 5,9 cm h</span><strong>11164878 · Side 22</strong>
+      <small class="stock-status" data-stock-code="11164878">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop"
+      data-search="removable handle. ø 15,6 x 3,5 cm h / 310 ml 11178789" data-page="23" data-code="11178789">
+      <span>removable handle. Ø 15,6 x 3,5 cm h / 310 ml</span><strong>11178789 · Side 23</strong>
+      <small class="stock-status" data-stock-code="11178789">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop"
+      data-search="airtight lids. ø 7,5 x 5,2 cm h / 110 ml 11166328" data-page="23" data-code="11166328">
+      <span>airtight lids. Ø 7,5 x 5,2 cm h / 110 ml</span><strong>11166328 · Side 23</strong>
+      <small class="stock-status" data-stock-code="11166328">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop"
+      data-search="independently. from 6 months fork: 13,7 cm spoon: 13,8 cm 11168886" data-page="23" data-code="11168886">
+      <span>independently. From 6 months Fork: 13,7 cm Spoon: 13,8 cm</span><strong>11168886 · Side 23</strong>
+      <small class="stock-status" data-stock-code="11168886">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop"
+      data-search="ml baby bottles. ø 9,9 x 9,7 cm h 11178323" data-page="23" data-code="11178323">
+      <span>ml baby bottles. Ø 9,9 x 9,7 cm h</span><strong>11178323 · Side 23</strong>
+      <small class="stock-status" data-stock-code="11178323">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop"
+      data-search="spoon: 16.8 x 2,3 x 1,6 cm case: 17.8 x 3,9 x 3,3 cm 11167063" data-page="23" data-code="11167063">
+      <span>Spoon: 16.8 x 2,3 x 1,6 cm Case: 17.8 x 3,9 x 3,3 cm</span><strong>11167063 · Side 23</strong>
+      <small class="stock-status" data-stock-code="11167063">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174474" target="tupperware_shop"
+      data-search="22,8 x 26,5 x 15 cm h folded: max. : 1000 watts 11174474" data-page="24" data-code="11174474">
+      <span>22,8 x 26,5 x 15 cm h Folded: Max. : 1000 watts</span><strong>11174474 · Side 24</strong>
+      <small class="stock-status" data-stock-code="11174474">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11133292" target="tupperware_shop"
+      data-search="5,5 cm h meals. 29 x 24,2 x 18,5 cm h 11133292" data-page="24" data-code="11133292">
+      <span>5,5 cm h meals. 29 x 24,2 x 18,5 cm h</span><strong>11133292 · Side 24</strong>
+      <small class="stock-status" data-stock-code="11133292">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11146975" target="tupperware_shop"
+      data-search="micro pro ring ø 15,2 x 3,2 cm h 11146975" data-page="24" data-code="11146975">
+      <span>Micro pro ring Ø 15,2 x 3,2 cm h</span><strong>11146975 · Side 24</strong>
+      <small class="stock-status" data-stock-code="11146975">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184428" target="tupperware_shop"
+      data-search="550 ml 1,5 19,5 x 14,8 x 5,5 cm h 11184428" data-page="25" data-code="11184428">
+      <span>550 ml 1,5 19,5 x 14,8 x 5,5 cm h</span><strong>11184428 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184428">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184677" target="tupperware_shop"
+      data-search="1,5 l x 5,5 cm h 19,5 x 14,8 x 10,8 cm h 11184677" data-page="25" data-code="11184677">
+      <span>1,5 l x 5,5 cm h 19,5 x 14,8 x 10,8 cm h</span><strong>11184677 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184677">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184519" target="tupperware_shop"
+      data-search="rectangular 1,3 l 31 x 19,5 x 5,5 cm h 11184519" data-page="25" data-code="11184519">
+      <span>rectangular 1,3 l 31 x 19,5 x 5,5 cm h</span><strong>11184519 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184519">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184933" target="tupperware_shop"
+      data-search="rectangular 260 ml 1,3 l 14,1 x 9,8 x 5,6 cm h x 5,5 cm h 11184933" data-page="25" data-code="11184933">
+      <span>rectangular 260 ml 1,3 l 14,1 x 9,8 x 5,6 cm h x 5,5 cm h</span><strong>11184933 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184933">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184923" target="tupperware_shop"
+      data-search="e. rock n serve round 400 ml new 18,6 x 16 x 5,3 cm h 11184923" data-page="25" data-code="11184923">
+      <span>E. Rock n serve round 400 ml NEW 18,6 x 16 x 5,3 cm h</span><strong>11184923 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184923">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184531" target="tupperware_shop"
+      data-search="f. rock n serve round 600 ml 18,6 x 16 x 6,5 cm h 11184531" data-page="25" data-code="11184531">
+      <span>F. Rock n serve round 600 ml 18,6 x 16 x 6,5 cm h</span><strong>11184531 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184531">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184532" target="tupperware_shop"
+      data-search="1 l g. rock n serve round 800 ml drain easily. 18,6 x 16 x 8,2 cm h 11184532" data-page="25" data-code="11184532">
+      <span>1 l G. Rock n serve round 800 ml drain easily. 18,6 x 16 x 8,2 cm h</span><strong>11184532 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184532">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11184919" target="tupperware_shop"
+      data-search="heat, melt and drain easily. 20,6 × 15,5 x 12,9 cm h 11184919" data-page="25" data-code="11184919">
+      <span>Heat, melt and drain easily. 20,6 × 15,5 x 12,9 cm h</span><strong>11184919 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11184919">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11177543" target="tupperware_shop"
+      data-search="reheat your pasta. 23,6 x 22,4 x 17 cm h 11177543" data-page="25" data-code="11177543">
+      <span>reheat your pasta. 23,6 x 22,4 x 17 cm h</span><strong>11177543 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11177543">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11129256" target="tupperware_shop"
+      data-search="pasta. from appetizer to dessert. 17 cm h 22 cm x 18,5 x 13,5 cm h 11129256" data-page="25" data-code="11129256">
+      <span>pasta. from appetizer to dessert. 17 cm h 22 cm x 18,5 x 13,5 cm h</span><strong>11129256 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11129256">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11130599" target="tupperware_shop"
+      data-search="to dessert. meals. x 13,5 cm h 23,8 x 5,6 x 22,3 cm h 11130599" data-page="25" data-code="11130599">
+      <span>to dessert. meals. x 13,5 cm h 23,8 x 5,6 x 22,3 cm h</span><strong>11130599 · Side 25</strong>
+      <small class="stock-status" data-stock-code="11130599">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11167057" target="tupperware_shop"
+      data-search="22 × 21 x 29 cm h basket : 18,5 x 20 x 13 cm h 11167057" data-page="26" data-code="11167057">
+      <span>22 × 21 x 29 cm h Basket : 18,5 x 20 x 13 cm h</span><strong>11167057 · Side 26</strong>
+      <small class="stock-status" data-stock-code="11167057">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186857" target="tupperware_shop"
+      data-search="ultrapro cocotte 500 ml * 14,3 x 14,3 x 9,4 cm h 11186857" data-page="26" data-code="11186857">
+      <span>Ultrapro cocotte 500 ml * 14,3 x 14,3 x 9,4 cm h</span><strong>11186857 · Side 26</strong>
+      <small class="stock-status" data-stock-code="11186857">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=CB003" target="tupperware_shop"
+      data-search="cocotte 500 ml * ultrapro 2 l 9,4 cm h 30 x 22,6 x 10,4 cm h cb003" data-page="26" data-code="CB003">
+      <span>cocotte 500 ml * Ultrapro 2 l 9,4 cm h 30 x 22,6 x 10,4 cm h</span><strong>CB003 · Side 26</strong>
+      <small class="stock-status" data-stock-code="CB003">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186856" target="tupperware_shop"
+      data-search="ultrapro 3,5 l * cm h 30 x 22,7 x 14,8 cm h 11186856" data-page="26" data-code="11186856">
+      <span>Ultrapro 3,5 l * cm h 30 x 22,7 x 14,8 cm h</span><strong>11186856 · Side 26</strong>
+      <small class="stock-status" data-stock-code="11186856">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186859" target="tupperware_shop"
+      data-search="for consistently successful ø 29,5 x 16,5 cm h 11186859" data-page="26" data-code="11186859">
+      <span>for consistently successful Ø 29,5 x 16,5 cm h</span><strong>11186859 · Side 26</strong>
+      <small class="stock-status" data-stock-code="11186859">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186850" target="tupperware_shop"
+      data-search="large cuts of meat to perfection. 36,3 x 26,6 x 14,8 cm h 11186850" data-page="26" data-code="11186850">
+      <span>large cuts of meat to perfection. 36,3 x 26,6 x 14,8 cm h</span><strong>11186850 · Side 26</strong>
+      <small class="stock-status" data-stock-code="11186850">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183902" target="tupperware_shop"
+      data-search="voila™ rectangular 1,5 l * 23,6 x 19,4 x 8,9 cm h 11183902" data-page="27" data-code="11183902">
+      <span>Voila™ rectangular 1,5 l * 23,6 x 19,4 x 8,9 cm h</span><strong>11183902 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11183902">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183899" target="tupperware_shop"
+      data-search="voila™ rectangular 400 ml * 16,2 x 12,1 x 7,1 cm h 11183899" data-page="27" data-code="11183899">
+      <span>Voila™ rectangular 400 ml * 16,2 x 12,1 x 7,1 cm h</span><strong>11183899 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11183899">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183900" target="tupperware_shop"
+      data-search="rectangular 400 ml * voila™ rectangular 650 ml * 7,1 cm h 18,5 x 14,4 x 7,7 cm h 11183900" data-page="27" data-code="11183900">
+      <span>rectangular 400 ml * Voila™ rectangular 650 ml * 7,1 cm h 18,5 x 14,4 x 7,7 cm h</span><strong>11183900 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11183900">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183901" target="tupperware_shop"
+      data-search="rectangular 650 ml * voila™ rectangular 1 l * 7,7 cm h 21,1 x 16,8 x 8,3 cm h 11183901" data-page="27" data-code="11183901">
+      <span>rectangular 650 ml * Voila™ rectangular 1 l * 7,7 cm h 21,1 x 16,8 x 8,3 cm h</span><strong>11183901 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11183901">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186368" target="tupperware_shop"
+      data-search="voila™ round 260 ml 14,2 x ø 13,5 x 6,5 cm h 11186368" data-page="27" data-code="11186368">
+      <span>Voila™ round 260 ml 14,2 x Ø 13,5 x 6,5 cm h</span><strong>11186368 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11186368">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186369" target="tupperware_shop"
+      data-search="260 ml voila™ round 500 ml x 6,5 cm h 17,2 x ø 16,5 x 7,1 cm h 11186369" data-page="27" data-code="11186369">
+      <span>260 ml Voila™ round 500 ml x 6,5 cm h 17,2 x Ø 16,5 x 7,1 cm h</span><strong>11186369 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11186369">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11186370" target="tupperware_shop"
+      data-search="500 ml voila™ round 900 ml x 7,1 cm h 20,7 x ø 20 x 7,7 cm h 11186370" data-page="27" data-code="11186370">
+      <span>500 ml Voila™ round 900 ml x 7,1 cm h 20,7 x Ø 20 x 7,7 cm h</span><strong>11186370 · Side 27</strong>
+      <small class="stock-status" data-stock-code="11186370">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=DC002" target="tupperware_shop"
+      data-search="+ 1 carbon refill 10,5 cm × 27,5 cm × 26 cm h dc002" data-page="29" data-code="DC002">
+      <span>+ 1 carbon refill 10,5 cm × 27,5 cm × 26 cm h</span><strong>DC002 · Side 29</strong>
+      <small class="stock-status" data-stock-code="DC002">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11148370" target="tupperware_shop"
+      data-search="co ndiserve flip cap dispenser ø 5,92 x 17,63 cm h 11148370" data-page="29" data-code="11148370">
+      <span>Co ndiserve flip cap dispenser Ø 5,92 x 17,63 cm h</span><strong>11148370 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11148370">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11068549" target="tupperware_shop"
+      data-search="moments milk foamer flip cap dispenser 14,1 x 9,1 x 17,7 cm h / 500 ml cm h 11068549" data-page="29" data-code="11068549">
+      <span>Moments milk foamer flip cap dispenser 14,1 x 9,1 x 17,7 cm h / 500 ml cm h</span><strong>11068549 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11068549">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=DC003" target="tupperware_shop"
+      data-search="milk foamer 17,7 cm h / 500 ml 3 pure &amp;amp; serve carbon refill dc003" data-page="29" data-code="DC003">
+      <span>milk foamer 17,7 cm h / 500 ml 3 Pure &amp; serve carbon refill</span><strong>DC003 · Side 29</strong>
+      <small class="stock-status" data-stock-code="DC003">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=X101" target="tupperware_shop"
+      data-search="1,3 l eco+ clear bowl 2,4 l x101" data-page="29" data-code="X101">
+      <span>1,3 l Eco+ clear bowl 2,4 l</span><strong>X101 · Side 29</strong>
+      <small class="stock-status" data-stock-code="X101">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11157966" target="tupperware_shop"
+      data-search="ec o+ clear bowl 810 ml 17,6 ø x 7,3 cm h 11157966" data-page="29" data-code="11157966">
+      <span>Ec o+ clear bowl 810 ml 17,6 Ø x 7,3 cm h</span><strong>11157966 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11157966">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11157968" target="tupperware_shop"
+      data-search="bowl 810 ml eco+ clear bowl 1,3 l cm h 20 ø x 8,5 cm h 11157968" data-page="29" data-code="11157968">
+      <span>bowl 810 ml Eco+ clear bowl 1,3 l cm h 20 Ø x 8,5 cm h</span><strong>11157968 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11157968">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11158285" target="tupperware_shop"
+      data-search="bowl 1,3 l eco+ clear bowl 2,4 l h 23,6 ø x10,1 cm h 11158285" data-page="29" data-code="11158285">
+      <span>bowl 1,3 l Eco+ clear bowl 2,4 l h 23,6 Ø x10,1 cm h</span><strong>11158285 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11158285">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11158286" target="tupperware_shop"
+      data-search="eco+ clear bowl 4 l 27,4 ø x 11,9 cm h 11158286" data-page="29" data-code="11158286">
+      <span>Eco+ clear bowl 4 l 27,4 Ø x 11,9 cm h</span><strong>11158286 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11158286">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11158287" target="tupperware_shop"
+      data-search="bowl 4 l eco+ clear bowl 6 l cm h 29,6 ø x 13,3 cm h 11158287" data-page="29" data-code="11158287">
+      <span>bowl 4 l Eco+ clear bowl 6 l cm h 29,6 Ø x 13,3 cm h</span><strong>11158287 · Side 29</strong>
+      <small class="stock-status" data-stock-code="11158287">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168463" target="tupperware_shop"
+      data-search="straw ø 7,5 x 25,8 cm h 11168463" data-page="30" data-code="11168463">
+      <span>straw Ø 7,5 x 25,8 cm h</span><strong>11168463 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11168463">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168462" target="tupperware_shop"
+      data-search="b. premium eco bottle 750 ml ø 7,5 x 25,8 cm h 11168462" data-page="30" data-code="11168462">
+      <span>B. Premium eco bottle 750 ml Ø 7,5 x 25,8 cm h</span><strong>11168462 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11168462">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178420" target="tupperware_shop"
+      data-search="eco bottle 750 ml ø 8,4 x 25,5 cm h 11178420" data-page="30" data-code="11178420">
+      <span>Eco bottle 750 ml Ø 8,4 x 25,5 cm h</span><strong>11178420 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11178420">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11172902" target="tupperware_shop"
+      data-search="ø 8,4 x 25,5 cm h c. 11178420 11172902" data-page="30" data-code="11172902">
+      <span>Ø 8,4 x 25,5 cm h C. 11178420</span><strong>11172902 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11172902">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11179922" target="tupperware_shop"
+      data-search="cm h eco+ bottle 500 ml (2) ø 7,4 x 22,3 cm h 11179922" data-page="30" data-code="11179922">
+      <span>cm h Eco+ bottle 500 ml (2) Ø 7,4 x 22,3 cm h</span><strong>11179922 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11179922">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11170998" target="tupperware_shop"
+      data-search="500 ml (2) eco+ bottle slim 750 ml cm h ø 7,5 x 25,8 cm h 11170998" data-page="30" data-code="11170998">
+      <span>500 ml (2) Eco+ bottle slim 750 ml cm h Ø 7,5 x 25,8 cm h</span><strong>11170998 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11170998">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11168955" target="tupperware_shop"
+      data-search="eco bottle 750 ml ø 8,4 x 25,5 cm h 11168955" data-page="30" data-code="11168955">
+      <span>Eco bottle 750 ml Ø 8,4 x 25,5 cm h</span><strong>11168955 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11168955">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11179809" target="tupperware_shop"
+      data-search="750 ml eco bottle 1 l cm h ø 9,4 x 28,2 cm h 11179809" data-page="30" data-code="11179809">
+      <span>750 ml Eco bottle 1 l cm h Ø 9,4 x 28,2 cm h</span><strong>11179809 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11179809">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178567" target="tupperware_shop"
+      data-search="1 l eco bottle 2 l with straw cm h ø 10,8 x 32,4 cm h 11178567" data-page="30" data-code="11178567">
+      <span>1 l Eco bottle 2 L with straw cm h Ø 10,8 x 32,4 cm h</span><strong>11178567 · Side 30</strong>
+      <small class="stock-status" data-stock-code="11178567">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11183976" target="tupperware_shop"
+      data-search="2 boxes in 1, 22,8 x 14,1 x 4,3 cm h 11183976" data-page="32" data-code="11183976">
+      <span>2 boxes in 1, 22,8 x 14,1 x 4,3 cm h</span><strong>11183976 · Side 32</strong>
+      <small class="stock-status" data-stock-code="11183976">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11180062" target="tupperware_shop"
+      data-search="thanks to its 3 compartments. 25,4 x 15,7 x 5,3 cm h 11180062" data-page="32" data-code="11180062">
+      <span>thanks to its 3 compartments. 25,4 x 15,7 x 5,3 cm h</span><strong>11180062 · Side 32</strong>
+      <small class="stock-status" data-stock-code="11180062">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174730" target="tupperware_shop"
+      data-search="fork, spoon). 16 x 3,9 x 2,7 cm h 11174730" data-page="32" data-code="11174730">
+      <span>fork, spoon). 16 x 3,9 x 2,7 cm h</span><strong>11174730 · Side 32</strong>
+      <small class="stock-status" data-stock-code="11174730">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11178565" target="tupperware_shop"
+      data-search="aloha tumbler 470 ml ø 9,5 x 12,4 cm h 11178565" data-page="32" data-code="11178565">
+      <span>Aloha tumbler 470 ml Ø 9,5 x 12,4 cm h</span><strong>11178565 · Side 32</strong>
+      <small class="stock-status" data-stock-code="11178565">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11165385" target="tupperware_shop"
+      data-search="carrying meals and snacks. 20 x 17,9 x 5,9 cm h 11165385" data-page="32" data-code="11165385">
+      <span>carrying meals and snacks. 20 x 17,9 x 5,9 cm h</span><strong>11165385 · Side 32</strong>
+      <small class="stock-status" data-stock-code="11165385">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11174866" target="tupperware_shop"
+      data-search="includes: 1 window towel, 1 towel and 1 mop towel 2 sided 11174866" data-page="33" data-code="11174866">
+      <span>Includes: 1 window towel, 1 towel and 1 mop towel 2 sided</span><strong>11174866 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11174866">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155977" target="tupperware_shop"
+      data-search="screens and surfaces. 20 x 15 cm 11155977" data-page="33" data-code="11155977">
+      <span>screens and surfaces. 20 x 15 cm</span><strong>11155977 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155977">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155980" target="tupperware_shop"
+      data-search="surfaces. cooking. 65 x 40 cm 11155980" data-page="33" data-code="11155980">
+      <span>surfaces. cooking. 65 x 40 cm</span><strong>11155980 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155980">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155981" target="tupperware_shop"
+      data-search="and one side for effective cleaning. 35 x 30 cm 11155981" data-page="33" data-code="11155981">
+      <span>and one side for effective cleaning. 35 x 30 cm</span><strong>11155981 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155981">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155979" target="tupperware_shop"
+      data-search="in one easy step. 40 x 40 cm 11155979" data-page="33" data-code="11155979">
+      <span>in one easy step. 40 x 40 cm</span><strong>11155979 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155979">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155978" target="tupperware_shop"
+      data-search="step. gently clean and degrease. 30 x 30 cm 11155978" data-page="33" data-code="11155978">
+      <span>step. gently clean and degrease. 30 x 30 cm</span><strong>11155978 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155978">Sjekker lagerstatus ...</small></a>
+<a class="product-row" href="https://tupperware-eu.com/no/search?q=11155982" target="tupperware_shop"
+      data-search="and degrease. wet for effective cleaning 50 x 60 cm 11155982" data-page="33" data-code="11155982">
+      <span>and degrease. wet for effective cleaning 50 x 60 cm</span><strong>11155982 · Side 33</strong>
+      <small class="stock-status" data-stock-code="11155982">Sjekker lagerstatus ...</small></a></aside><div class="pages"><section class="page" id="page-1" data-page="1">
+              <div class="page-head"><span>Side 1</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-01.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 1">
+                
+                <div class="translation-panel cover-translation"><strong>Høst 2026 - vinter 2027</strong><span>Gleden ved å dele hverdagens viktigste øyeblikk</span></div>
+              </div>
+            </section><section class="page" id="page-2" data-page="2">
+              <div class="page-head"><span>Side 2</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-02.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 2">
+                
+                <div class="translation-panel page-two-translation"><h2>Velkommen til den nye Tupperware-katalogen!</h2><p>Høsten senker seg, dagene blir kjøligere og de gode stundene sammen blir enda viktigere.</p><p>Oppdag vårt nye høst- og vinterutvalg for matlaging, oppbevaring, organisering og hyggelige måltider. Her finner du både velkjente favoritter og nye løsninger som gjør hverdagen enklere.</p><p>Enten du liker hjemmelaget mat, smarte løsninger på farten eller orden hjemme, er katalogen full av ideer for sesongen.</p><p><strong>God fornøyelse!</strong></p></div>
+              </div>
+            </section><section class="page" id="page-3" data-page="3">
+              <div class="page-head"><span>Side 3</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-03.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 3">
+                
+                <div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p></div>
+              </div>
+            </section><section class="page" id="page-4" data-page="4">
+              <div class="page-head"><span>Side 4</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-04.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 4">
+                
+                <div class="translation-panel full-text-translation join-translation"><h2>Bli med</h2><h3>Bli kjent med produktene</h3><p>Start med nyttige Tupperware-produkter og få tilgang til arrangementer, gaver og gode tilbud.</p><h3>Jobb der du vil</h3><p>Arbeid fysisk eller digitalt, og legg opp dagene slik det passer deg.</p><h3>Møt nye mennesker</h3><p>Bli del av et engasjert fellesskap og skap nye kontakter.</p><h3>Kombiner jobb og fritid</h3><p>Du bestemmer selv arbeidstid og ambisjonsnivå.</p><h3>Provisjon fra første salg</h3><p>Du tjener provisjon helt fra starten.</p><h3>Jobb digitalt</h3><p>Bygg nettverk, skap gode kunderelasjoner og selg på nettet.</p></div>
+              </div>
+            </section><section class="page" id="page-5" data-page="5">
+              <div class="page-head"><span>Side 5</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-05.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 5">
+                
+                
+              </div>
+            </section><section class="page" id="page-6" data-page="6">
+              <div class="page-head"><span>Side 6</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-06.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 6">
+                
+                
+              </div>
+            </section><section class="page" id="page-7" data-page="7">
+              <div class="page-head"><span>Side 7</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-07.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 7">
+                
+                
+              </div>
+            </section><section class="page" id="page-8" data-page="8">
+              <div class="page-head"><span>Side 8</span><span>8 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-08.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 8">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186044" target="tupperware_shop" data-code="11186044" aria-label="11186044" title="11186044" style="left:7.7167%;top:20.8640%;width:30.2870%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168759" target="tupperware_shop" data-code="11168759" aria-label="11168759" title="11168759" style="left:33.9274%;top:34.5065%;width:42.0000%;height:11.6124%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168760" target="tupperware_shop" data-code="11168760" aria-label="11168760" title="11168760" style="left:33.8061%;top:36.3701%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168761" target="tupperware_shop" data-code="11168761" aria-label="11168761" title="11168761" style="left:33.8061%;top:42.9807%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168762" target="tupperware_shop" data-code="11168762" aria-label="11168762" title="11168762" style="left:51.3981%;top:49.8347%;width:28.1905%;height:11.7760%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174029" target="tupperware_shop" data-code="11174029" aria-label="11174029" title="11174029" style="left:7.7810%;top:70.8934%;width:31.3723%;height:10.5088%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174026" target="tupperware_shop" data-code="11174026" aria-label="11174026" title="11174026" style="left:7.7810%;top:74.2387%;width:31.3723%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174028" target="tupperware_shop" data-code="11174028" aria-label="11174028" title="11174028" style="left:7.7810%;top:81.6094%;width:32.1444%;height:12.0000%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-9" data-page="9">
+              <div class="page-head"><span>Side 9</span><span>5 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-09.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 9">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156002" target="tupperware_shop" data-code="11156002" aria-label="11156002" title="11156002" style="left:4.7446%;top:23.6573%;width:29.3731%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155861" target="tupperware_shop" data-code="11155861" aria-label="11155861" title="11155861" style="left:15.3809%;top:23.6573%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184913" target="tupperware_shop" data-code="11184913" aria-label="11184913" title="11184913" style="left:4.7446%;top:45.0710%;width:30.0462%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184916" target="tupperware_shop" data-code="11184916" aria-label="11184916" title="11184916" style="left:14.7879%;top:45.0710%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184921" target="tupperware_shop" data-code="11184921" aria-label="11184921" title="11184921" style="left:45.5928%;top:45.0557%;width:42.0000%;height:6.4988%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-10" data-page="10">
+              <div class="page-head"><span>Side 10</span><span>8 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-10.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 10">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11169011" target="tupperware_shop" data-code="11169011" aria-label="11169011" title="11169011" style="left:20.7042%;top:19.7193%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184136" target="tupperware_shop" data-code="11184136" aria-label="11184136" title="11184136" style="left:5.9825%;top:46.0908%;width:29.6423%;height:6.3107%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184135" target="tupperware_shop" data-code="11184135" aria-label="11184135" title="11184135" style="left:14.4748%;top:46.0039%;width:42.0000%;height:6.6640%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184137" target="tupperware_shop" data-code="11184137" aria-label="11184137" title="11184137" style="left:43.4439%;top:46.0039%;width:42.0000%;height:6.6640%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184119" target="tupperware_shop" data-code="11184119" aria-label="11184119" title="11184119" style="left:5.8931%;top:65.5815%;width:29.7331%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184120" target="tupperware_shop" data-code="11184120" aria-label="11184120" title="11184120" style="left:12.4543%;top:65.5815%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184204" target="tupperware_shop" data-code="11184204" aria-label="11184204" title="11184204" style="left:42.0147%;top:65.5815%;width:42.0000%;height:6.5549%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184105" target="tupperware_shop" data-code="11184105" aria-label="11184105" title="11184105" style="left:6.6873%;top:85.3129%;width:28.8367%;height:6.4835%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-11" data-page="11">
+              <div class="page-head"><span>Side 11</span><span>6 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-11.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 11">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183903" target="tupperware_shop" data-code="11183903" aria-label="11183903" title="11183903" style="left:4.9779%;top:21.5378%;width:29.9640%;height:6.3106%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178253" target="tupperware_shop" data-code="11178253" aria-label="11178253" title="11178253" style="left:15.8480%;top:21.5378%;width:42.0000%;height:6.3106%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184200" target="tupperware_shop" data-code="11184200" aria-label="11184200" title="11184200" style="left:43.0400%;top:20.6615%;width:42.0000%;height:7.1869%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11165083" target="tupperware_shop" data-code="11165083" aria-label="11165083" title="11165083" style="left:4.7180%;top:43.3542%;width:30.6403%;height:7.8718%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11160057" target="tupperware_shop" data-code="11160057" aria-label="11160057" title="11160057" style="left:10.3460%;top:41.4010%;width:42.0000%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157472" target="tupperware_shop" data-code="11157472" aria-label="11157472" title="11157472" style="left:44.2582%;top:41.4010%;width:42.0000%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-12" data-page="12">
+              <div class="page-head"><span>Side 12</span><span>6 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-12.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 12">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176764" target="tupperware_shop" data-code="11176764" aria-label="11176764" title="11176764" style="left:4.0485%;top:45.2252%;width:30.6430%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176862" target="tupperware_shop" data-code="11176862" aria-label="11176862" title="11176862" style="left:15.1086%;top:45.2252%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176765" target="tupperware_shop" data-code="11176765" aria-label="11176765" title="11176765" style="left:45.1791%;top:45.2252%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176870" target="tupperware_shop" data-code="11176870" aria-label="11176870" title="11176870" style="left:12.0101%;top:65.4167%;width:42.0000%;height:11.4977%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176775" target="tupperware_shop" data-code="11176775" aria-label="11176775" title="11176775" style="left:45.1791%;top:66.4191%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11176871" target="tupperware_shop" data-code="11176871" aria-label="11176871" title="11176871" style="left:66.2041%;top:79.9399%;width:30.7969%;height:6.4835%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-13" data-page="13">
+              <div class="page-head"><span>Side 13</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-13.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 13">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184167" target="tupperware_shop" data-code="11184167" aria-label="11184167" title="11184167" style="left:3.3191%;top:17.1281%;width:30.6433%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184177" target="tupperware_shop" data-code="11184177" aria-label="11184177" title="11184177" style="left:13.1704%;top:16.8703%;width:42.0000%;height:6.7413%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184104" target="tupperware_shop" data-code="11184104" aria-label="11184104" title="11184104" style="left:3.4920%;top:38.6884%;width:30.0424%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11159416" target="tupperware_shop" data-code="11159416" aria-label="11159416" title="11159416" style="left:3.4920%;top:60.0765%;width:31.2735%;height:8.1561%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11175889" target="tupperware_shop" data-code="11175889" aria-label="11175889" title="11175889" style="left:30.6169%;top:77.8416%;width:42.0000%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11162264" target="tupperware_shop" data-code="11162264" aria-label="11162264" title="11162264" style="left:3.4920%;top:84.5323%;width:30.0856%;height:8.1561%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11181136" target="tupperware_shop" data-code="11181136" aria-label="11181136" title="11181136" style="left:30.6169%;top:81.1870%;width:42.0000%;height:12.0000%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-14" data-page="14">
+              <div class="page-head"><span>Side 14</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-14.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 14">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11170305" target="tupperware_shop" data-code="11170305" aria-label="11170305" title="11170305" style="left:4.2885%;top:24.8962%;width:30.6462%;height:6.6378%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11180469" target="tupperware_shop" data-code="11180469" aria-label="11180469" title="11180469" style="left:15.6794%;top:24.8962%;width:42.0000%;height:6.6378%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11181082" target="tupperware_shop" data-code="11181082" aria-label="11181082" title="11181082" style="left:43.9461%;top:24.8962%;width:42.0000%;height:6.6378%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11164847" target="tupperware_shop" data-code="11164847" aria-label="11164847" title="11164847" style="left:4.5274%;top:46.4995%;width:29.5464%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11187510" target="tupperware_shop" data-code="11187510" aria-label="11187510" title="11187510" style="left:13.4683%;top:46.4995%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184201" target="tupperware_shop" data-code="11184201" aria-label="11184201" title="11184201" style="left:44.4832%;top:46.4995%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11153129" target="tupperware_shop" data-code="11153129" aria-label="11153129" title="11153129" style="left:46.3955%;top:86.6002%;width:42.0000%;height:9.7413%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-15" data-page="15">
+              <div class="page-head"><span>Side 15</span><span>6 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-15.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 15">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155655" target="tupperware_shop" data-code="11155655" aria-label="11155655" title="11155655" style="left:66.4322%;top:18.2667%;width:30.2833%;height:6.6378%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11171211" target="tupperware_shop" data-code="11171211" aria-label="11171211" title="11171211" style="left:3.5816%;top:39.8073%;width:30.1052%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156006" target="tupperware_shop" data-code="11156006" aria-label="11156006" title="11156006" style="left:14.0582%;top:39.8817%;width:42.0000%;height:9.9165%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156082" target="tupperware_shop" data-code="11156082" aria-label="11156082" title="11156082" style="left:45.8023%;top:39.8817%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11127276" target="tupperware_shop" data-code="11127276" aria-label="11127276" title="11127276" style="left:3.9209%;top:61.4519%;width:30.1054%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186944" target="tupperware_shop" data-code="11186944" aria-label="11186944" title="11186944" style="left:41.5827%;top:57.5882%;width:42.0000%;height:10.3472%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-16" data-page="16">
+              <div class="page-head"><span>Side 16</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-16.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 16">
+                
+                <div class="translation-panel recipe-intro"><strong>Et magisk måltid</strong><span>Én meny, mange muligheter til å glede. Lett å tilberede og elegant å servere - perfekt for familie og venner.</span></div><div class="translation-panel recipe-bottom"><h3>Butternutgresskarsuppe med parmesan-krem</h3><p><strong>Til 4 personer:</strong> 2 sjalottløk, 15 ml olje, 600 g butternutgresskar, 300 ml varmt vann, 1 grønnsaksbuljongterning, 400 ml kald kremfløte, 30 g parmesan, salt og pepper.</p><p>Hakk løken og varm den med olje. Tilsett skrelt gresskar i terninger, buljong og vann. Kok til mørt og mos. Pisk fløten, bland inn parmesan og smak til. Server suppen med parmesan-kremen.</p></div>
+              </div>
+            </section><section class="page" id="page-17" data-page="17">
+              <div class="page-head"><span>Side 17</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-17.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 17">
+                
+                <div class="translation-panel recipe-top"><h3>Pai med confitert and og sopp</h3><p><strong>Til 4 personer:</strong> andelår, sjalottløk, sjampinjong, hasselnøtter, persille, butterdeig, egg, salt og pepper.</p><p>Varm andelårene, fjern bein og skinn og riv kjøttet. Hakk løk og sopp, stek blandingen og tilsett and, nøtter og persille. Legg fyllet mellom to butterdeigplater, forsegl kantene, pensle med egg og stek ved 200 °C i omtrent 35 minutter.</p></div><div class="translation-panel recipe-lower"><h3>Bakte epler med nougat og sprø brioche</h3><p><strong>Til 4 personer:</strong> 4 epler, 80 g myk nougat, 4 skiver brioche, karamellsaus og 150 ml kremfløte.</p><p>Fjern kjernehuset og fyll eplene med nougat. Stek uten lokk i 40-45 minutter ved 180 °C. Rist brioche, varm karamell og fløte, og server eplene med saus og brioche.</p></div>
+              </div>
+            </section><section class="page" id="page-18" data-page="18">
+              <div class="page-head"><span>Side 18</span><span>4 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-18.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 18">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11156647" target="tupperware_shop" data-code="11156647" aria-label="11156647" title="11156647" style="left:52.9380%;top:32.1714%;width:36.2894%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157463" target="tupperware_shop" data-code="11157463" aria-label="11157463" title="11157463" style="left:52.9380%;top:45.7624%;width:34.4077%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop" data-code="11109598" aria-label="11109598" title="11109598" style="left:5.9181%;top:68.6537%;width:31.3133%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11131820" target="tupperware_shop" data-code="11131820" aria-label="11131820" title="11131820" style="left:5.9181%;top:79.9076%;width:31.1176%;height:9.8288%;"></a>
+                <div class="translation-panel hummus-translation"><h3>Hjemmelaget hummus</h3><p>Kjør 120 g kokte, skylte kikerter sammen med et halvt hvitløksfedd. Tilsett 1 ss olivenolje, 1 ts sitronsaft og 1 ss soyasaus. Kjør til jevn konsistens og oppbevar kjølig.</p><p><strong>Variant:</strong> Tilsett 80 g kokt rødbete.</p></div>
+              </div>
+            </section><section class="page" id="page-19" data-page="19">
+              <div class="page-head"><span>Side 19</span><span>5 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-19.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 19">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172601" target="tupperware_shop" data-code="11172601" aria-label="11172601" title="11172601" style="left:55.3989%;top:16.5695%;width:39.1678%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=BE004" target="tupperware_shop" data-code="BE004" aria-label="BE004" title="BE004" style="left:6.2224%;top:41.5291%;width:27.7466%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11169697" target="tupperware_shop" data-code="11169697" aria-label="11169697" title="11169697" style="left:4.3846%;top:85.0197%;width:30.9743%;height:6.5028%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184997" target="tupperware_shop" data-code="11184997" aria-label="11184997" title="11184997" style="left:12.3523%;top:82.9318%;width:42.0000%;height:8.5907%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177880" target="tupperware_shop" data-code="11177880" aria-label="11177880" title="11177880" style="left:42.3896%;top:82.9318%;width:42.0000%;height:12.0000%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-20" data-page="20">
+              <div class="page-head"><span>Side 20</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-20.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 20">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11126299" target="tupperware_shop" data-code="11126299" aria-label="11126299" title="11126299" style="left:35.1832%;top:42.4719%;width:27.4073%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11146149" target="tupperware_shop" data-code="11146149" aria-label="11146149" title="11146149" style="left:4.7929%;top:59.4674%;width:28.4880%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11069728" target="tupperware_shop" data-code="11069728" aria-label="11069728" title="11069728" style="left:13.1826%;top:59.4674%;width:42.0000%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11130070" target="tupperware_shop" data-code="11130070" aria-label="11130070" title="11130070" style="left:42.2880%;top:64.1707%;width:42.0000%;height:6.6301%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11163030" target="tupperware_shop" data-code="11163030" aria-label="11163030" title="11163030" style="left:5.2669%;top:83.8719%;width:24.7026%;height:8.1770%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184123" target="tupperware_shop" data-code="11184123" aria-label="11184123" title="11184123" style="left:15.1867%;top:83.8719%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11163027" target="tupperware_shop" data-code="11163027" aria-label="11163027" title="11163027" style="left:43.1889%;top:85.8416%;width:42.0000%;height:10.4998%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-21" data-page="21">
+              <div class="page-head"><span>Side 21</span><span>9 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-21.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 21">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186681" target="tupperware_shop" data-code="11186681" aria-label="11186681" title="11186681" style="left:4.3094%;top:17.9634%;width:30.0811%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172984" target="tupperware_shop" data-code="11172984" aria-label="11172984" title="11172984" style="left:14.4021%;top:17.7202%;width:42.0000%;height:6.6628%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11164566" target="tupperware_shop" data-code="11164566" aria-label="11164566" title="11164566" style="left:43.6631%;top:17.7202%;width:42.0000%;height:6.6627%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11138015" target="tupperware_shop" data-code="11138015" aria-label="11138015" title="11138015" style="left:4.5387%;top:39.6102%;width:29.7452%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172982" target="tupperware_shop" data-code="11172982" aria-label="11172982" title="11172982" style="left:15.0021%;top:39.6102%;width:42.0000%;height:6.5174%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157678" target="tupperware_shop" data-code="11157678" aria-label="11157678" title="11157678" style="left:43.1837%;top:39.6441%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11106331" target="tupperware_shop" data-code="11106331" aria-label="11106331" title="11106331" style="left:4.3094%;top:60.8349%;width:30.2698%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11118522" target="tupperware_shop" data-code="11118522" aria-label="11118522" title="11118522" style="left:14.9894%;top:60.8349%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11116527" target="tupperware_shop" data-code="11116527" aria-label="11116527" title="11116527" style="left:43.9273%;top:60.8349%;width:42.0000%;height:6.4835%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-22" data-page="22">
+              <div class="page-head"><span>Side 22</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-22.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 22">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161873" target="tupperware_shop" data-code="11161873" aria-label="11161873" title="11161873" style="left:4.0180%;top:42.5958%;width:30.1050%;height:8.1561%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161880" target="tupperware_shop" data-code="11161880" aria-label="11161880" title="11161880" style="left:12.2765%;top:40.9231%;width:42.0000%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161879" target="tupperware_shop" data-code="11161879" aria-label="11161879" title="11161879" style="left:42.5249%;top:40.9231%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161867" target="tupperware_shop" data-code="11161867" aria-label="11161867" title="11161867" style="left:4.0526%;top:62.3713%;width:30.2840%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11161869" target="tupperware_shop" data-code="11161869" aria-label="11161869" title="11161869" style="left:12.3320%;top:62.3713%;width:42.0000%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11090050" target="tupperware_shop" data-code="11090050" aria-label="11090050" title="11090050" style="left:4.9113%;top:77.5587%;width:31.1883%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11164878" target="tupperware_shop" data-code="11164878" aria-label="11164878" title="11164878" style="left:65.7173%;top:80.9040%;width:27.6918%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-23" data-page="23">
+              <div class="page-head"><span>Side 23</span><span>5 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-23.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 23">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178789" target="tupperware_shop" data-code="11178789" aria-label="11178789" title="11178789" style="left:52.1013%;top:35.9092%;width:33.1798%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11166328" target="tupperware_shop" data-code="11166328" aria-label="11166328" title="11166328" style="left:7.7952%;top:60.2787%;width:32.7370%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168886" target="tupperware_shop" data-code="11168886" aria-label="11168886" title="11168886" style="left:32.4757%;top:60.2787%;width:42.0000%;height:9.8844%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178323" target="tupperware_shop" data-code="11178323" aria-label="11178323" title="11178323" style="left:8.1930%;top:80.9986%;width:29.2245%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11167063" target="tupperware_shop" data-code="11167063" aria-label="11167063" title="11167063" style="left:32.9305%;top:81.0309%;width:42.0000%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-24" data-page="24">
+              <div class="page-head"><span>Side 24</span><span>3 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-24.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 24">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174474" target="tupperware_shop" data-code="11174474" aria-label="11174474" title="11174474" style="left:4.9545%;top:52.4781%;width:32.6677%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11133292" target="tupperware_shop" data-code="11133292" aria-label="11133292" title="11133292" style="left:32.3770%;top:52.4781%;width:42.0000%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11146975" target="tupperware_shop" data-code="11146975" aria-label="11146975" title="11146975" style="left:29.0776%;top:81.1171%;width:41.2769%;height:9.8467%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-25" data-page="25">
+              <div class="page-head"><span>Side 25</span><span>11 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-25.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 25">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184428" target="tupperware_shop" data-code="11184428" aria-label="11184428" title="11184428" style="left:34.4651%;top:7.2238%;width:38.9787%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184677" target="tupperware_shop" data-code="11184677" aria-label="11184677" title="11184677" style="left:45.9045%;top:7.3075%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184519" target="tupperware_shop" data-code="11184519" aria-label="11184519" title="11184519" style="left:40.3392%;top:17.0843%;width:32.9260%;height:8.3284%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184933" target="tupperware_shop" data-code="11184933" aria-label="11184933" title="11184933" style="left:48.0294%;top:17.0843%;width:42.0000%;height:8.3284%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184923" target="tupperware_shop" data-code="11184923" aria-label="11184923" title="11184923" style="left:25.6600%;top:28.0396%;width:42.0000%;height:10.5230%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184531" target="tupperware_shop" data-code="11184531" aria-label="11184531" title="11184531" style="left:14.4548%;top:29.1731%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184532" target="tupperware_shop" data-code="11184532" aria-label="11184532" title="11184532" style="left:14.4548%;top:35.4244%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184919" target="tupperware_shop" data-code="11184919" aria-label="11184919" title="11184919" style="left:4.5979%;top:39.3440%;width:30.0083%;height:8.3115%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11177543" target="tupperware_shop" data-code="11177543" aria-label="11177543" title="11177543" style="left:4.4169%;top:58.3585%;width:29.8366%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11129256" target="tupperware_shop" data-code="11129256" aria-label="11129256" title="11129256" style="left:14.5685%;top:58.3585%;width:42.0000%;height:11.5088%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11130599" target="tupperware_shop" data-code="11130599" aria-label="11130599" title="11130599" style="left:45.6696%;top:60.0384%;width:42.0000%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-26" data-page="26">
+              <div class="page-head"><span>Side 26</span><span>6 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-26.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 26">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11167057" target="tupperware_shop" data-code="11167057" aria-label="11167057" title="11167057" style="left:29.6180%;top:9.6779%;width:33.2340%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186857" target="tupperware_shop" data-code="11186857" aria-label="11186857" title="11186857" style="left:4.2355%;top:36.9243%;width:27.0862%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=CB003" target="tupperware_shop" data-code="CB003" aria-label="CB003" title="CB003" style="left:12.9730%;top:36.9243%;width:42.0000%;height:6.6065%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186856" target="tupperware_shop" data-code="11186856" aria-label="11186856" title="11186856" style="left:46.3625%;top:36.9243%;width:42.0000%;height:10.9845%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186859" target="tupperware_shop" data-code="11186859" aria-label="11186859" title="11186859" style="left:5.7934%;top:80.6557%;width:34.9722%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186850" target="tupperware_shop" data-code="11186850" aria-label="11186850" title="11186850" style="left:32.9106%;top:80.6557%;width:42.0000%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-27" data-page="27">
+              <div class="page-head"><span>Side 27</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-27.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 27">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183902" target="tupperware_shop" data-code="11183902" aria-label="11183902" title="11183902" style="left:66.0765%;top:18.2667%;width:30.2845%;height:6.6378%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183899" target="tupperware_shop" data-code="11183899" aria-label="11183899" title="11183899" style="left:3.3540%;top:39.8461%;width:31.2131%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183900" target="tupperware_shop" data-code="11183900" aria-label="11183900" title="11183900" style="left:10.3770%;top:39.8461%;width:42.0000%;height:6.5190%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183901" target="tupperware_shop" data-code="11183901" aria-label="11183901" title="11183901" style="left:42.0218%;top:39.8817%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186368" target="tupperware_shop" data-code="11186368" aria-label="11186368" title="11186368" style="left:3.9209%;top:57.2904%;width:30.1047%;height:10.6450%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186369" target="tupperware_shop" data-code="11186369" aria-label="11186369" title="11186369" style="left:12.6546%;top:57.2904%;width:42.0000%;height:10.6450%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11186370" target="tupperware_shop" data-code="11186370" aria-label="11186370" title="11186370" style="left:46.6509%;top:57.2904%;width:42.0000%;height:10.6450%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-28" data-page="28">
+              <div class="page-head"><span>Side 28</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-28.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 28">
+                
+                
+              </div>
+            </section><section class="page" id="page-29" data-page="29">
+              <div class="page-head"><span>Side 29</span><span>10 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-29.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 29">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=DC002" target="tupperware_shop" data-code="DC002" aria-label="DC002" title="DC002" style="left:57.5128%;top:10.1433%;width:29.3144%;height:8.6435%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11148370" target="tupperware_shop" data-code="11148370" aria-label="11148370" title="11148370" style="left:4.0276%;top:43.7175%;width:31.1917%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11068549" target="tupperware_shop" data-code="11068549" aria-label="11068549" title="11068549" style="left:15.6408%;top:43.6027%;width:42.0000%;height:6.5982%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=DC003" target="tupperware_shop" data-code="DC003" aria-label="DC003" title="DC003" style="left:44.9865%;top:43.6027%;width:42.0000%;height:6.5982%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=X101" target="tupperware_shop" data-code="X101" aria-label="X101" title="X101" style="left:50.8464%;top:64.9025%;width:42.0000%;height:6.6090%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157966" target="tupperware_shop" data-code="11157966" aria-label="11157966" title="11157966" style="left:4.0276%;top:64.9025%;width:30.6631%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11157968" target="tupperware_shop" data-code="11157968" aria-label="11157968" title="11157968" style="left:14.4567%;top:64.9025%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158285" target="tupperware_shop" data-code="11158285" aria-label="11158285" title="11158285" style="left:44.8573%;top:64.9025%;width:42.0000%;height:6.6090%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158286" target="tupperware_shop" data-code="11158286" aria-label="11158286" title="11158286" style="left:4.2959%;top:85.8416%;width:30.3967%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11158287" target="tupperware_shop" data-code="11158287" aria-label="11158287" title="11158287" style="left:14.7251%;top:85.8416%;width:42.0000%;height:10.4998%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-30" data-page="30">
+              <div class="page-head"><span>Side 30</span><span>9 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-30.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 30">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168463" target="tupperware_shop" data-code="11168463" aria-label="11168463" title="11168463" style="left:57.5441%;top:19.9944%;width:30.8246%;height:11.9424%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168462" target="tupperware_shop" data-code="11168462" aria-label="11168462" title="11168462" style="left:40.8585%;top:23.1167%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178420" target="tupperware_shop" data-code="11178420" aria-label="11178420" title="11178420" style="left:4.8691%;top:50.4199%;width:34.3481%;height:10.6115%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11172902" target="tupperware_shop" data-code="11172902" aria-label="11172902" title="11172902" style="left:4.8691%;top:50.4199%;width:34.3481%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11179922" target="tupperware_shop" data-code="11179922" aria-label="11179922" title="11179922" style="left:15.1804%;top:50.4199%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11170998" target="tupperware_shop" data-code="11170998" aria-label="11170998" title="11170998" style="left:45.9558%;top:54.5479%;width:42.0000%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11168955" target="tupperware_shop" data-code="11168955" aria-label="11168955" title="11168955" style="left:4.6572%;top:86.4444%;width:30.3158%;height:6.4835%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11179809" target="tupperware_shop" data-code="11179809" aria-label="11179809" title="11179809" style="left:14.9685%;top:86.4444%;width:42.0000%;height:9.8971%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178567" target="tupperware_shop" data-code="11178567" aria-label="11178567" title="11178567" style="left:45.5299%;top:86.6163%;width:42.0000%;height:9.7251%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-31" data-page="31">
+              <div class="page-head"><span>Side 31</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-31.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 31">
+                
+                
+              </div>
+            </section><section class="page" id="page-32" data-page="32">
+              <div class="page-head"><span>Side 32</span><span>5 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-32.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 32">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11183976" target="tupperware_shop" data-code="11183976" aria-label="11183976" title="11183976" style="left:52.4026%;top:19.0298%;width:31.4729%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11180062" target="tupperware_shop" data-code="11180062" aria-label="11180062" title="11180062" style="left:52.4026%;top:39.5620%;width:34.9835%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174730" target="tupperware_shop" data-code="11174730" aria-label="11174730" title="11174730" style="left:5.9316%;top:60.9653%;width:27.5936%;height:9.8288%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11178565" target="tupperware_shop" data-code="11178565" aria-label="11178565" title="11178565" style="left:31.4541%;top:62.6380%;width:42.0000%;height:8.1561%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11165385" target="tupperware_shop" data-code="11165385" aria-label="11165385" title="11165385" style="left:5.9316%;top:82.3095%;width:32.9897%;height:9.8288%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-33" data-page="33">
+              <div class="page-head"><span>Side 33</span><span>7 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-33.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 33">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11174866" target="tupperware_shop" data-code="11174866" aria-label="11174866" title="11174866" style="left:30.6035%;top:21.2072%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155977" target="tupperware_shop" data-code="11155977" aria-label="11155977" title="11155977" style="left:3.8249%;top:52.2538%;width:29.9634%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155980" target="tupperware_shop" data-code="11155980" aria-label="11155980" title="11155980" style="left:12.6536%;top:52.2538%;width:42.0000%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155981" target="tupperware_shop" data-code="11155981" aria-label="11155981" title="11155981" style="left:43.4587%;top:51.9327%;width:42.0000%;height:11.8360%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155979" target="tupperware_shop" data-code="11155979" aria-label="11155979" title="11155979" style="left:3.8249%;top:80.0459%;width:29.9632%;height:11.5015%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155978" target="tupperware_shop" data-code="11155978" aria-label="11155978" title="11155978" style="left:12.2792%;top:80.0459%;width:42.0000%;height:12.0000%;"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11155982" target="tupperware_shop" data-code="11155982" aria-label="11155982" title="11155982" style="left:42.6854%;top:80.0459%;width:42.0000%;height:12.0000%;"></a>
+                
+              </div>
+            </section><section class="page" id="page-34" data-page="34">
+              <div class="page-head"><span>Side 34</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-34.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 34">
+                
+                
+              </div>
+            </section><section class="page" id="page-35" data-page="35">
+              <div class="page-head"><span>Side 35</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-35.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 35">
+                
+                
+              </div>
+            </section><section class="page" id="page-36" data-page="36">
+              <div class="page-head"><span>Side 36</span><span>0 lenker</span></div>
+              <div class="sheet" style="--page-ratio:0.70449966;">
+                <img loading="lazy" decoding="async" src="/tw-host-vinter-2026-27/pages/page-36.webp"
+                  width="1049" height="1489" alt="Tupperware høst/vinter side 36">
+                
+                <div class="consultant-details" id="catalogConsultantDetails"><strong>Din Tupperware-konsulent</strong><span id="catalogConsultantName">Navn lastes inn ...</span><span id="catalogConsultantEmail"></span><span id="catalogConsultantPhone"></span></div>
+              </div>
+            </section></div></main>
+  <script>
+    const search = document.querySelector("#search");
+    const rows = [...document.querySelectorAll(".product-row")];
+    const shopLinks = [...document.querySelectorAll('a[target="tupperware_shop"]')];
+    const toggle = document.querySelector("#toggle");
+    const consultantLine = document.querySelector("#consultantLine");
+    const consultantName = document.querySelector("#consultantName");
+    const consultantCode = document.querySelector("#consultantCode");
+    let shopWindow = null;
+    let consultantReady = false;
+    function cleanReference(value) { return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80); }
+    function openShopProduct(url) {
+      shopWindow = window.open(url, "tupperware-official-store");
+      if (!shopWindow) { window.location.assign(url); return; }
+      try { shopWindow.focus(); } catch {}
+    }
+    function norwegianShopUrl(value, reference) {
+      const target = new URL(value);
+      if (target.hostname === "tupperware-eu.com" || target.hostname.endsWith(".tupperware-eu.com")) {
+        if (target.pathname === "" || target.pathname === "/") target.pathname = "/no/";
+        else if (target.pathname !== "/no" && !target.pathname.startsWith("/no/")) target.pathname = `/no${target.pathname.startsWith("/") ? target.pathname : `/${target.pathname}`}`;
+        target.searchParams.set("ref", reference);
+      }
+      return target.toString();
+    }
+    async function prepareConsultant() {
+      const params = new URLSearchParams(window.location.search);
+      const reference = cleanReference(params.get("ref"));
+      if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }
+      try {
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1`);
+        const result = await response.json();
+        if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
+        consultantName.textContent = result.name || result.consultant?.display_name || reference;
+        const catalogName = document.querySelector("#catalogConsultantName");
+        const catalogEmail = document.querySelector("#catalogConsultantEmail");
+        const catalogPhone = document.querySelector("#catalogConsultantPhone");
+        if (catalogName) catalogName.textContent = result.name || result.consultant?.display_name || reference;
+        if (catalogEmail) catalogEmail.textContent = result.email || "";
+        if (catalogPhone) catalogPhone.textContent = result.phone || "";
+        consultantCode.textContent = reference;
+        shopLinks.forEach((link) => { link.href = norwegianShopUrl(link.href, reference); });
+        consultantReady = true;
+      } catch {
+        consultantLine.classList.add("invalid"); consultantName.textContent = "konsulenten kunne ikke bekreftes"; consultantCode.textContent = reference;
+      }
+    }
+    function statusLabel(product) {
+      if (!product) return ["unknown", "Ikke funnet i produktbasen"];
+      if (product.catalogStatus === "not-in-current-assortment") return ["unknown", "Ikke i dagens sortiment"];
+      if (product.available) return ["available", "På lager"];
+      return ["unavailable", "Midlertidig utsolgt"];
+    }
+    function updateStockStatus(code, product) {
+      const [statusClass, text] = statusLabel(product);
+      document.querySelectorAll(`[data-stock-code="${code}"]`).forEach((item) => {
+        item.textContent = text;
+        item.classList.remove("available", "unavailable", "unknown");
+        item.classList.add(statusClass);
+      });
+      document.querySelectorAll(`.hotspot[data-code="${code}"]`).forEach((item) => {
+        item.title = `${code} - ${text}`;
+        item.setAttribute("aria-label", `${code} - ${text}`);
+      });
+    }
+    async function loadStockStatuses() {
+      const codes = [...new Set(rows.map(row => row.dataset.code).filter(Boolean))];
+      const cacheKey = `september-stock:${codes.join(",")}`;
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+        if (cached && Date.now() - cached.savedAt < 15 * 60 * 1000 && Array.isArray(cached.products)) {
+          const productsByCode = new Map(cached.products.map(product => [String(product.articleNumber || "").toUpperCase(), product]));
+          codes.forEach(code => updateStockStatus(code, productsByCode.get(code) || null));
+          return;
+        }
+      } catch {}
+
+      let products = [];
+      let loaded = false;
+      try {
+        const articles = encodeURIComponent(codes.join(","));
+        const response = await fetch(`/api/products?articles=${articles}&limit=${codes.length}`);
+        const payload = await response.json();
+        if (response.ok && Array.isArray(payload.products)) {
+          products = payload.products;
+          loaded = true;
+        }
+      } catch {}
+      const productsByCode = new Map(products.map(product => [String(product.articleNumber || "").toUpperCase(), product]));
+      codes.forEach(code => updateStockStatus(code, productsByCode.get(code) || null));
+      if (loaded) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), products }));
+        } catch {}
+      }
+    }
+    shopLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!consultantReady) { window.alert("Produktet kan ikke apnes for en gyldig konsulent er valgt."); return; }
+        openShopProduct(link.href);
+      });
+    });
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach((row) => { row.style.display = !query || row.dataset.search.includes(query) ? "" : "none"; });
+    });
+    rows.forEach((row) => {
+      row.addEventListener("mouseenter", () => {
+        const page = document.querySelector(`[data-page="${row.dataset.page}"]`);
+        if (page) page.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+    });
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("show-links");
+      toggle.textContent = document.body.classList.contains("show-links") ? "Skjul lenkeflater" : "Vis lenkeflater";
+    });
+    prepareConsultant();
+    loadStockStatuses();
+  </script>
+</body>
+</html>

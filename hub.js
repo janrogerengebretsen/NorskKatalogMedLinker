@@ -19,6 +19,7 @@ const shareUrls = {
   official: new URL(`/?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   digital: new URL(`/digital-katalog?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   september: new URL(`/siste-maanedstilbud?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
+  winter: new URL(`/tw-host-vinter-2026-27?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   own: new URL(`/egne-varer?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
   party: new URL(`/party?ref=${encodeURIComponent(referenceCode)}`, window.location.origin).toString(),
 };
@@ -42,6 +43,11 @@ const shareDetails = {
     title: "Velkommen til månedens tilbud",
     text: "Se den nyeste månedskatalogen med personlige produktlenker.",
     filename: "siste-maanedstilbud",
+  },
+  winter: {
+    title: "Tupperware høst/vinter 2026-2027",
+    text: "Bla i den nye sesongkatalogen og åpne personlige produktlenker.",
+    filename: "tw-host-vinter-2026-2027",
   },
   own: {
     title: "Velkommen til konsulentens egne varer",
@@ -87,6 +93,13 @@ const productRegister = [
     key: "maanedstilbud",
     title: "Siste månedstilbud",
     description: "Abonnement på den nyeste månedskatalogen med aktuelle tilbud.",
+    accessLabel: "Abonnement",
+    accessType: "entitlement",
+  },
+  {
+    key: "tw-host-vinter-2026-27",
+    title: "TWHøstVinter202627",
+    description: "Digital høst- og vinterkatalog 2026-2027 med personlige produktlenker.",
     accessLabel: "Abonnement",
     accessType: "entitlement",
   },
@@ -622,6 +635,7 @@ function setPersonalLinks(name) {
   document.querySelector("#officialCatalogLink").href = shareUrls.official;
   document.querySelector("#digitalCatalogLink").href = shareUrls.digital;
   document.querySelector("#septemberCatalogLink").href = shareUrls.september;
+  document.querySelector("#winterCatalogLink").href = shareUrls.winter;
   document.querySelector("#ownCatalogModule").href = shareUrls.own;
   document.querySelector("#partyModule").href = shareUrls.party;
   document.querySelector("#footerCatalogLink").href = shareUrls.official;
@@ -671,11 +685,13 @@ function updateVisibleModules() {
   document.querySelector("#officialCatalogLink").hidden = !access.has("norsk-nettkatalog");
   document.querySelector("#digitalCatalogLink").hidden = !access.has("norsk-produktkatalog");
   document.querySelector("#septemberCatalogLink").hidden = !access.has("maanedstilbud");
+  document.querySelector("#winterCatalogLink").hidden = !access.has("tw-host-vinter-2026-27");
   document.querySelector("#ownCatalogModule").hidden = !access.has("egne-varer");
   document.querySelector("#partyModule").hidden = !access.has("party");
   document.querySelector('[data-share="official"]').hidden = !access.has("norsk-nettkatalog");
   document.querySelector('[data-share="digital"]').hidden = !access.has("norsk-produktkatalog");
   document.querySelector('[data-share="september"]').hidden = !access.has("maanedstilbud");
+  document.querySelector('[data-share="winter"]').hidden = !access.has("tw-host-vinter-2026-27");
   document.querySelector('[data-share="party"]').hidden = !access.has("party");
 }
 
@@ -698,6 +714,7 @@ async function loadConsultant() {
   if (consultantProfile.productAccess.has("norsk-nettkatalog")) shareTasks.push(renderShareItem("official"));
   if (consultantProfile.productAccess.has("norsk-produktkatalog")) shareTasks.push(renderShareItem("digital"));
   if (consultantProfile.productAccess.has("maanedstilbud")) shareTasks.push(renderShareItem("september"));
+  if (consultantProfile.productAccess.has("tw-host-vinter-2026-27")) shareTasks.push(renderShareItem("winter"));
   if (consultantProfile.productAccess.has("party")) shareTasks.push(renderShareItem("party"));
   await Promise.all(shareTasks);
 

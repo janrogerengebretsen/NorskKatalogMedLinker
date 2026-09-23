@@ -1809,6 +1809,7 @@ class Handler(BaseHTTPRequestHandler):
             "norsk-nettkatalog": "Norsk Nettkatalog",
             "norsk-produktkatalog": "Norsk produktkatalog",
             "maanedstilbud": "Siste månedstilbud",
+            "tw-host-vinter-2026-27": "TWHøstVinter202627",
             "egne-varer": "Egne varer",
             "party": "Party",
         }
@@ -1850,6 +1851,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/september-katalog", "/september-katalog/",
         ):
             return "maanedstilbud"
+        if path in ("/tw-host-vinter-2026-27", "/tw-host-vinter-2026-27/"):
+            return "tw-host-vinter-2026-27"
         if path in ("/egne-varer", "/egne-varer/", "/own.html"):
             return "egne-varer"
         if path in ("/party", "/party/", "/party.html") or path.startswith("/party-p/"):
@@ -1916,6 +1919,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/digital-katalog/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/september-katalog": ("september-katalog/index.html", "text/html; charset=utf-8"),
             "/september-katalog/": ("september-katalog/index.html", "text/html; charset=utf-8"),
+            "/tw-host-vinter-2026-27": ("tw-host-vinter-2026-27/index.html", "text/html; charset=utf-8"),
+            "/tw-host-vinter-2026-27/": ("tw-host-vinter-2026-27/index.html", "text/html; charset=utf-8"),
             "/catalog-demo/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/catalog-demo/index.html": ("catalog-demo/index.html", "text/html; charset=utf-8"),
         }
@@ -1923,6 +1928,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
         if not item and re.fullmatch(r"/catalog-demo/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")
         if not item and re.fullmatch(r"/september-katalog/pages/page-\d{2}\.webp", path):
+            item = (path.lstrip("/"), "image/webp")
+        if not item and re.fullmatch(r"/tw-host-vinter-2026-27/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")
         if not item:
             if path.startswith("/api/"):
