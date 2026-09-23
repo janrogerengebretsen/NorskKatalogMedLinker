@@ -162,10 +162,10 @@
     "anchor_x": 242.18969443867243,
     "anchor_y": 158.64647809079088,
     "anchor_bottom": 158.64647809079088,
-    "left": 0.6678592725104353,
-    "top": 7.4973096793306855,
-    "width": 98.66428145497912,
-    "height": 19.815281742088906
+    "left": 51.5,
+    "top": 5.7,
+    "width": 42.0,
+    "height": 23.2
   },
   {
     "page": 10,
@@ -174,10 +174,10 @@
     "anchor_x": 49.49628492088223,
     "anchor_y": 306.39237151071177,
     "anchor_bottom": 306.39237151071177,
-    "left": 0.6678592725104353,
-    "top": 27.64844365433635,
-    "width": 25.424200147091113,
-    "height": 24.791248002840106
+    "left": 6.2,
+    "top": 34.7,
+    "width": 28.8,
+    "height": 20.0
   },
   {
     "page": 10,
@@ -186,10 +186,10 @@
     "anchor_x": 170.88563331247673,
     "anchor_y": 307.203109783651,
     "anchor_bottom": 307.203109783651,
-    "left": 26.473693289607507,
-    "top": 27.64844365433635,
-    "width": 28.948801201731516,
-    "height": 24.791248002840106
+    "left": 35.5,
+    "top": 34.7,
+    "width": 28.8,
+    "height": 20.0
   },
   {
     "page": 10,
@@ -198,10 +198,10 @@
     "anchor_x": 295.431982997401,
     "anchor_y": 308.278356476929,
     "anchor_bottom": 308.278356476929,
-    "left": 55.80412836134499,
-    "top": 27.64844365433635,
-    "width": 43.52801236614457,
-    "height": 24.791248002840106
+    "left": 65.0,
+    "top": 34.7,
+    "width": 28.7,
+    "height": 20.0
   },
   {
     "page": 10,
@@ -210,10 +210,10 @@
     "anchor_x": 48.81885765065982,
     "anchor_y": 423.7874701599691,
     "anchor_bottom": 423.7874701599691,
-    "left": 0.6678592725104353,
-    "top": 52.775543890093225,
-    "width": 25.610534491658203,
-    "height": 19.132595096496182
+    "left": 6.2,
+    "top": 54.9,
+    "width": 28.8,
+    "height": 19.8
   },
   {
     "page": 10,
@@ -222,10 +222,10 @@
     "anchor_x": 173.1254740618942,
     "anchor_y": 423.787306241896,
     "anchor_bottom": 423.787306241896,
-    "left": 26.6600276341746,
-    "top": 52.775543890093225,
-    "width": 29.13792529566228,
-    "height": 19.132595096496182
+    "left": 35.5,
+    "top": 54.9,
+    "width": 28.8,
+    "height": 19.8
   },
   {
     "page": 10,
@@ -234,10 +234,10 @@
     "anchor_x": 296.34036125478804,
     "anchor_y": 424.21295759800046,
     "anchor_bottom": 424.21295759800046,
-    "left": 56.17958679984285,
-    "top": 52.775543890093225,
-    "width": 43.152553927646714,
-    "height": 19.132595096496182
+    "left": 65.0,
+    "top": 54.9,
+    "width": 28.7,
+    "height": 19.8
   },
   {
     "page": 10,
@@ -246,10 +246,10 @@
     "anchor_x": 52.57479216656199,
     "anchor_y": 541.2876919704463,
     "anchor_bottom": 541.2876919704463,
-    "left": 0.6678592725104353,
-    "top": 72.24399121950617,
-    "width": 98.66428145497912,
-    "height": 19.32405324564455
+    "left": 6.2,
+    "top": 75.0,
+    "width": 28.8,
+    "height": 18.5
   },
   {
     "page": 11,
@@ -1873,5 +1873,204 @@
     "top": 74,
     "width": 25,
     "height": 17
+  },
+  {
+    "page": 6,
+    "code": "11184201",
+    "name": "Mixing bowl 2 l",
+    "left": 16.7,
+    "top": 9.5,
+    "width": 21.0,
+    "height": 14.5
+  },
+  {
+    "page": 6,
+    "code": "11187510",
+    "name": "Ultimate mixing bowl 9.5 l",
+    "left": 37.7,
+    "top": 9.5,
+    "width": 21.8,
+    "height": 14.5
+  },
+  {
+    "page": 6,
+    "code": "11186944",
+    "name": "Quick shake 500 ml",
+    "left": 59.5,
+    "top": 9.5,
+    "width": 22.0,
+    "height": 14.5
+  },
+  {
+    "page": 6,
+    "code": "11184123",
+    "name": "Potato masher",
+    "left": 6.4,
+    "top": 24.0,
+    "width": 20.9,
+    "height": 14.0
+  },
+  {
+    "page": 6,
+    "code": "11186681",
+    "name": "Twistable peeler",
+    "left": 27.3,
+    "top": 24.0,
+    "width": 22.0,
+    "height": 14.0
+  },
+  {
+    "page": 6,
+    "code": "11161880",
+    "name": "A-series Utility Knife",
+    "left": 49.3,
+    "top": 24.0,
+    "width": 21.7,
+    "height": 14.0
+  },
+  {
+    "page": 6,
+    "code": "11164878",
+    "name": "U-series Sharpener",
+    "left": 71.0,
+    "top": 24.0,
+    "width": 22.0,
+    "height": 14.0
+  },
+  {
+    "page": 6,
+    "code": "11138015",
+    "name": "KPT Garlic star",
+    "left": 17.3,
+    "top": 38.0,
+    "width": 21.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11116527",
+    "name": "Ergologics can guru",
+    "left": 38.3,
+    "top": 38.0,
+    "width": 21.7,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "MICROPLUS1L",
+    "name": "Microplus pitcher 1 l",
+    "left": 60.0,
+    "top": 38.0,
+    "width": 22.0,
+    "height": 15.0,
+    "direct_url": "https://tupperware-eu.com/no/products/set-pichet-et-spatule"
+  },
+  {
+    "page": 6,
+    "code": "11186857",
+    "name": "Ultrapro cocotte 500 ml",
+    "left": 6.0,
+    "top": 61.0,
+    "width": 21.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186856",
+    "name": "Ultrapro 3,5 l",
+    "left": 27.0,
+    "top": 61.0,
+    "width": 22.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186850",
+    "name": "Ultrapro 5,7 l",
+    "left": 49.0,
+    "top": 61.0,
+    "width": 22.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186859",
+    "name": "Ultraplus 5 l",
+    "left": 71.0,
+    "top": 61.0,
+    "width": 22.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186368",
+    "name": "Voila round 260 ml",
+    "left": 17.0,
+    "top": 76.0,
+    "width": 21.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186369",
+    "name": "Voila round 500 ml",
+    "left": 38.0,
+    "top": 76.0,
+    "width": 22.0,
+    "height": 15.0
+  },
+  {
+    "page": 6,
+    "code": "11186370",
+    "name": "Voila round 900 ml",
+    "left": 60.0,
+    "top": 76.0,
+    "width": 22.0,
+    "height": 15.0
+  },
+  {
+    "page": 7,
+    "code": "11178420",
+    "name": "Eco bottle 750 ml",
+    "left": 7.6,
+    "top": 10.0,
+    "width": 21.0,
+    "height": 22.0
+  },
+  {
+    "page": 7,
+    "code": "11179922",
+    "name": "2 Eco+ bottle 500 ml",
+    "left": 28.6,
+    "top": 10.0,
+    "width": 21.9,
+    "height": 22.0
+  },
+  {
+    "page": 7,
+    "code": "11170998",
+    "name": "Eco+ bottle slim 750 ml",
+    "left": 50.5,
+    "top": 10.0,
+    "width": 21.8,
+    "height": 22.0
+  },
+  {
+    "page": 7,
+    "code": "11168955",
+    "name": "Eco bottle 750 ml",
+    "left": 72.3,
+    "top": 10.0,
+    "width": 21.8,
+    "height": 22.0
+  },
+  {
+    "page": 7,
+    "code": "11155977",
+    "name": "Recycled microfibers window (2)",
+    "left": 36.8,
+    "top": 32.0,
+    "width": 27.0,
+    "height": 20.0
   }
 ]
