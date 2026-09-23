@@ -53,6 +53,9 @@
     .cover-translation strong { font-size:1.7em; }
     .page-two-translation { left:40%; top:5%; width:54%; height:86%; font-size:clamp(9px,1.28vw,17px); }
     .full-text-translation { left:7%; top:6%; width:86%; height:84%; }
+    .catalog-howto { margin-top:.8em; padding:.8em 1em; background:#e8f4f1; border:2px solid #008c82; color:#202522; }
+    .catalog-howto h3 { margin:0 0 .35em; color:#006b5f; }
+    .catalog-howto p { margin:.3em 0; }
     .join-translation { height:61%; }
     .contents-translation { left:5%; top:70%; width:90%; height:29%; background:#653925; color:#fff; border-left-color:#f5d995; }
     .contents-translation strong { display:block; font-size:1.35em; margin-bottom:.45em; }
@@ -165,9 +168,21 @@
     .consultant-qrs a { display:grid; gap:.55em; color:#262626; text-decoration:none; font-weight:700; font-size:.72em; }
     .consultant-qrs canvas { display:block; width:100% !important; height:auto !important; aspect-ratio:1; background:#fff; padding:5%; }
     .catalog-disclaimer { position:absolute; z-index:4; left:7.5%; top:81%; width:65%; min-height:8.5%; display:flex; flex-direction:column; justify-content:center; gap:.2em; padding:1.2% 1.6%; background:#26342d; color:#fff; font-size:clamp(7px,.86vw,12px); line-height:1.22; pointer-events:none; }
-    .print-tools { display:flex; gap:8px; align-items:center; }
-    .print-tools input { width:190px; }
+    .print-tools { display:grid; grid-template-columns:minmax(0,190px) max-content; gap:8px; align-items:center; min-width:0; }
+    .print-tools input { width:100%; min-width:0; }
+    .print-tools button { white-space:nowrap; }
     .bar { grid-template-columns:minmax(210px,1fr) auto auto auto; }
+    @media (max-width:860px) {
+      .bar { grid-template-columns:minmax(0,1fr); }
+      .bar > * { width:100%; min-width:0; }
+      .print-tools { grid-template-columns:minmax(0,1fr) max-content; width:100%; }
+    }
+    @media (max-width:430px) {
+      .bar { padding:10px 12px; gap:8px; }
+      .brand h1 { font-size:16px; }
+      .print-tools { grid-template-columns:minmax(0,1fr); }
+      .print-tools button { width:100%; }
+    }
     @media print {
       @page { size:A5 portrait; margin:0; }
       body { background:#fff; }
@@ -190,7 +205,7 @@
     <div class="bar">
       <div class="brand"><span class="brand-mark">T</span><h1>Tupperware høst/vinter 2026-2027</h1></div>
       <input id="search" type="search" placeholder="Sok artikkelnummer eller kode">
-      <button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut"><button id="printCatalog" type="button">Skriv ut</button></div>
+      <button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut eller lagres som PDF"><button id="printCatalog" type="button" title="Skriv ut eller velg Lagre som PDF i utskriftsvinduet">PDF / skriv ut</button></div>
     </div>
   </header>
   <main><aside><a class="product-row" href="https://tupperware-eu.com/no/search?q=11186044" target="tupperware_shop"
@@ -944,7 +959,7 @@
 
 
 
-                <div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p></div>
+                <div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p><div class="catalog-howto"><h3>Slik bruker du den digitale katalogen</h3><p>Klikk på et produkt for å åpne det i Tupperwares nettbutikk med konsulentens personlige referanse. Velg antall og legg varen i handlekurven. Gå tilbake til katalogen og legg til flere produkter på samme måte. Når du er ferdig, åpner du handlekurven, kontrollerer varene og sender inn hele bestillingen samlet.</p><p><strong>Pris og lagerstatus i Tupperwares nettbutikk gjelder alltid.</strong></p></div></div>
               </div>
             </section><section class="page" id="page-4" data-page="4">
               <div class="page-head"><span>Side 4</span><span>0 lenker</span></div>

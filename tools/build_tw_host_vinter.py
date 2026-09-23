@@ -22,7 +22,7 @@ POPPLER = Path(
 OVERLAYS = {
     1: '''<div class="translation-panel cover-translation"><strong>Høst 2026 - vinter 2027</strong></div>''',
     2: '''<div class="translation-panel page-two-translation"><h2>Velkommen til den nye Tupperware-katalogen!</h2><p>Høsten senker seg, dagene blir kjøligere og de gode stundene sammen blir enda viktigere.</p><p>Oppdag vårt nye høst- og vinterutvalg for matlaging, oppbevaring, organisering og hyggelige måltider. Her finner du både velkjente favoritter og nye løsninger som gjør hverdagen enklere.</p><p>Enten du liker hjemmelaget mat, smarte løsninger på farten eller orden hjemme, er katalogen full av ideer for sesongen.</p><p><strong>God fornøyelse!</strong></p></div>''',
-    3: '''<div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p></div>''',
+    3: '''<div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p><div class="catalog-howto"><h3>Slik bruker du den digitale katalogen</h3><p>Klikk på et produkt for å åpne det i Tupperwares nettbutikk med konsulentens personlige referanse. Velg antall og legg varen i handlekurven. Gå tilbake til katalogen og legg til flere produkter på samme måte. Når du er ferdig, åpner du handlekurven, kontrollerer varene og sender inn hele bestillingen samlet.</p><p><strong>Pris og lagerstatus i Tupperwares nettbutikk gjelder alltid.</strong></p></div></div>''',
     4: '''<div class="translation-panel full-text-translation join-translation"><h2>Bli med</h2><h3>Bli kjent med produktene</h3><p>Start med nyttige Tupperware-produkter og få tilgang til arrangementer, gaver og gode tilbud.</p><h3>Jobb der du vil</h3><p>Arbeid fysisk eller digitalt, og legg opp dagene slik det passer deg.</p><h3>Møt nye mennesker</h3><p>Bli del av et engasjert fellesskap og skap nye kontakter.</p><h3>Kombiner jobb og fritid</h3><p>Du bestemmer selv arbeidstid og ambisjonsnivå.</p><h3>Provisjon fra første salg</h3><p>Du tjener provisjon helt fra starten.</p><h3>Jobb digitalt</h3><p>Bygg nettverk, skap gode kunderelasjoner og selg på nettet.</p></div><div class="translation-panel contents-translation"><strong>Innhold</strong><div><a href="#page-3">3 Tupperware</a><a href="#page-4">4 Bli med</a><a href="#page-5">5 Tilbakevendende og nye produkter</a><a href="#page-8">8 Frysing</a><a href="#page-8">8 Flerbruk</a><a href="#page-9">9 Kjøleskap</a><a href="#page-12">12 Oppbevaring</a><a href="#page-14">14 Baking</a><a href="#page-16">16 Oppskrifter</a><a href="#page-18">18 Ekstra praktisk</a><a href="#page-20">20 Kjøkkenredskaper</a><a href="#page-23">23 Barn</a><a href="#page-24">24 Mikrobølgeovn</a><a href="#page-26">26 Matlaging</a><a href="#page-28">28 Oppskrifter</a><a href="#page-29">29 Servering</a><a href="#page-30">30 Drikke</a><a href="#page-31">31 Big T</a><a href="#page-32">32 På farten</a><a href="#page-33">33 Pleie og rengjøring</a><a href="#page-34">34 Garanti</a></div></div>''',
     5: '''<div class="translation-panel page-five-translation"><h2>TILBAKEVENDENDE<br><strong>NYE PRODUKTER</strong></h2><p>Når behovene dine utvikler seg, gjør sortimentet vårt det samme.</p><p>Oppdag produkter som gjør comeback, og nye produkter som er utviklet for å gjøre hverdagen enklere.</p><p>Inspirerende løsninger og favoritter å dele - kanskje finner du din neste favoritt på de følgende sidene.</p></div>''',
     6: '''<div class="fixed-heading heading-page6-prep">FORBEREDELSE</div><div class="fixed-heading heading-page6-cook">MATLAGING</div><div class="fixed-footer">6 | Tilbakevendende og nye produkter</div>''',
@@ -447,7 +447,7 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     )
     page_html = page_html.replace(
         '<button id="toggle" type="button">Vis lenkeflater</button>',
-        '<button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut"><button id="printCatalog" type="button">Skriv ut</button></div>',
+        '<button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut eller lagres som PDF"><button id="printCatalog" type="button" title="Skriv ut eller velg Lagre som PDF i utskriftsvinduet">PDF / skriv ut</button></div>',
     )
     page_html = page_html.replace(
         "</style>",
@@ -461,6 +461,9 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     .cover-translation strong { font-size:1.7em; }
     .page-two-translation { left:40%; top:5%; width:54%; height:86%; font-size:clamp(9px,1.28vw,17px); }
     .full-text-translation { left:7%; top:6%; width:86%; height:84%; }
+    .catalog-howto { margin-top:.8em; padding:.8em 1em; background:#e8f4f1; border:2px solid #008c82; color:#202522; }
+    .catalog-howto h3 { margin:0 0 .35em; color:#006b5f; }
+    .catalog-howto p { margin:.3em 0; }
     .join-translation { height:61%; }
     .contents-translation { left:5%; top:70%; width:90%; height:29%; background:#653925; color:#fff; border-left-color:#f5d995; }
     .contents-translation strong { display:block; font-size:1.35em; margin-bottom:.45em; }
@@ -573,9 +576,21 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     .consultant-qrs a { display:grid; gap:.55em; color:#262626; text-decoration:none; font-weight:700; font-size:.72em; }
     .consultant-qrs canvas { display:block; width:100% !important; height:auto !important; aspect-ratio:1; background:#fff; padding:5%; }
     .catalog-disclaimer { position:absolute; z-index:4; left:7.5%; top:81%; width:65%; min-height:8.5%; display:flex; flex-direction:column; justify-content:center; gap:.2em; padding:1.2% 1.6%; background:#26342d; color:#fff; font-size:clamp(7px,.86vw,12px); line-height:1.22; pointer-events:none; }
-    .print-tools { display:flex; gap:8px; align-items:center; }
-    .print-tools input { width:190px; }
+    .print-tools { display:grid; grid-template-columns:minmax(0,190px) max-content; gap:8px; align-items:center; min-width:0; }
+    .print-tools input { width:100%; min-width:0; }
+    .print-tools button { white-space:nowrap; }
     .bar { grid-template-columns:minmax(210px,1fr) auto auto auto; }
+    @media (max-width:860px) {
+      .bar { grid-template-columns:minmax(0,1fr); }
+      .bar > * { width:100%; min-width:0; }
+      .print-tools { grid-template-columns:minmax(0,1fr) max-content; width:100%; }
+    }
+    @media (max-width:430px) {
+      .bar { padding:10px 12px; gap:8px; }
+      .brand h1 { font-size:16px; }
+      .print-tools { grid-template-columns:minmax(0,1fr); }
+      .print-tools button { width:100%; }
+    }
     @media print {
       @page { size:A5 portrait; margin:0; }
       body { background:#fff; }
