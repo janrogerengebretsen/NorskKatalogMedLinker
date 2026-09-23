@@ -1418,7 +1418,7 @@ class Handler(BaseHTTPRequestHandler):
                 status = clean_text((query.get("status") or ["all"])[0])
                 try:
                     offset = max(0, int((query.get("offset") or ["0"])[0]))
-                    limit = min(96, max(1, int((query.get("limit") or ["48"])[0])))
+                    limit = min(250, max(1, int((query.get("limit") or ["48"])[0])))
                 except ValueError:
                     offset, limit = 0, 48
                 products = get_products(collection)
