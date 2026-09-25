@@ -17,7 +17,7 @@ import unicodedata
 import mail_tool
 from datetime import datetime
 
-ACTIVE_MONTHLY_CATALOG_PATH = "/september-katalog"
+ACTIVE_MONTHLY_CATALOG_PATH = "/oktober-katalog"
 
 _local_env = Path(__file__).resolve().parent / ".env"
 if _local_env.is_file():
@@ -1808,7 +1808,7 @@ class Handler(BaseHTTPRequestHandler):
         product_titles = {
             "norsk-nettkatalog": "Norsk Nettkatalog",
             "norsk-produktkatalog": "Norsk produktkatalog",
-            "maanedstilbud": "Siste månedstilbud",
+            "maanedstilbud": "Månedens tilbudskatalog",
             "tw-host-vinter-2026-27": "TWHøstVinter202627",
             "egne-varer": "Egne varer",
             "party": "Party",
@@ -1849,6 +1849,7 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/siste-maanedstilbud", "/siste-maanedstilbud/",
             "/siste-manedstilbud", "/siste-manedstilbud/",
             "/september-katalog", "/september-katalog/",
+            "/oktober-katalog", "/oktober-katalog/",
         ):
             return "maanedstilbud"
         if path in ("/tw-host-vinter-2026-27", "/tw-host-vinter-2026-27/"):
@@ -1919,6 +1920,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/digital-katalog/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
             "/september-katalog": ("september-katalog/index.html", "text/html; charset=utf-8"),
             "/september-katalog/": ("september-katalog/index.html", "text/html; charset=utf-8"),
+            "/oktober-katalog": ("oktober-katalog/index.html", "text/html; charset=utf-8"),
+            "/oktober-katalog/": ("oktober-katalog/index.html", "text/html; charset=utf-8"),
             "/tw-host-vinter-2026-27": ("tw-host-vinter-2026-27/index.html", "text/html; charset=utf-8"),
             "/tw-host-vinter-2026-27/": ("tw-host-vinter-2026-27/index.html", "text/html; charset=utf-8"),
             "/catalog-demo/": ("catalog-demo/index.html", "text/html; charset=utf-8"),
@@ -1928,6 +1931,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
         if not item and re.fullmatch(r"/catalog-demo/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")
         if not item and re.fullmatch(r"/september-katalog/pages/page-\d{2}\.webp", path):
+            item = (path.lstrip("/"), "image/webp")
+        if not item and re.fullmatch(r"/oktober-katalog/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")
         if not item and re.fullmatch(r"/tw-host-vinter-2026-27/pages/page-\d{2}\.webp", path):
             item = (path.lstrip("/"), "image/webp")

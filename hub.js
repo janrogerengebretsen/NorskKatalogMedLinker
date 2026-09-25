@@ -91,7 +91,7 @@ const productRegister = [
   },
   {
     key: "maanedstilbud",
-    title: "Siste månedstilbud",
+    title: "Månedens tilbudskatalog",
     description: "Abonnement på den nyeste månedskatalogen med aktuelle tilbud.",
     accessLabel: "Abonnement",
     accessType: "entitlement",

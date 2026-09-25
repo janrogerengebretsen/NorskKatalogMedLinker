@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupperware oktoberkatalog 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f2f5f4; color: #172124; }
+    header { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #dbe2e0; }
+    .consultant-line { min-height: 32px; display:flex; align-items:center; justify-content:center; gap:8px; padding:6px 18px; background:#0b6b66; color:#fff; font-size:13px; }
+    .consultant-line small { color: rgba(255,255,255,.75); }
+    .consultant-line.invalid { background:#9b332d; }
+    .bar { display:grid; grid-template-columns:minmax(210px,1fr) auto auto; gap:10px; align-items:center; max-width:1380px; margin:0 auto; padding:12px 18px; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:0; }
+    .brand-mark { width:36px; height:36px; display:grid; place-items:center; flex:0 0 auto; background:#d45a3c; color:#fff; font-size:21px; font-weight:800; }
+    h1 { margin:0; font-size:18px; letter-spacing:0; }
+    input { width:min(420px,100%); border:1px solid #cbd6d3; border-radius:8px; min-height:40px; padding:8px 10px; font:inherit; }
+    button { border:1px solid #0b6b66; background:#0b6b66; color:#fff; border-radius:8px; min-height:40px; padding:8px 12px; font:inherit; font-weight:700; cursor:pointer; }
+    main { display:grid; grid-template-columns:300px minmax(0,1fr); gap:18px; max-width:1380px; margin:0 auto; padding:18px; }
+    aside { position:sticky; top:76px; align-self:start; max-height:calc(100vh - 92px); overflow:auto; background:#fff; border:1px solid #dbe2e0; border-radius:8px; }
+    .product-row { display:grid; gap:4px; padding:10px 12px; border-bottom:1px solid #eef2f1; color:#172124; text-decoration:none; }
+    .product-row:hover { background:#edf8f6; }
+    .product-row strong { color:#0b6b66; font-size:13px; }
+    .stock-status { color:#506166; font-size:12px; font-weight:700; }
+    .stock-status.available { color:#08795f; }
+    .stock-status.unavailable { color:#9b332d; }
+    .stock-status.unknown { color:#6b5b2a; }
+    .pages { display:grid; gap:18px; }
+    .page { background:#fff; border:1px solid #dbe2e0; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(18,48,47,.08); }
+    .page-head { display:flex; justify-content:space-between; border-bottom:1px solid #e7ecea; padding:8px 12px; font-size:13px; font-weight:700; color:#506166; }
+    .sheet { position:relative; width:100%; aspect-ratio:var(--page-ratio); background:#fff; }
+    .sheet img { display:block; width:100%; height:100%; object-fit:contain; }
+    .hotspot { position:absolute; display:block; border-radius:4px; outline-offset:2px; }
+    .hotspot:focus { outline:3px solid #d45a3c; background:rgba(212,90,60,.14); }
+    body.show-links .hotspot { background:rgba(11,107,102,.18); box-shadow:inset 0 0 0 2px rgba(11,107,102,.75); }
+    .translation { position:absolute; z-index:2; font-weight:800; line-height:1.15; color:#172124; text-wrap:balance; pointer-events:none; }
+    .october-cover { left:5%; top:17%; width:68%; min-height:10%; display:flex; align-items:center; padding:1.2% 1.6%; background:#efbda5; color:#7f210b; font-size:clamp(18px,3.2vw,46px); }
+    .october-heading { left:4%; top:2.3%; width:92%; min-height:7%; display:flex; align-items:center; justify-content:center; padding:.7% 1.4%; background:#fff; color:#84250d; font-size:clamp(16px,2.8vw,40px); text-align:center; }
+    .october-heading-left { justify-content:flex-start; }
+    #page-8 .october-heading { left:3%; width:94%; background:#d7b28d; }
+    #page-12 .october-heading { left:0; top:0; width:48%; min-height:9%; padding-left:5%; background:#ef7f22; color:#182f59; }
+    #page-13 .october-heading { left:28%; width:69%; background:#fff; }
+    #page-14 .october-heading { left:0; top:0; width:76%; min-height:9%; padding-left:5%; background:#d7a77f; }
+    .october-callout { display:grid; gap:.25em; padding:.7% 1%; background:rgba(247,200,178,.96); color:#46170c; font-size:clamp(8px,.95vw,14px); font-weight:500; }
+    .october-callout strong { font-size:1.08em; }
+    .callout-colander { left:3%; top:15.8%; width:31%; min-height:10%; }
+    .callout-cone { left:3%; top:68%; width:32%; min-height:11%; }
+    .callout-lids { left:67%; top:68%; width:30%; min-height:11%; }
+    .callout-combo { left:5%; top:81%; width:90%; min-height:17%; display:flex; flex-direction:column; justify-content:center; text-align:center; font-size:clamp(9px,1.15vw,16px); }
+    .october-blog { left:66%; top:3%; width:31%; min-height:10%; display:flex; align-items:center; padding:1%; background:#f7c8b2; color:#46170c; font-size:clamp(8px,.9vw,13px); text-align:center; }
+    .recipe-sheet-original { left:2%; top:2.3%; width:96%; height:96%; display:grid; grid-template-rows:24.8% 34.3% 38.7%; gap:1.1%; padding:0; background:#d7bba4; color:#29221e; font-size:clamp(11.5px,1.25vw,20px); font-weight:400; line-height:1.08; overflow:hidden; }
+    .recipe-row { position:relative; min-height:0; padding:1.35% 2.25% 1.15%; background:#f8f5f1; overflow:hidden; }
+    .recipe-row h2,.recipe-row h3,.recipe-row p { margin:0; }
+    .recipe-row h2 { margin-bottom:.3em; color:#6e311f; font-size:1.72em; line-height:1; font-weight:800; }
+    .recipe-row h3 { margin-bottom:.3em; font-size:1em; font-weight:800; }
+    .recipe-columns { display:grid; grid-template-columns:32.5% 64.5%; gap:3%; height:calc(100% - 3.9em); }
+    .ingredients,.method { min-width:0; }
+    .recipe-row ul,.recipe-row ol { margin:0; padding-left:1.45em; }
+    .recipe-row li { margin:0 0 .18em; }
+    .method p { margin-top:.3em; }
+    .individual { position:absolute; left:2.25%; right:2.25%; bottom:1%; display:grid; grid-template-columns:17% 1fr; gap:2%; align-items:center; padding-top:.38em; border-top:1px solid #b68b70; font-size:.94em; }
+    .individual strong { color:#6e311f; text-transform:uppercase; }
+    .cover-badge { padding:1.1% 1.6%; background:rgba(255,255,255,.92); color:#0b6b66; font-size:clamp(10px,1.4vw,19px); text-transform:uppercase; letter-spacing:.04em; }
+    .cover-title { color:#fff; font-size:clamp(22px,4.3vw,54px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .cover-subtitle { color:#fff; font-size:clamp(15px,2.2vw,30px); text-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .note-panel, .story-panel { padding:1.2% 1.5%; background:rgba(255,255,255,.92); border-left:5px solid #0b6b66; font-size:clamp(10px,1.45vw,18px); font-weight:500; box-shadow:0 8px 20px rgba(0,0,0,.12); }
+    .note-panel.compact { font-size:clamp(9px,1.08vw,15px); line-height:1.22; }
+    .note-panel.dark { background:rgba(23,33,36,.9); color:#fff; }
+    .note-panel strong, .story-panel strong { color:#0b6b66; font-weight:900; }
+    .print-tools { display:grid; grid-template-columns:minmax(0,180px) max-content; gap:8px; min-width:0; }
+    .print-tools input { width:100%; min-width:0; }
+    .print-tools button { white-space:nowrap; }
+    .bar { grid-template-columns:minmax(210px,1fr) minmax(180px,360px) auto auto; }
+    .contact-sheet { overflow:hidden; background:linear-gradient(150deg,#f4b89e 0 40%,#f8e9df 40% 100%); padding:7%; color:#20312d; }
+    .contact-accent { position:absolute; right:-8%; top:7%; color:rgba(132,37,13,.1); font-weight:900; font-size:clamp(50px,10vw,140px); transform:rotate(-8deg); }
+    .contact-intro { position:relative; z-index:1; max-width:80%; }
+    .contact-intro > span { color:#84250d; font-weight:900; letter-spacing:0; }
+    .contact-intro h2 { margin:.3em 0; font-size:clamp(24px,4vw,54px); line-height:1; }
+    .contact-intro p { max-width:86%; font-size:clamp(11px,1.35vw,18px); line-height:1.4; }
+    .contact-card { position:relative; z-index:1; display:flex; flex-direction:column; gap:.35em; width:62%; margin-top:4%; padding:3%; background:#fff; border-left:8px solid #0b6b66; box-shadow:0 10px 24px rgba(70,36,24,.14); font-size:clamp(11px,1.5vw,20px); }
+    .contact-card h3 { margin:0; color:#84250d; text-transform:uppercase; font-size:.8em; }
+    .contact-card span { overflow-wrap:anywhere; }
+    .contact-qr-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:4%; margin-top:5%; }
+    .contact-qr-grid a { display:grid; grid-template-columns:36% 1fr; grid-template-rows:auto 1fr; align-items:center; gap:.35em 5%; padding:3%; background:#fff; color:#20312d; text-decoration:none; box-shadow:0 10px 24px rgba(70,36,24,.12); }
+    .contact-qr-grid canvas { grid-row:1 / 3; width:100% !important; height:auto !important; aspect-ratio:1; }
+    .contact-qr-grid span { font-size:clamp(7px,.75vw,11px); overflow-wrap:anywhere; }
+    .contact-note { position:relative; z-index:1; margin-top:5%; padding:2.5%; background:#84250d; color:#fff; text-align:center; font-weight:700; font-size:clamp(10px,1.25vw,17px); }
+    @media (max-width:860px) { .bar { grid-template-columns:minmax(0,1fr); } .bar > * { width:100%; min-width:0; } .print-tools { grid-template-columns:minmax(0,1fr) max-content; } main { grid-template-columns:1fr; } aside { position:static; max-height:210px; } .consultant-line { flex-wrap:wrap; text-align:center; } }
+    @media (max-width:430px) { .print-tools { grid-template-columns:1fr; } .print-tools button { width:100%; } }
+    @media print {
+      @page { size:A4 portrait; margin:0; }
+      body { background:#fff; }
+      header, aside, .page-head { display:none !important; }
+      main, .pages { display:block; width:100%; max-width:none; margin:0; padding:0; }
+      .page { display:block; width:210mm; height:297mm; margin:0; border:0; border-radius:0; box-shadow:none; overflow:hidden; break-after:page; page-break-after:always; }
+      .page.print-excluded { display:none !important; }
+      .sheet { width:210mm; height:297mm; }
+      .hotspot { display:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="consultant-line" id="consultantLine">
+      <span>Du handler med <strong id="consultantName">Kontrollerer konsulent ...</strong></span>
+      <small id="consultantCode"></small>
+    </div>
+    <div class="bar">
+      <div class="brand"><span class="brand-mark">T</span><h1>Tupperware oktoberkatalog 2026</h1></div>
+      <input id="search" type="search" placeholder="Søk artikkelnummer eller kode">
+      <button id="toggle" type="button">Vis lenkeflater</button>
+      <div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,15" aria-label="Sider som skal skrives ut eller lagres som PDF"><button id="printCatalog" type="button" title="Skriv ut eller velg Lagre som PDF i utskriftsvinduet">PDF / skriv ut</button></div>
+    </div>
+  </header>
+  <main>
+    <aside>
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11184918" target="tupperware_shop"
+           data-search="11184918 11184918" data-page="5" data-code="11184918">
+          <span>11184918</span>
+          <strong>Side 5</strong>
+          <small class="stock-status" data-stock-code="11184918">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS712" target="tupperware_shop"
+           data-search="26ss712 26ss712" data-page="5" data-code="26SS712">
+          <span>26SS712</span>
+          <strong>Side 5</strong>
+          <small class="stock-status" data-stock-code="26SS712">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop"
+           data-search="11109598 11109598" data-page="8" data-code="11109598">
+          <span>11109598</span>
+          <strong>Side 8</strong>
+          <small class="stock-status" data-stock-code="11109598">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11138015" target="tupperware_shop"
+           data-search="11138015 11138015" data-page="9" data-code="11138015">
+          <span>11138015</span>
+          <strong>Side 9</strong>
+          <small class="stock-status" data-stock-code="11138015">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS197" target="tupperware_shop"
+           data-search="26ss197 26ss197" data-page="9" data-code="26SS197">
+          <span>26SS197</span>
+          <strong>Side 9</strong>
+          <small class="stock-status" data-stock-code="26SS197">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS716" target="tupperware_shop"
+           data-search="26ss716 26ss716" data-page="9" data-code="26SS716">
+          <span>26SS716</span>
+          <strong>Side 9</strong>
+          <small class="stock-status" data-stock-code="26SS716">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11185147" target="tupperware_shop"
+           data-search="11185147 11185147" data-page="10" data-code="11185147">
+          <span>11185147</span>
+          <strong>Side 10</strong>
+          <small class="stock-status" data-stock-code="11185147">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11185155" target="tupperware_shop"
+           data-search="11185155 11185155" data-page="11" data-code="11185155">
+          <span>11185155</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11185155">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11185580" target="tupperware_shop"
+           data-search="11185580 11185580" data-page="11" data-code="11185580">
+          <span>11185580</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11185580">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11185152" target="tupperware_shop"
+           data-search="11185152 11185152" data-page="11" data-code="11185152">
+          <span>11185152</span>
+          <strong>Side 11</strong>
+          <small class="stock-status" data-stock-code="11185152">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11179160" target="tupperware_shop"
+           data-search="11179160 11179160" data-page="12" data-code="11179160">
+          <span>11179160</span>
+          <strong>Side 12</strong>
+          <small class="stock-status" data-stock-code="11179160">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=26SS723" target="tupperware_shop"
+           data-search="26ss723 26ss723" data-page="13" data-code="26SS723">
+          <span>26SS723</span>
+          <strong>Side 13</strong>
+          <small class="stock-status" data-stock-code="26SS723">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11185578" target="tupperware_shop"
+           data-search="11185578 11185578" data-page="13" data-code="11185578">
+          <span>11185578</span>
+          <strong>Side 13</strong>
+          <small class="stock-status" data-stock-code="11185578">Sjekker lagerstatus ...</small>
+        </a>
+
+        <a class="product-row" href="https://tupperware-eu.com/no/search?q=11179354" target="tupperware_shop"
+           data-search="11179354 11179354" data-page="14" data-code="11179354">
+          <span>11179354</span>
+          <strong>Side 14</strong>
+          <small class="stock-status" data-stock-code="11179354">Sjekker lagerstatus ...</small>
+        </a></aside>
+    <div class="pages">
+            <section class="page" id="page-1" data-page="1">
+              <div class="page-head">
+                <span>Side 1</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-01.webp" width="1191" height="1685" alt="Oktoberkatalog side 1">
+                
+                <div class="translation october-cover">Lag høstmat på under 30 minutter!</div>
+              </div>
+            </section>
+            <section class="page" id="page-2" data-page="2">
+              <div class="page-head">
+                <span>Side 2</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-02.webp" width="1191" height="1685" alt="Oktoberkatalog side 2">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-3" data-page="3">
+              <div class="page-head">
+                <span>Side 3</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-03.webp" width="1191" height="1685" alt="Oktoberkatalog side 3">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-4" data-page="4">
+              <div class="page-head">
+                <span>Side 4</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-04.webp" width="1191" height="1685" alt="Oktoberkatalog side 4">
+                
+                <div class="translation october-callout callout-colander"><strong>1 dørslag</strong><span>Ideelt til kjøtt: fettet renner av, eller smak kan trekke ned i tilbehøret under.</span></div><div class="translation october-callout callout-cone"><strong>1 kjegle</strong><span>Gir jevnere tilberedning av store mengder i beholderen på 3 liter.</span></div><div class="translation october-callout callout-lids"><strong>2 fleksible lokk</strong><span>Til oppbevaring i kjøleskap og fryser, og til transport.</span></div><div class="translation october-callout callout-combo"><strong>Med Combo Micro 3 blir et komplett måltid ferdig på 30 minutter.</strong><span>Tilbered tre retter samtidig, uten at de kommer i kontakt med hverandre.</span></div><div class="translation october-blog">Oppskriften på sjokolade- og kirsebærkake finner du på bloggen vår.</div>
+              </div>
+            </section>
+            <section class="page" id="page-5" data-page="5">
+              <div class="page-head">
+                <span>Side 5</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-05.webp" width="1191" height="1685" alt="Oktoberkatalog side 5">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11184918" target="tupperware_shop" style="left:7.5398%;top:18.3847%;width:33.0386%;height:12.2880%;" aria-label="11184918" title="11184918" data-code="11184918"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS712" target="tupperware_shop" style="left:8.5000%;top:79.9428%;width:35.2036%;height:12.2880%;" aria-label="26SS712" title="26SS712" data-code="26SS712"></a>
+                <div class="translation october-heading">Høsten, den raske veien!</div>
+              </div>
+            </section>
+            <section class="page" id="page-6" data-page="6">
+              <div class="page-head">
+                <span>Side 6</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-06.webp" width="1191" height="1685" alt="Oktoberkatalog side 6">
+                
+                
+              </div>
+            </section>
+            <section class="page" id="page-7" data-page="7">
+              <div class="page-head">
+                <span>Side 7</span>
+                <span>0 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-07.webp" width="1191" height="1685" alt="Oktoberkatalog side 7">
+                
+                <div class="translation recipe-sheet-original">
+<section class="recipe-row recipe-carrots"><h2>HVITLØKSGULRØTTER</h2><div class="recipe-columns"><div class="ingredients"><h3>Ingredienser til 4 personer</h3><ul><li>500 g gulrøtter</li><li>Bladene fra 4 persillekvister</li><li>2 hvitløksfedd</li><li>20 g smør i små terninger</li><li>Krydder</li><li>2 ss vann eller grønnsaksbuljong</li></ul></div><div class="method"><ol><li>Skrell de vaskede gulrøttene og skjær dem i skiver med MandoChef, innstilling 1. Legg dem i 3-litersformen.</li><li>Hakk persillebladene i SuperSonic Chopper Compact og bland dem med gulrøttene.</li><li>Press de skrelte hvitløksfeddene uten kime over gulrøttene med Garlic Star.</li><li>Tilsett resten av ingrediensene og bland godt.</li><li>Stable formene i Combo Micro 3 og tilbered i 25 minutter ved 600 watt. La hvile i 5 minutter.</li><li>Server sammen med den kjøttfylte kålen.</li></ol></div></div><div class="individual"><strong>Tilberedt alene</strong><span>Tilbered med lokk i ca. 7 minutter ved 600 watt. Rør halvveis.</span></div></section>
+<section class="recipe-row recipe-cabbage"><h2>KJØTTFYLT KÅL</h2><div class="recipe-columns"><div class="ingredients"><h3>Ingredienser til 4 personer</h3><ul><li>2 løk (ca. 300 g)</li><li>2 ts persille</li><li>1 hvitløksfedd, skrelt</li><li>¼ bunt bladpersille, bladene plukket av</li><li>100 g mellomgrov couscous</li><li>200 g pølsefarse</li><li>Salt og pepper</li><li>1 egg</li><li>1 kinakål (ca. 900 g)</li></ul></div><div class="method"><ol><li>Hakk skrelt løk, skrelt hvitløk uten kime og vasket, tørket persille porsjonsvis i SuperSonic Chopper Compact.</li><li>Bland løk, hvitløk, persille, couscous, pølsefarse, salt, pepper og egg kraftig i That's a Bowl 3 l til fyllet er jevnt.</li><li>Vask kålen og fjern roten. Del kålen slik at grønne og hvite deler skilles. Kle bunnen og sidene av 1,75-litersformen med to lag grønne blader som går opp langs sidene.</li><li>Legg i fyllet, dekk med grønne blader, brett sidebladene inn mot midten og press godt. Legg resten av kålen til side til oppskriften med kinakål.</li><li>Stable Combo Micro 3 og tilbered i 25 minutter ved 600 watt. La hvile i 5 minutter, hell av væsken og server i porsjoner med hvitløksgulrøttene.</li></ol></div></div><div class="individual"><strong>Tilberedt alene</strong><span>Tilbered med lokk i ca. 10 minutter ved 600 watt. La hvile i 3 minutter, hell om nødvendig av væsken med dørslaget, og nyt.</span></div></section>
+<section class="recipe-row recipe-pear"><h2>PÆREKAKE</h2><div class="recipe-columns"><div class="ingredients"><h3>Ingredienser til 4 personer</h3><ul><li>1 ss flytende karamell</li><li>500 g modne pærer</li><li>80 g svært mykt smør</li><li>80 g sukker</li><li>2 egg</li><li>80 g mel (ca. 135 ml)</li><li>2 usprøytede appelsiner til pressing</li><li>2 ss brunt sukker</li><li>Eventuelt pekannøtter</li></ul></div><div class="method"><ol><li>Pensle 750 ml-formen med karamell med Easylogics pensel.</li><li>Skrell pærene, del dem i to og fjern kjernehusene. Legg én halvdel i midten og resten i båter rundt.</li><li>Pisk smør og sukker kremet. Tilsett eggene ett om gangen, deretter melet, og bland godt.</li><li>Fordel røren over pærene. Unngå å legge for mye røre i midten.</li><li>Stable Combo Micro 3 og tilbered i 25 minutter ved 600 watt. La kaken stå til den er avkjølt.</li><li>Riv skallet og press appelsinene med Citrus Set. Tilsett brunt sukker og bland.</li><li>Hvelv kaken på et serveringsfat. Avkjøl litt før den søtede appelsinsaften helles over.</li><li>Server med flytende karamell og eventuelt pekannøtter.</li></ol><p><strong>Variant:</strong> Bruk pærer eller annen frukt i sukkerlake.</p></div></div><div class="individual"><strong>Tilberedt alene</strong><span>Tilbered uten lokk i ca. 10 minutter ved 600 watt. La hvile, og nyt som angitt.</span></div></section>
+</div>
+              </div>
+            </section>
+            <section class="page" id="page-8" data-page="8">
+              <div class="page-head">
+                <span>Side 8</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-08.webp" width="1191" height="1685" alt="Oktoberkatalog side 8">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11109598" target="tupperware_shop" style="left:10.1916%;top:84.5219%;width:33.0951%;height:10.5954%;" aria-label="11109598" title="11109598" data-code="11109598"></a>
+                <div class="translation october-heading">Høsten, skåret til perfeksjon!</div>
+              </div>
+            </section>
+            <section class="page" id="page-9" data-page="9">
+              <div class="page-head">
+                <span>Side 9</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-09.webp" width="1191" height="1685" alt="Oktoberkatalog side 9">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11138015" target="tupperware_shop" style="left:24.5813%;top:20.0386%;width:28.0000%;height:8.9029%;" aria-label="11138015" title="11138015" data-code="11138015"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS197" target="tupperware_shop" style="left:53.2985%;top:46.4038%;width:30.5855%;height:8.9029%;" aria-label="26SS197" title="26SS197" data-code="26SS197"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS716" target="tupperware_shop" style="left:6.0002%;top:64.1282%;width:34.0848%;height:12.2880%;" aria-label="26SS716" title="26SS716" data-code="26SS716"></a>
+                <div class="translation october-heading">Sett smak på høsten</div>
+              </div>
+            </section>
+            <section class="page" id="page-10" data-page="10">
+              <div class="page-head">
+                <span>Side 10</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-10.webp" width="1191" height="1685" alt="Oktoberkatalog side 10">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11185147" target="tupperware_shop" style="left:13.9521%;top:10.2123%;width:26.2064%;height:8.9029%;" aria-label="11185147" title="11185147" data-code="11185147"></a>
+                
+              </div>
+            </section>
+            <section class="page" id="page-11" data-page="11">
+              <div class="page-head">
+                <span>Side 11</span>
+                <span>3 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-11.webp" width="1191" height="1685" alt="Oktoberkatalog side 11">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11185155" target="tupperware_shop" style="left:58.0495%;top:65.4118%;width:26.5676%;height:8.9029%;" aria-label="11185155" title="11185155" data-code="11185155"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11185580" target="tupperware_shop" style="left:58.0495%;top:75.2408%;width:27.3820%;height:8.9029%;" aria-label="11185580" title="11185580" data-code="11185580"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11185152" target="tupperware_shop" style="left:58.0495%;top:85.0699%;width:25.9524%;height:8.9029%;" aria-label="11185152" title="11185152" data-code="11185152"></a>
+                <div class="translation october-heading">Gjør deg klar for høsten på en stor måte!</div>
+              </div>
+            </section>
+            <section class="page" id="page-12" data-page="12">
+              <div class="page-head">
+                <span>Side 12</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-12.webp" width="1191" height="1685" alt="Oktoberkatalog side 12">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11179160" target="tupperware_shop" style="left:10.3994%;top:76.7670%;width:33.5063%;height:8.9029%;" aria-label="11179160" title="11179160" data-code="11179160"></a>
+                <div class="translation october-heading october-heading-left">Grøss ...</div>
+              </div>
+            </section>
+            <section class="page" id="page-13" data-page="13">
+              <div class="page-head">
+                <span>Side 13</span>
+                <span>2 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-13.webp" width="1191" height="1685" alt="Oktoberkatalog side 13">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=26SS723" target="tupperware_shop" style="left:9.5731%;top:41.8405%;width:37.6383%;height:12.2880%;" aria-label="26SS723" title="26SS723" data-code="26SS723"></a><a class="hotspot" href="https://tupperware-eu.com/no/search?q=11185578" target="tupperware_shop" style="left:69.3285%;top:71.4142%;width:26.3840%;height:8.9029%;" aria-label="11185578" title="11185578" data-code="11185578"></a>
+                <div class="translation october-heading">... og Halloween går POP!</div>
+              </div>
+            </section>
+            <section class="page" id="page-14" data-page="14">
+              <div class="page-head">
+                <span>Side 14</span>
+                <span>1 lenker</span>
+              </div>
+              <div class="sheet" style="--page-ratio:0.70682493;">
+                <img loading="lazy" decoding="async" src="/oktober-katalog/pages/page-14.webp" width="1191" height="1685" alt="Oktoberkatalog side 14">
+                <a class="hotspot" href="https://tupperware-eu.com/no/search?q=11179354" target="tupperware_shop" style="left:28.5696%;top:14.1741%;width:48.0000%;height:12.5000%;" aria-label="11179354" title="11179354" data-code="11179354"></a>
+                <div class="translation october-heading october-heading-left">Høsten, ryddig og organisert!</div>
+              </div>
+            </section><section class="page" id="page-15" data-page="15">
+          <div class="page-head"><span>Side 15</span><span>Konsulentinformasjon</span></div>
+          <div class="sheet contact-sheet" style="--page-ratio:0.70682493;">
+            <div class="contact-accent">Tupperware</div>
+            <div class="contact-intro"><span>OKTOBER 2026</span><h2>Bestill fra din Tupperware-konsulent</h2><p>Klikk på produktene i den digitale katalogen, legg flere varer i handlekurven og send hele bestillingen samlet. Pris og lagerstatus i Tupperwares nettbutikk gjelder alltid.</p></div>
+            <div class="contact-card"><h3>Din konsulent</h3><strong id="catalogConsultantName">Navn lastes inn ...</strong><span id="catalogConsultantEmail"></span><span id="catalogConsultantPhone"></span></div>
+            <div class="contact-qr-grid"><a id="catalogStoreLink" target="tupperware_shop"><canvas id="catalogStoreQr"></canvas><strong>Handle hos konsulenten</strong><span id="catalogStoreUrl"></span></a><a id="catalogDigitalLink"><canvas id="catalogDigitalQr"></canvas><strong>Åpne oktoberkatalogen</strong><span id="catalogDigitalUrl"></span></a></div>
+            <div class="contact-note">Tupperware sender bestillingen hjem til kunden. Normal leveringstid er vanligvis 7-10 dager.</div>
+          </div>
+        </section></div>
+  </main>
+  <script>
+    const search = document.querySelector("#search");
+    const rows = [...document.querySelectorAll(".product-row")];
+    const shopLinks = [...document.querySelectorAll('a[target="tupperware_shop"]')];
+    const toggle = document.querySelector("#toggle");
+    const consultantLine = document.querySelector("#consultantLine");
+    const consultantName = document.querySelector("#consultantName");
+    const consultantCode = document.querySelector("#consultantCode");
+    const printPages = document.querySelector("#printPages");
+    const printCatalog = document.querySelector("#printCatalog");
+    let shopWindow = null;
+    let consultantReady = false;
+    function cleanReference(value) { return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80); }
+    function openShopProduct(url) {
+      shopWindow = window.open(url, "tupperware-official-store");
+      if (!shopWindow) { window.location.assign(url); return; }
+      try { shopWindow.focus(); } catch {}
+    }
+    function norwegianShopUrl(value, reference) {
+      const target = new URL(value);
+      if (target.hostname === "tupperware-eu.com" || target.hostname.endsWith(".tupperware-eu.com")) {
+        if (target.pathname === "" || target.pathname === "/") target.pathname = "/no/";
+        else if (target.pathname !== "/no" && !target.pathname.startsWith("/no/")) target.pathname = `/no${target.pathname.startsWith("/") ? target.pathname : `/${target.pathname}`}`;
+        target.searchParams.set("ref", reference);
+      }
+      return target.toString();
+    }
+    async function prepareConsultant() {
+      const params = new URLSearchParams(window.location.search);
+      const reference = cleanReference(params.get("ref"));
+      if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }
+      const fallbackStoreUrl = `https://tupperware-eu.com/no/?ref=${encodeURIComponent(reference)}`;
+      const fallbackDigitalUrl = `${window.location.origin}/oktober-katalog?ref=${encodeURIComponent(reference)}`;
+      document.querySelector("#catalogConsultantName").textContent = reference;
+      document.querySelector("#catalogStoreLink").href = fallbackStoreUrl;
+      document.querySelector("#catalogDigitalLink").href = fallbackDigitalUrl;
+      document.querySelector("#catalogStoreUrl").textContent = fallbackStoreUrl;
+      document.querySelector("#catalogDigitalUrl").textContent = fallbackDigitalUrl;
+      if (window.QRCode) {
+        QRCode.toCanvas(document.querySelector("#catalogStoreQr"), fallbackStoreUrl, { width:260, margin:1 });
+        QRCode.toCanvas(document.querySelector("#catalogDigitalQr"), fallbackDigitalUrl, { width:260, margin:1 });
+      }
+      try {
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1`);
+        const result = await response.json();
+        if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
+        consultantName.textContent = result.name || result.consultant?.display_name || reference;
+        consultantCode.textContent = reference;
+        shopLinks.forEach((link) => { link.href = norwegianShopUrl(link.href, reference); });
+        const profile = result.consultant || result;
+        const displayName = result.name || profile.display_name || reference;
+        const storeUrl = `https://tupperware-eu.com/no/?ref=${encodeURIComponent(reference)}`;
+        const digitalUrl = `${window.location.origin}/oktober-katalog?ref=${encodeURIComponent(reference)}`;
+        document.querySelector("#catalogConsultantName").textContent = displayName;
+        document.querySelector("#catalogConsultantEmail").textContent = profile.email || "";
+        document.querySelector("#catalogConsultantPhone").textContent = profile.phone || "";
+        document.querySelector("#catalogStoreLink").href = storeUrl;
+        document.querySelector("#catalogDigitalLink").href = digitalUrl;
+        document.querySelector("#catalogStoreUrl").textContent = storeUrl;
+        document.querySelector("#catalogDigitalUrl").textContent = digitalUrl;
+        if (window.QRCode) {
+          QRCode.toCanvas(document.querySelector("#catalogStoreQr"), storeUrl, { width:260, margin:1 });
+          QRCode.toCanvas(document.querySelector("#catalogDigitalQr"), digitalUrl, { width:260, margin:1 });
+        }
+        consultantReady = true;
+      } catch {
+        consultantLine.classList.add("invalid"); consultantName.textContent = "konsulenten kunne ikke bekreftes"; consultantCode.textContent = reference;
+      }
+    }
+    function statusLabel(product) {
+      if (!product) return ["unknown", "Ikke funnet i produktbasen"];
+      if (product.catalogStatus === "not-in-current-assortment") return ["unknown", "Ikke i dagens sortiment"];
+      if (product.available) return ["available", "På lager"];
+      return ["unavailable", "Midlertidig utsolgt"];
+    }
+    async function loadStockStatuses() {
+      const codes = [...new Set(rows.map(row => row.dataset.code).filter(Boolean))];
+      await Promise.all(codes.map(async (code) => {
+        let product = null;
+        try {
+          const response = await fetch(`/api/products?q=${encodeURIComponent(code)}&limit=8`);
+          const payload = await response.json();
+          if (response.ok && Array.isArray(payload.products)) {
+            product = payload.products.find(item => String(item.articleNumber || "").toUpperCase() === code)
+              || payload.products[0]
+              || null;
+          }
+        } catch {}
+        const [statusClass, text] = statusLabel(product);
+        document.querySelectorAll(`[data-stock-code="${code}"]`).forEach((item) => {
+          item.textContent = text;
+          item.classList.remove("available", "unavailable", "unknown");
+          item.classList.add(statusClass);
+        });
+        document.querySelectorAll(`.hotspot[data-code="${code}"]`).forEach((item) => {
+          item.title = `${code} - ${text}`;
+          item.setAttribute("aria-label", `${code} - ${text}`);
+        });
+      }));
+    }
+    shopLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (!consultantReady) { window.alert("Produktet kan ikke åpnes før en gyldig konsulent er valgt."); return; }
+        openShopProduct(link.href);
+      });
+    });
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      rows.forEach((row) => { row.style.display = !query || row.dataset.search.includes(query) ? "" : "none"; });
+    });
+    rows.forEach((row) => {
+      row.addEventListener("mouseenter", () => {
+        const page = document.querySelector(`[data-page="${row.dataset.page}"]`);
+        if (page) page.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+    });
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("show-links");
+      toggle.textContent = document.body.classList.contains("show-links") ? "Skjul lenkeflater" : "Vis lenkeflater";
+    });
+    function selectedPrintPages(value) {
+      if (!value.trim()) return new Set(Array.from({length:15}, (_, index) => index + 1));
+      const selected = new Set();
+      value.split(",").forEach((part) => {
+        const match = part.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+        if (!match) return;
+        let start = Math.max(1, Math.min(15, Number(match[1])));
+        let end = Math.max(1, Math.min(15, Number(match[2] || match[1])));
+        if (start > end) [start, end] = [end, start];
+        for (let page = start; page <= end; page += 1) selected.add(page);
+      });
+      return selected;
+    }
+    printCatalog.addEventListener("click", () => {
+      const selected = selectedPrintPages(printPages.value);
+      if (!selected.size) { window.alert("Skriv inn gyldige sider, for eksempel 1-5,15."); return; }
+      document.querySelectorAll(".page").forEach((page) => page.classList.toggle("print-excluded", !selected.has(Number(page.dataset.page))));
+      window.print();
+      window.setTimeout(() => document.querySelectorAll(".page").forEach((page) => page.classList.remove("print-excluded")), 500);
+    });
+    prepareConsultant();
+    loadStockStatuses();
+  </script>
+</body>
+</html>
