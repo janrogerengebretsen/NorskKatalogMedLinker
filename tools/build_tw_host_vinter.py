@@ -21,7 +21,7 @@ POPPLER = Path(
 
 OVERLAYS = {
     1: '''<div class="translation-panel cover-translation"><strong>Høst 2026 - vinter 2027</strong></div>''',
-    2: '''<div class="translation-panel page-two-translation"><h2>Velkommen til den nye Tupperware-katalogen!</h2><p>Høsten senker seg, dagene blir kjøligere og de gode stundene sammen blir enda viktigere.</p><p>Oppdag vårt nye høst- og vinterutvalg for matlaging, oppbevaring, organisering og hyggelige måltider. Her finner du både velkjente favoritter og nye løsninger som gjør hverdagen enklere.</p><p>Enten du liker hjemmelaget mat, smarte løsninger på farten eller orden hjemme, er katalogen full av ideer for sesongen.</p><p><strong>God fornøyelse!</strong></p></div><div class="translation-panel catalog-howto-panel"><h3>Slik bruker du den digitale katalogen</h3><p>Klikk på et produkt for å åpne det i Tupperwares nettbutikk med konsulentens personlige referanse. Velg antall og legg varen i handlekurven. Gå tilbake til katalogen og legg til flere produkter på samme måte. Når du er ferdig, åpner du handlekurven, kontrollerer varene og sender inn hele bestillingen samlet.</p><p><strong>Pris og lagerstatus i Tupperwares nettbutikk gjelder alltid.</strong></p></div>''',
+    2: '''<div class="translation-panel page-two-translation"><h2>Velkommen til den nye Tupperware-katalogen!</h2><p>Høsten senker seg, dagene blir kjøligere og de gode stundene sammen blir enda viktigere.</p><p>Oppdag vårt nye høst- og vinterutvalg for matlaging, oppbevaring, organisering og hyggelige måltider. Her finner du både velkjente favoritter og nye løsninger som gjør hverdagen enklere.</p><p>Enten du liker hjemmelaget mat, smarte løsninger på farten eller orden hjemme, er katalogen full av ideer for sesongen.</p><p><strong>God fornøyelse!</strong></p></div><div class="translation-panel catalog-howto-panel"><h3>Slik bruker du den digitale katalogen</h3><p>Klikk på et produkt for å åpne det i Tupperwares nettbutikk med konsulentens personlige referanse. Velg antall og legg varen i handlekurven. Gå tilbake til katalogen og legg til flere produkter på samme måte. Når du er ferdig, åpner du handlekurven, kontrollerer varene og sender inn hele bestillingen samlet.</p><p><strong>Pris og lagerstatus i Tupperwares nettbutikk gjelder alltid.</strong></p><div class="monthly-offer-callout"><span><strong>Se månedens tilbud</strong>Aktuelle kampanjer og produkter finner du i den nyeste tilbudskatalogen.</span><a class="monthly-offer-link" data-monthly-offer href="/siste-maanedstilbud">Åpne månedens tilbud →</a></div></div>''',
     3: '''<div class="translation-panel full-text-translation"><h2>Gjør hverdagen enklere</h2><h3>Smart og uunnværlig</h3><p>Tupperware er mer enn oppbevaringsbokser. Produktene er laget for hverdagens behov, med gjennomtenkt funksjon og et moderne uttrykk.</p><h3>Klar for alt</h3><p>Effektiv og intuitiv organisering hjelper deg med oppbevaring, matlaging og forberedelser.</p><h3>Utviklet for å gjøre en forskjell</h3><p>Kvalitet, funksjon og holdbarhet har stått sentralt helt fra starten.</p><h3>Kjøp én gang, bruk lenge</h3><p>Produkter som varer bidrar til mindre matsvinn og færre engangsprodukter.</p></div>''',
     4: '''<div class="translation-panel full-text-translation join-translation"><h2>Bli med</h2><h3>Bli kjent med produktene</h3><p>Start med nyttige Tupperware-produkter og få tilgang til arrangementer, gaver og gode tilbud.</p><h3>Jobb der du vil</h3><p>Arbeid fysisk eller digitalt, og legg opp dagene slik det passer deg.</p><h3>Møt nye mennesker</h3><p>Bli del av et engasjert fellesskap og skap nye kontakter.</p><h3>Kombiner jobb og fritid</h3><p>Du bestemmer selv arbeidstid og ambisjonsnivå.</p><h3>Provisjon fra første salg</h3><p>Du tjener provisjon helt fra starten.</p><h3>Jobb digitalt</h3><p>Bygg nettverk, skap gode kunderelasjoner og selg på nettet.</p></div><div class="translation-panel contents-translation"><strong>Innhold</strong><div><a href="#page-3">3 Tupperware</a><a href="#page-4">4 Bli med</a><a href="#page-5">5 Tilbakevendende og nye produkter</a><a href="#page-8">8 Frysing</a><a href="#page-8">8 Flerbruk</a><a href="#page-9">9 Kjøleskap</a><a href="#page-12">12 Oppbevaring</a><a href="#page-14">14 Baking</a><a href="#page-16">16 Oppskrifter</a><a href="#page-18">18 Ekstra praktisk</a><a href="#page-20">20 Kjøkkenredskaper</a><a href="#page-23">23 Barn</a><a href="#page-24">24 Mikrobølgeovn</a><a href="#page-26">26 Matlaging</a><a href="#page-28">28 Oppskrifter</a><a href="#page-29">29 Servering</a><a href="#page-30">30 Drikke</a><a href="#page-31">31 Big T</a><a href="#page-32">32 På farten</a><a href="#page-33">33 Pleie og rengjøring</a><a href="#page-34">34 Garanti</a></div></div>''',
     5: '''<div class="translation-panel page-five-translation"><h2>TILBAKEVENDENDE<br><strong>NYE PRODUKTER</strong></h2><p>Når behovene dine utvikler seg, gjør sortimentet vårt det samme.</p><p>Oppdag produkter som gjør comeback, og nye produkter som er utviklet for å gjøre hverdagen enklere.</p><p>Inspirerende løsninger og favoritter å dele - kanskje finner du din neste favoritt på de følgende sidene.</p></div>''',
@@ -447,11 +447,25 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     )
     page_html = page_html.replace(
         '<button id="toggle" type="button">Vis lenkeflater</button>',
-        '<button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut eller lagres som PDF"><button id="printCatalog" type="button" title="Skriv ut eller velg Lagre som PDF i utskriftsvinduet">PDF / skriv ut</button></div>',
+        '<a class="monthly-offer-nav" data-monthly-offer href="/siste-maanedstilbud">Månedens tilbud</a><button id="toggle" type="button">Vis lenkeflater</button><div class="print-tools"><input id="printPages" type="text" inputmode="numeric" placeholder="Sider, f.eks. 1-5,36" aria-label="Sider som skal skrives ut eller lagres som PDF"><button id="printCatalog" type="button" title="Skriv ut eller velg Lagre som PDF i utskriftsvinduet">PDF / skriv ut</button></div>',
+    )
+    page_html = page_html.replace(
+        '<div class="bar">',
+        '''<section class="in-app-warning" id="inAppWarning" aria-label="Åpne i vanlig nettleser" hidden><div class="in-app-warning-text"><strong>Åpne katalogen i Chrome eller Safari</strong><span>1. Trykk «Kopier lenke» nedenfor. 2. Start Chrome eller Safari på telefonen. 3. Trykk i adressefeltet øverst. 4. Lim inn lenken og trykk Gå eller Enter.</span></div><button class="in-app-copy" id="copyCatalogLink" type="button">Kopier lenke</button><button class="in-app-close" id="closeInAppWarning" type="button" aria-label="Lukk meldingen" title="Lukk">×</button></section>
+    <div class="bar">''',
+        1,
     )
     page_html = page_html.replace(
         "</style>",
         '''
+    .in-app-warning { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:12px; padding:12px 18px; background:#fff2cc; color:#3f3214; border-bottom:1px solid #e6c76d; }
+    .in-app-warning[hidden] { display:none; }
+    .in-app-warning-text { display:grid; gap:3px; min-width:0; }
+    .in-app-warning-text strong { font-size:14px; }
+    .in-app-warning-text span { font-size:12px; line-height:1.4; }
+    .in-app-copy,.in-app-close { min-height:38px; border:1px solid #8a5a18; background:#fff; color:#6b4310; font-weight:700; cursor:pointer; }
+    .in-app-copy { padding:0 14px; }
+    .in-app-close { width:38px; padding:0; font-size:20px; }
     .translation-panel { position:absolute; z-index:3; padding:2.1%; background:#f9f8ef; color:#262626; border-left:6px solid #d96822; box-shadow:0 8px 22px rgba(0,0,0,.14); font-size:clamp(9px,1.12vw,16px); line-height:1.3; pointer-events:none; overflow:hidden; }
     .translation-panel h2,.translation-panel h3,.translation-panel p { margin:0 0 .65em; }
     .translation-panel h2 { font-size:1.65em; }
@@ -464,6 +478,11 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     .catalog-howto-panel { left:40%; top:52%; width:54%; height:39%; background:#e8f4f1; border:2px solid #008c82; border-left:6px solid #008c82; color:#202522; font-size:clamp(9px,1.2vw,16px); }
     .catalog-howto-panel h3 { margin:0 0 .5em; color:#006b5f; font-size:1.35em; }
     .catalog-howto-panel p { margin:.45em 0; }
+    .monthly-offer-callout { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:.7em; margin-top:.65em; padding:.65em .75em; background:#fff; border:1px solid #d96822; border-radius:6px; pointer-events:auto; }
+    .monthly-offer-callout span { display:grid; gap:.12em; font-size:.82em; }
+    .monthly-offer-callout span strong { color:#8b3d22; font-size:1.1em; }
+    .monthly-offer-link,.monthly-offer-nav { display:inline-flex; align-items:center; justify-content:center; color:#fff; background:#d45a3c; border:1px solid #b8462c; border-radius:8px; min-height:40px; padding:8px 12px; font-weight:800; text-decoration:none; white-space:nowrap; }
+    .monthly-offer-link:hover,.monthly-offer-link:focus-visible,.monthly-offer-nav:hover,.monthly-offer-nav:focus-visible { background:#b8462c; }
     .join-translation { height:61%; }
     .contents-translation { left:5%; top:70%; width:90%; height:29%; background:#653925; color:#fff; border-left-color:#f5d995; }
     .contents-translation strong { display:block; font-size:1.35em; margin-bottom:.45em; }
@@ -579,11 +598,16 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     .print-tools { display:grid; grid-template-columns:minmax(0,190px) max-content; gap:8px; align-items:center; min-width:0; }
     .print-tools input { width:100%; min-width:0; }
     .print-tools button { white-space:nowrap; }
-    .bar { grid-template-columns:minmax(210px,1fr) auto auto auto; }
+    .bar { grid-template-columns:minmax(210px,1fr) auto auto auto auto; }
     @media (max-width:860px) {
       .bar { grid-template-columns:minmax(0,1fr); }
       .bar > * { width:100%; min-width:0; }
       .print-tools { grid-template-columns:minmax(0,1fr) max-content; width:100%; }
+      .in-app-warning { grid-template-columns:minmax(0,1fr) auto; }
+      .in-app-close { grid-column:2; grid-row:1; }
+      .in-app-copy { grid-column:1 / 3; width:100%; }
+      .monthly-offer-callout { grid-template-columns:1fr; }
+      .monthly-offer-link { width:100%; white-space:normal; text-align:center; }
     }
     @media (max-width:430px) {
       .bar { padding:10px 12px; gap:8px; }
@@ -690,6 +714,57 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
     page_html = page_html.replace(
         'if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }',
         'if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }\n      renderCatalogQrs(reference);',
+        1,
+    )
+    page_html = page_html.replace(
+        'const consultantCode = document.querySelector("#consultantCode");',
+        '''const consultantCode = document.querySelector("#consultantCode");
+    const monthlyOfferUrl = new URL("/siste-maanedstilbud", window.location.origin);
+    const monthlyOfferReference = cleanReference(new URLSearchParams(window.location.search).get("ref"));
+    if (monthlyOfferReference) monthlyOfferUrl.searchParams.set("ref", monthlyOfferReference);
+    document.querySelectorAll("[data-monthly-offer]").forEach((link) => { link.href = monthlyOfferUrl.toString(); });
+    const inAppWarning = document.querySelector("#inAppWarning");
+    const copyCatalogLink = document.querySelector("#copyCatalogLink");
+    const closeInAppWarning = document.querySelector("#closeInAppWarning");
+    function isInAppBrowser() {
+      const userAgent = navigator.userAgent || navigator.vendor || "";
+      return /FBAN|FBAV|FB_IAB|Messenger|Instagram/i.test(userAgent)
+        || new URLSearchParams(window.location.search).get("inapp-preview") === "1";
+    }
+    function shareableCatalogUrl() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("inapp-preview");
+      return url.toString();
+    }
+    async function copyCatalogUrl() {
+      const value = shareableCatalogUrl();
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+        else {
+          const field = document.createElement("textarea");
+          field.value = value; field.setAttribute("readonly", ""); field.style.position = "fixed"; field.style.opacity = "0";
+          document.body.appendChild(field); field.select(); document.execCommand("copy"); field.remove();
+        }
+        copyCatalogLink.textContent = "Lenken er kopiert";
+      } catch { copyCatalogLink.textContent = "Kopieringen mislyktes"; }
+    }
+    function setupInAppWarning() {
+      if (!isInAppBrowser()) return;
+      try { if (sessionStorage.getItem("seasonInAppWarningDismissed") === "1") return; } catch {}
+      inAppWarning.hidden = false;
+    }''',
+        1,
+    )
+    page_html = page_html.replace(
+        '    prepareConsultant();\n    loadStockStatuses();',
+        '''    copyCatalogLink.addEventListener("click", copyCatalogUrl);
+    closeInAppWarning.addEventListener("click", () => {
+      inAppWarning.hidden = true;
+      try { sessionStorage.setItem("seasonInAppWarningDismissed", "1"); } catch {}
+    });
+    setupInAppWarning();
+    prepareConsultant();
+    loadStockStatuses();''',
         1,
     )
     OUTPUT.mkdir(parents=True, exist_ok=True)
