@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js?v=20260820-party-share" defer></script>
+  <script src="/hub.js?v=20260929-admin-mail-accounting" defer></script>
 </head>
 <body>
   <header class="hub-header">
@@ -86,6 +86,49 @@
             <span>Gi eller fjern tilgang for valgt konsulent</span>
           </div>
           <div class="admin-product-list" id="adminProductAccessList"></div>
+        </div>
+        <div class="admin-tools-grid">
+          <section class="admin-tool-panel" aria-labelledby="adminMailHeading">
+            <div class="admin-product-heading">
+              <strong id="adminMailHeading">E-post til valgt konsulent</strong>
+              <span>E-posten inneholder bare katalogene konsulenten har tilgang til</span>
+            </div>
+            <p class="admin-tool-status" id="adminMailRecipient">Velg en konsulent først.</p>
+            <div class="admin-tool-actions">
+              <button type="button" id="adminCopyMail"><i data-lucide="copy"></i><span>Kopier e-post</span></button>
+              <button type="button" id="adminOpenGmail"><i data-lucide="mail-plus"></i><span>Åpne i Gmail</span></button>
+            </div>
+          </section>
+          <section class="admin-tool-panel" aria-labelledby="adminPaymentHeading">
+            <div class="admin-product-heading">
+              <strong id="adminPaymentHeading">Registrer betaling</strong>
+              <span>Bruk betalt dato for riktig regnskapsmåned</span>
+            </div>
+            <form class="admin-payment-form" id="adminPaymentForm">
+              <label><span>Produkt</span><select id="adminPaymentProduct" required></select></label>
+              <label><span>Beløp kr</span><input id="adminPaymentAmount" type="number" min="0" step="1" value="199" required></label>
+              <label><span>Status</span><select id="adminPaymentStatus"><option value="paid">Betalt</option><option value="gift">Gave</option><option value="unpaid">Ikke betalt</option><option value="refunded">Tilbakebetalt</option></select></label>
+              <label><span>Dato</span><input id="adminPaymentDate" type="date" required></label>
+              <label class="admin-payment-note"><span>Kommentar</span><input id="adminPaymentNote" type="text" maxlength="250" placeholder="Valgfritt"></label>
+              <button type="submit"><i data-lucide="receipt-text"></i><span>Registrer</span></button>
+            </form>
+          </section>
+        </div>
+        <div class="admin-accounting">
+          <div class="admin-accounting-heading">
+            <div class="admin-product-heading">
+              <strong>Regnskap per måned</strong>
+              <span>Summerer registrerte betalinger, gaver og ubetalte kjøp</span>
+            </div>
+            <label><span>Måned</span><input id="adminAccountingMonth" type="month"></label>
+          </div>
+          <div class="admin-accounting-summary" id="adminAccountingSummary"></div>
+          <div class="admin-overview-table-wrap">
+            <table class="admin-overview-table admin-accounting-table">
+              <thead><tr><th>Dato</th><th>Konsulent</th><th>Produkt</th><th>Status</th><th>Beløp</th></tr></thead>
+              <tbody id="adminAccountingRows"></tbody>
+            </table>
+          </div>
         </div>
         <div class="admin-overview">
           <div class="admin-product-heading">

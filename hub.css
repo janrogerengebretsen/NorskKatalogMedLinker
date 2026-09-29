@@ -553,6 +553,26 @@ main {
 }
 .admin-product-access button:disabled { opacity: .55; cursor: not-allowed; }
 .admin-product-access svg { width: 16px; }
+.admin-tools-grid { display: grid; grid-template-columns: 1fr 1.35fr; gap: 14px; margin-top: 18px; }
+.admin-tool-panel, .admin-accounting { border-top: 1px solid var(--line); padding-top: 16px; }
+.admin-tool-status { min-height: 18px; margin: 14px 0; color: var(--muted); font-size: 12px; }
+.admin-tool-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-tool-actions button, .admin-payment-form button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--brand); background: var(--brand); color: white; padding: 0 14px; font-weight: 750; cursor: pointer; }
+.admin-tool-actions button:first-child { background: white; color: var(--brand); }
+.admin-tool-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.admin-tool-actions svg, .admin-payment-form button svg { width: 16px; }
+.admin-payment-form { display: grid; grid-template-columns: 1.4fr .7fr .9fr .9fr; gap: 9px; margin-top: 14px; align-items: end; }
+.admin-payment-form label, .admin-accounting-heading label { display: grid; gap: 5px; }
+.admin-payment-form label > span, .admin-accounting-heading label > span { color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.admin-payment-form input, .admin-payment-form select, .admin-accounting-heading input { min-height: 40px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 0; background: white; padding: 8px 10px; color: var(--ink); font: 600 12px Arial, Helvetica, sans-serif; }
+.admin-payment-note { grid-column: 1 / -2; }
+.admin-accounting { margin-top: 22px; }
+.admin-accounting-heading { display: flex; align-items: end; justify-content: space-between; gap: 14px; }
+.admin-accounting-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.admin-accounting-card { border: 1px solid var(--line); padding: 12px; background: #f8faf9; }
+.admin-accounting-card span { display: block; color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.admin-accounting-card strong { display: block; margin-top: 5px; font-size: 19px; }
+.admin-accounting-table { min-width: 680px; }
 
 footer {
   min-height: 64px;
@@ -615,6 +635,12 @@ footer a { color: var(--brand); }
   .admin-current { margin-left: 0; }
   .admin-product-row { align-items: stretch; flex-direction: column; }
   .admin-product-access button { justify-content: center; width: 100%; }
+  .admin-tools-grid { grid-template-columns: 1fr; }
+  .admin-payment-form { grid-template-columns: 1fr 1fr; }
+  .admin-payment-note { grid-column: 1 / -1; }
+  .admin-payment-form button { grid-column: 1 / -1; }
+  .admin-accounting-heading { align-items: stretch; flex-direction: column; }
+  .admin-accounting-summary { grid-template-columns: 1fr 1fr; }
   .share-item {
     display: grid;
     grid-template-columns: 128px minmax(0, 1fr);

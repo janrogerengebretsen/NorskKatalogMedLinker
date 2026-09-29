@@ -113,7 +113,99 @@ const adminState = {
   consultants: [],
   filtered: [],
   productAccess: [],
+  payments: [],
 };
+
+const adminProductLinks = {
+  "norsk-nettkatalog": reference => new URL(`/?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+  "norsk-produktkatalog": reference => new URL(`/digital-katalog?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+  "egne-varer": reference => new URL(`/egne-varer?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+  party: reference => new URL(`/party?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+  maanedstilbud: reference => new URL(`/siste-maanedstilbud?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+  "tw-host-vinter-2026-27": reference => new URL(`/tw-host-vinter-2026-27?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
+};
+
+function selectedAdminConsultant() {
+  const reference = document.querySelector("#adminConsultantSelect")?.value;
+  return adminState.consultants.find(item => item.reference_code === reference) || null;
+}
+
+function adminMailContent(consultant) {
+  const links = productRegister
+    .filter(product => consultant.product_access.has(product.key) && adminProductLinks[product.key])
+    .map(product => `${product.title}:\n${adminProductLinks[product.key](consultant.reference_code)}`)
+    .join("\n\n");
+  const firstName = consultant.display_name.trim().split(/\s+/)[0] || consultant.display_name;
+  return {
+    subject: "Dine digitale Tupperware-kataloger",
+    body: `Hei ${firstName}!\n\nHer er de digitale Tupperware-løsningene du har tilgang til:\n\n${links || "Du har foreløpig ingen aktive kataloger."}\n\nLenkene er personlige og inneholder din konsulentreferanse. Du kan dele dem direkte med kundene dine. Kundene kan bla i katalogene, åpne produktene og bestille og betale i Tupperwares nettbutikk.\n\nVennlig hilsen\nJan Roger`,
+  };
+}
+
+function renderAdminMail(consultant) {
+  const recipient = document.querySelector("#adminMailRecipient");
+  const disabled = !consultant || !consultant.email;
+  document.querySelector("#adminCopyMail").disabled = disabled;
+  document.querySelector("#adminOpenGmail").disabled = disabled;
+  recipient.textContent = !consultant
+    ? "Velg en konsulent først."
+    : consultant.email
+      ? `Til: ${consultant.display_name} <${consultant.email}>`
+      : `${consultant.display_name} mangler e-postadresse.`;
+}
+
+function paymentStatusLabel(status) {
+  return { paid: "Betalt", gift: "Gave", unpaid: "Ikke betalt", refunded: "Tilbakebetalt" }[status] || status;
+}
+
+function formatNok(value) {
+  return new Intl.NumberFormat("nb-NO", { style: "currency", currency: "NOK", maximumFractionDigits: 0 }).format(Number(value || 0));
+}
+
+async function loadAdminAccounting() {
+  const month = document.querySelector("#adminAccountingMonth").value;
+  if (!month) return;
+  const start = `${month}-01`;
+  const next = new Date(`${start}T12:00:00`);
+  next.setMonth(next.getMonth() + 1);
+  const end = next.toISOString().slice(0, 10);
+  try {
+    adminState.payments = await jsonRequest(
+      `${adminState.config.supabaseUrl}/rest/v1/consultant_product_payments?select=id,consultant_id,product_key,amount_nok,payment_status,paid_at,note&paid_at=gte.${start}&paid_at=lt.${end}&order=paid_at.desc,created_at.desc`,
+      { headers: adminHeaders() },
+    );
+    renderAdminAccounting();
+  } catch (error) {
+    document.querySelector("#adminAccountingSummary").innerHTML = `<p class="admin-product-empty">Regnskapstabellen må opprettes i Supabase før oversikten kan brukes.</p>`;
+    document.querySelector("#adminAccountingRows").replaceChildren();
+  }
+}
+
+function renderAdminAccounting() {
+  const paid = adminState.payments.filter(item => item.payment_status === "paid");
+  const refunded = adminState.payments.filter(item => item.payment_status === "refunded");
+  const revenue = paid.reduce((sum, item) => sum + Number(item.amount_nok), 0)
+    - refunded.reduce((sum, item) => sum + Number(item.amount_nok), 0);
+  const count = status => adminState.payments.filter(item => item.payment_status === status).length;
+  document.querySelector("#adminAccountingSummary").innerHTML = `
+    <div class="admin-accounting-card"><span>Omsetning</span><strong>${formatNok(revenue)}</strong></div>
+    <div class="admin-accounting-card"><span>Betalt</span><strong>${count("paid")}</strong></div>
+    <div class="admin-accounting-card"><span>Gaver</span><strong>${count("gift")}</strong></div>
+    <div class="admin-accounting-card"><span>Ikke betalt</span><strong>${count("unpaid")}</strong></div>`;
+  const body = document.querySelector("#adminAccountingRows");
+  body.replaceChildren(...adminState.payments.map(payment => {
+    const consultant = adminState.consultants.find(item => item.id === payment.consultant_id);
+    const product = productRegister.find(item => item.key === payment.product_key);
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${payment.paid_at}</td><td>${consultant?.display_name || "Ukjent"}</td><td>${product?.title || payment.product_key}</td><td>${paymentStatusLabel(payment.payment_status)}</td><td>${formatNok(payment.amount_nok)}</td>`;
+    return row;
+  }));
+  if (!adminState.payments.length) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="5">Ingen registreringer denne måneden.</td>`;
+    body.append(row);
+  }
+}
 
 function showToast(message) {
   const toast = document.querySelector("#hubToast");
@@ -234,6 +326,7 @@ function updateAdminCurrent() {
     ? `${selected.display_name} · ${selected.reference_code}${selected.own_shop_enabled ? " · Egen butikk aktiv" : ""}`
     : "Ingen konsulent passer søket.";
   renderAdminProductAccess(selected);
+  renderAdminMail(selected);
 }
 
 function renderAdminProductAccess(consultant) {
@@ -289,7 +382,7 @@ async function verifySuperAdmin() {
 async function loadAdminConsultants() {
   const [consultants, productAccess] = await Promise.all([
     jsonRequest(
-      `${adminState.config.supabaseUrl}/rest/v1/consultants?select=id,reference_code,display_name,status,public_listing,municipality,county,own_shop_enabled,link_use_count&order=display_name.asc&limit=500`,
+      `${adminState.config.supabaseUrl}/rest/v1/consultants?select=id,reference_code,display_name,email,phone,status,public_listing,municipality,county,own_shop_enabled,link_use_count&order=display_name.asc&limit=500`,
       { headers: adminHeaders() },
     ),
     jsonRequest(
@@ -305,6 +398,8 @@ async function loadAdminConsultants() {
       .map(item => item.product_key)),
   }));
   renderAdminConsultants();
+  document.querySelector("#adminPaymentProduct").replaceChildren(...productRegister.map(product => new Option(product.title, product.key)));
+  await loadAdminAccounting();
 }
 
 async function toggleAdminProductAccess(productKey) {
@@ -406,6 +501,59 @@ async function copyText(value) {
   input.select();
   document.execCommand("copy");
   input.remove();
+}
+
+async function copyAdminMail() {
+  const consultant = selectedAdminConsultant();
+  if (!consultant?.email) return;
+  const mail = adminMailContent(consultant);
+  await copyText(`Til: ${consultant.email}\nEmne: ${mail.subject}\n\n${mail.body}`);
+  showToast("E-posten er kopiert");
+}
+
+function openAdminGmail() {
+  const consultant = selectedAdminConsultant();
+  if (!consultant?.email) return;
+  const mail = adminMailContent(consultant);
+  const url = new URL("https://mail.google.com/mail/");
+  url.searchParams.set("view", "cm");
+  url.searchParams.set("fs", "1");
+  url.searchParams.set("to", consultant.email);
+  url.searchParams.set("su", mail.subject);
+  url.searchParams.set("body", mail.body);
+  window.open(url.toString(), "_blank", "noopener");
+}
+
+async function registerAdminPayment(event) {
+  event.preventDefault();
+  const consultant = selectedAdminConsultant();
+  if (!consultant) return showToast("Velg en konsulent først");
+  const form = event.currentTarget;
+  const button = form.querySelector("button[type=submit]");
+  button.disabled = true;
+  try {
+    await jsonRequest(`${adminState.config.supabaseUrl}/rest/v1/consultant_product_payments`, {
+      method: "POST",
+      headers: adminHeaders({ Prefer: "return=minimal" }),
+      body: JSON.stringify({
+        consultant_id: consultant.id,
+        product_key: document.querySelector("#adminPaymentProduct").value,
+        amount_nok: Number(document.querySelector("#adminPaymentAmount").value),
+        payment_status: document.querySelector("#adminPaymentStatus").value,
+        paid_at: document.querySelector("#adminPaymentDate").value,
+        note: document.querySelector("#adminPaymentNote").value.trim() || null,
+      }),
+    });
+    document.querySelector("#adminPaymentNote").value = "";
+    const paidMonth = document.querySelector("#adminPaymentDate").value.slice(0, 7);
+    document.querySelector("#adminAccountingMonth").value = paidMonth;
+    await loadAdminAccounting();
+    showToast("Betalingen er registrert");
+  } catch (error) {
+    showToast(error.message || "Kunne ikke registrere betalingen");
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function qrDataUrl(value, width = 360) {
@@ -831,8 +979,16 @@ document.querySelector("#adminConsultantOverview").addEventListener("click", eve
   url.searchParams.set("ref", button.dataset.adminSelect);
   window.location.assign(url.toString());
 });
+document.querySelector("#adminCopyMail").addEventListener("click", () => copyAdminMail().catch(error => showToast(error.message)));
+document.querySelector("#adminOpenGmail").addEventListener("click", openAdminGmail);
+document.querySelector("#adminPaymentForm").addEventListener("submit", registerAdminPayment);
+document.querySelector("#adminAccountingMonth").addEventListener("change", () => loadAdminAccounting());
 
 window.addEventListener("DOMContentLoaded", async () => {
+  const today = new Date();
+  const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
+  document.querySelector("#adminPaymentDate").value = localDate.slice(0, 10);
+  document.querySelector("#adminAccountingMonth").value = localDate.slice(0, 7);
   if (window.lucide) window.lucide.createIcons();
   initializeAdminSwitcher().catch(error => {
     document.querySelector("#adminLoginMessage").textContent = error.message || "Kunne ikke starte administratorverktøyet.";
