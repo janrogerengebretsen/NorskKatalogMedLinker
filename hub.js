@@ -331,6 +331,59 @@ function updateAdminCurrent() {
     : "Ingen konsulent passer søket.";
   renderAdminProductAccess(selected);
   renderAdminMail(selected);
+  renderAdminConsultantEdit(selected);
+}
+
+function renderAdminConsultantEdit(consultant) {
+  const form = document.querySelector("#adminConsultantEditForm");
+  const fields = form.querySelectorAll("input, button");
+  fields.forEach(field => { field.disabled = !consultant; });
+  document.querySelector("#adminEditName").value = consultant?.display_name || "";
+  document.querySelector("#adminEditEmail").value = consultant?.email || "";
+  document.querySelector("#adminEditPhone").value = consultant?.phone || "";
+  document.querySelector("#adminEditReference").value = consultant?.reference_code || "";
+  document.querySelector("#adminEditMessage").textContent = consultant
+    ? "Endringer lagres direkte i konsulentregisteret."
+    : "Velg en konsulent først.";
+}
+
+async function updateAdminConsultant(event) {
+  event.preventDefault();
+  const consultant = selectedAdminConsultant();
+  if (!consultant) return;
+  const button = document.querySelector("#adminEditSave");
+  const message = document.querySelector("#adminEditMessage");
+  button.disabled = true;
+  message.textContent = "Lagrer opplysningene ...";
+  try {
+    const result = await jsonRequest(
+      `${adminState.config.supabaseUrl}/rest/v1/rpc/superadmin_update_consultant`,
+      {
+        method: "POST",
+        headers: adminHeaders(),
+        body: JSON.stringify({
+          p_reference_code: consultant.reference_code,
+          p_display_name: document.querySelector("#adminEditName").value.trim(),
+          p_email: document.querySelector("#adminEditEmail").value.trim() || null,
+          p_phone: document.querySelector("#adminEditPhone").value.trim() || null,
+        }),
+      },
+    );
+    const saved = result[0];
+    if (!saved) throw new Error("Databasen returnerte ingen oppdaterte opplysninger.");
+    consultant.display_name = saved.display_name;
+    consultant.email = saved.email;
+    consultant.phone = saved.phone;
+    message.textContent = "Opplysningene er lagret.";
+    renderAdminMail(consultant);
+    renderAdminOverview();
+    showToast("Konsulentopplysningene er oppdatert");
+    window.setTimeout(() => window.location.reload(), 650);
+  } catch (error) {
+    message.textContent = error.message || "Kunne ikke lagre opplysningene.";
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function renderAdminProductAccess(consultant) {
@@ -968,6 +1021,7 @@ document.querySelector("#adminProductAccessList").addEventListener("click", even
   const button = event.target.closest("[data-product-access]");
   if (button) toggleAdminProductAccess(button.dataset.productAccess);
 });
+document.querySelector("#adminConsultantEditForm").addEventListener("submit", updateAdminConsultant);
 document.querySelector("#adminConsultantOverview").addEventListener("click", event => {
   const accessButton = event.target.closest("[data-overview-access]");
   if (accessButton) {

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js?v=20261001-admin-mail-template" defer></script>
+  <script src="/hub.js?v=20261001-admin-consultant-edit" defer></script>
 </head>
 <body>
   <header class="hub-header">
@@ -80,6 +80,22 @@
           <button type="button" class="admin-open-button" id="adminOpenConsultant"><i data-lucide="external-link"></i><span>Åpne valgt</span></button>
         </div>
         <p class="admin-current" id="adminCurrentConsultant"></p>
+        <form class="admin-consultant-edit" id="adminConsultantEditForm">
+          <div class="admin-product-heading">
+            <strong>Rediger konsulent</strong>
+            <span>Opplysningene brukes blant annet på katalogens personlige kontaktside</span>
+          </div>
+          <div class="admin-consultant-edit-fields">
+            <label><span>Navn</span><input id="adminEditName" type="text" maxlength="120" required></label>
+            <label><span>E-postadresse</span><input id="adminEditEmail" type="email" maxlength="200"></label>
+            <label><span>Telefonnummer</span><input id="adminEditPhone" type="tel" maxlength="40"></label>
+            <label><span>Referanse (kan ikke endres her)</span><input id="adminEditReference" type="text" readonly></label>
+          </div>
+          <div class="admin-consultant-edit-actions">
+            <p id="adminEditMessage" role="status"></p>
+            <button type="submit" id="adminEditSave"><i data-lucide="save"></i><span>Lagre opplysninger</span></button>
+          </div>
+        </form>
         <div class="admin-product-access">
           <div class="admin-product-heading">
             <strong>Kjøpte produkter</strong>
