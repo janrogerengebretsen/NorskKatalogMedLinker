@@ -513,6 +513,16 @@ main {
   font-weight: 700;
 }
 .admin-consultant-edit { margin-top: 16px; padding: 16px; border: 1px solid var(--line); background: #f8faf9; }
+.admin-consultant-create { margin: 16px 0; padding: 16px; border: 1px solid var(--brand); background: #f4faf8; }
+.admin-consultant-create-fields { display: grid; grid-template-columns: 1fr 1.2fr 1.2fr .8fr; gap: 9px; margin-top: 13px; }
+.admin-consultant-create-fields label { display: grid; gap: 5px; min-width: 0; }
+.admin-consultant-create-fields label > span { color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.admin-consultant-create-fields input { width: 100%; min-height: 40px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 0; background: white; padding: 8px 10px; color: var(--ink); font: 600 12px Arial, Helvetica, sans-serif; }
+.admin-consultant-create-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 11px; }
+.admin-consultant-create-actions p { margin: 0; color: var(--muted); font-size: 11px; }
+.admin-consultant-create-actions button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--brand); background: var(--brand); color: white; padding: 0 14px; font-weight: 750; cursor: pointer; }
+.admin-consultant-create-actions button:disabled { opacity: .5; cursor: wait; }
+.admin-consultant-create-actions svg { width: 16px; }
 .admin-consultant-edit-fields { display: grid; grid-template-columns: 1.2fr 1.2fr .8fr 1fr; gap: 9px; margin-top: 13px; }
 .admin-consultant-edit-fields label { display: grid; gap: 5px; min-width: 0; }
 .admin-consultant-edit-fields label > span { color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
@@ -649,6 +659,9 @@ footer a { color: var(--brand); }
   .admin-consultant-edit-fields { grid-template-columns: 1fr; }
   .admin-consultant-edit-actions { align-items: stretch; flex-direction: column; }
   .admin-consultant-edit-actions button { width: 100%; }
+  .admin-consultant-create-fields { grid-template-columns: 1fr; }
+  .admin-consultant-create-actions { align-items: stretch; flex-direction: column; }
+  .admin-consultant-create-actions button { width: 100%; }
   .admin-tools-grid { grid-template-columns: 1fr; }
   .admin-payment-form { grid-template-columns: 1fr 1fr; }
   .admin-payment-note { grid-column: 1 / -1; }

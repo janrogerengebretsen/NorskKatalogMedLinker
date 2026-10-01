@@ -416,6 +416,49 @@ async function updateAdminConsultant(event) {
   }
 }
 
+async function createAdminConsultant(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = document.querySelector("#adminCreateSave");
+  const message = document.querySelector("#adminCreateMessage");
+  const reference = cleanReference(document.querySelector("#adminCreateReference").value).toUpperCase();
+  if (!reference) {
+    message.textContent = "Skriv inn en gyldig konsulentreferanse.";
+    return;
+  }
+  button.disabled = true;
+  message.textContent = "Oppretter konsulenten ...";
+  try {
+    const result = await jsonRequest(
+      `${adminState.config.supabaseUrl}/rest/v1/rpc/superadmin_create_consultant`,
+      {
+        method: "POST",
+        headers: adminHeaders(),
+        body: JSON.stringify({
+          p_reference_code: reference,
+          p_display_name: document.querySelector("#adminCreateName").value.trim(),
+          p_email: document.querySelector("#adminCreateEmail").value.trim(),
+          p_phone: document.querySelector("#adminCreatePhone").value.trim(),
+        }),
+      },
+    );
+    const created = result[0];
+    if (!created) throw new Error("Databasen returnerte ingen ny konsulent.");
+    message.textContent = "Konsulenten er opprettet med de to nyeste katalogene.";
+    form.reset();
+    showToast("Konsulenten er opprettet");
+    window.setTimeout(() => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("ref", created.reference_code);
+      window.location.assign(url.toString());
+    }, 700);
+  } catch (error) {
+    message.textContent = error.message || "Kunne ikke opprette konsulenten.";
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function renderAdminProductAccess(consultant) {
   const list = document.querySelector("#adminProductAccessList");
   if (!consultant) {
@@ -1059,6 +1102,7 @@ document.querySelector("#adminProductAccessList").addEventListener("click", even
   if (button) toggleAdminProductAccess(button.dataset.productAccess);
 });
 document.querySelector("#adminConsultantEditForm").addEventListener("submit", updateAdminConsultant);
+document.querySelector("#adminConsultantCreateForm").addEventListener("submit", createAdminConsultant);
 document.querySelector("#adminConsultantOverview").addEventListener("click", event => {
   const accessButton = event.target.closest("[data-overview-access]");
   if (accessButton) {

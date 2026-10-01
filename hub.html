@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js?v=20261001-admin-consultant-edit" defer></script>
+  <script src="/hub.js?v=20261001-admin-create-consultant" defer></script>
 </head>
 <body>
   <header class="hub-header">
@@ -63,6 +63,22 @@
           <span><i data-lucide="badge-check"></i> <strong id="adminAccountName">Superadministrator</strong></span>
           <button type="button" id="adminLogoutButton">Logg ut</button>
         </div>
+        <form class="admin-consultant-create" id="adminConsultantCreateForm">
+          <div class="admin-product-heading">
+            <strong>Ny konsulent</strong>
+            <span>Den nye konsulenten får automatisk tilgang til de to nyeste katalogene</span>
+          </div>
+          <div class="admin-consultant-create-fields">
+            <label><span>Referanse</span><input id="adminCreateReference" type="text" maxlength="80" autocomplete="off" placeholder="F.eks. LISBETHOVERBYE" required></label>
+            <label><span>Navn</span><input id="adminCreateName" type="text" maxlength="120" autocomplete="name" required></label>
+            <label><span>E-postadresse</span><input id="adminCreateEmail" type="email" maxlength="200" autocomplete="email" required></label>
+            <label><span>Mobilnummer</span><input id="adminCreatePhone" type="tel" maxlength="40" autocomplete="tel" required></label>
+          </div>
+          <div class="admin-consultant-create-actions">
+            <p id="adminCreateMessage" role="status">Referansen hentes fra konsulentens Tupperware-lenke.</p>
+            <button type="submit" id="adminCreateSave"><i data-lucide="user-plus"></i><span>Opprett konsulent</span></button>
+          </div>
+        </form>
         <div class="admin-search-row">
           <label class="admin-search">
             <i data-lucide="search"></i>
