@@ -339,15 +339,23 @@ function renderAdminOverview() {
   const head = document.querySelector("#adminConsultantOverviewHead");
   const body = document.querySelector("#adminConsultantOverview");
   if (!head || !body) return;
-  head.innerHTML = `<tr><th>Konsulent</th><th>Referanse</th>${productRegister.map(product => `<th>${product.title}</th>`).join("")}</tr>`;
+  const overviewProducts = [
+    { key: "maanedstilbud", label: "Måned", title: "Månedens tilbudskatalog" },
+    { key: "tw-host-vinter-2026-27", label: "Høst/vinter", title: "Høst- og vinterkatalog 2026/2027" },
+    { key: "norsk-nettkatalog", label: "Nett", title: "Norsk Nettkatalog" },
+    { key: "norsk-produktkatalog", label: "PDF", title: "Digital Produktkatalog" },
+    { key: "egne-varer", label: "Egne", title: "Egne varer" },
+    { key: "party", label: "Party", title: "Party" },
+  ];
+  head.innerHTML = `<tr><th class="admin-consultant-column">Konsulent / ref.</th><th class="admin-total-column" title="Totalt antall katalogåpninger">Totalt</th>${overviewProducts.map(product => `<th class="admin-product-column" title="${product.title}">${product.label}</th>`).join("")}</tr>`;
   body.replaceChildren(...adminState.consultants.map(consultant => {
     const row = document.createElement("tr");
-    const accessCells = productRegister.map(product => {
+    const accessCells = overviewProducts.map(product => {
       const active = consultant.product_access.has(product.key);
       const opens = consultantCatalogUseCount(consultant, product.key);
       return `<td><div class="admin-access-cell"><button type="button" class="admin-access-toggle ${active ? "is-active" : ""}" data-overview-access="${product.key}" data-access-consultant="${consultant.reference_code}" title="${active ? "Fjern tilgang" : "Gi tilgang"}" aria-label="${active ? "Fjern tilgang" : "Gi tilgang"}"><i data-lucide="${active ? "check-circle-2" : "ban"}"></i></button><span class="admin-open-count" title="Antall katalogåpninger">${opens}</span></div></td>`;
     }).join("");
-    row.innerHTML = `<td><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name} (${consultantLinkUseCount(consultant)})</button>${consultantCatalogBreakdown(consultant)}</td><td><code>${consultant.reference_code}</code></td>${accessCells}`;
+    row.innerHTML = `<td class="admin-consultant-column"><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name}</button><code>${consultant.reference_code}</code></td><td class="admin-total-column"><strong>${consultantLinkUseCount(consultant)}</strong></td>${accessCells}`;
     return row;
   }));
   if (window.lucide) window.lucide.createIcons();
