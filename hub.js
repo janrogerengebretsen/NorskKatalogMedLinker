@@ -131,14 +131,18 @@ function selectedAdminConsultant() {
 }
 
 function adminMailContent(consultant) {
-  const links = productRegister
-    .filter(product => consultant.product_access.has(product.key) && adminProductLinks[product.key])
-    .map(product => `${product.title}:\n${adminProductLinks[product.key](consultant.reference_code)}`)
+  const mailCatalogs = [
+    { key: "maanedstilbud", title: "Siste månedskatalog" },
+    { key: "tw-host-vinter-2026-27", title: "Høst- og vinterkatalog 2026/2027" },
+  ];
+  const links = mailCatalogs
+    .filter(product => consultant.product_access.has(product.key))
+    .map(product => `${product.title}\n${adminProductLinks[product.key](consultant.reference_code)}`)
     .join("\n\n");
   const firstName = consultant.display_name.trim().split(/\s+/)[0] || consultant.display_name;
   return {
     subject: "Dine digitale Tupperware-kataloger",
-    body: `Hei ${firstName}!\n\nHer er de digitale Tupperware-løsningene du har tilgang til:\n\n${links || "Du har foreløpig ingen aktive kataloger."}\n\nLenkene er personlige og inneholder din konsulentreferanse. Du kan dele dem direkte med kundene dine. Kundene kan bla i katalogene, åpne produktene og bestille og betale i Tupperwares nettbutikk.\n\nVennlig hilsen\nJan Roger`,
+    body: `Hei ${firstName}!\n\nHer er de digitale Tupperware-katalogene dine:\n\n${links || "Du har foreløpig ingen av disse katalogene aktive."}\n\nLenkene inneholder din personlige konsulentreferanse og kan deles direkte med kundene dine.\n\nSLIK BRUKES KATALOGENE\n\nKunden blar i katalogen og klikker på et produkt for å åpne det i Tupperwares nettbutikk. Kunden kan gå frem og tilbake mellom katalogen og nettbutikken, legge flere produkter i handlekurven og sende inn én samlet bestilling til slutt.\n\nBestilling og betaling gjennomføres direkte i Tupperwares nettbutikk. Det er alltid pris og lagerstatus i nettbutikken som gjelder. Varene sendes normalt hjem til kunden innen 7–10 dager.\n\nKatalogene fungerer på mobil, nettbrett og PC. Dersom katalogen åpnes inne i Messenger eller Facebook, bør kunden kopiere lenken, åpne Google Chrome og lime lenken inn i adressefeltet.\n\nHele katalogen eller utvalgte sider kan også skrives ut eller lagres som PDF.\n\nPERSONLIG KONTAKTSIDE\n\nPå den siste siden i katalogen vises konsulentens navn, telefonnummer og e-postadresse. Der finnes også QR-koder og lenker til konsulentens side hos Tupperware og den digitale katalogen. Den siste siden kan derfor brukes som kontaktark eller skrives ut sammen med utvalgte katalogsider.\n\nJeg bruker nå Gmail-adressen jan.roger.engebretsen@gmail.com. Bruk gjerne denne adressen dersom du oppdager feil eller har spørsmål.\n\nVennlig hilsen\nJan Roger Engebretsen\njan.roger.engebretsen@gmail.com`,
   };
 }
 
