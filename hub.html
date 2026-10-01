@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/hub.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js" defer></script>
-  <script src="/hub.js?v=20261001-compact-overview" defer></script>
+  <script src="/hub.js?v=20261001-private-admin" defer></script>
 </head>
 <body>
   <header class="hub-header">
@@ -38,7 +38,7 @@
       </div>
     </section>
 
-    <section class="admin-switcher" id="adminSwitcher" aria-labelledby="adminSwitcherHeading">
+    <section class="admin-switcher" id="adminSwitcher" aria-labelledby="adminSwitcherHeading" hidden>
       <div class="admin-switcher-heading">
         <span class="section-icon"><i data-lucide="shield-check"></i></span>
         <div>
@@ -357,7 +357,7 @@
         </div>
       </header>
       <p class="section-intro" id="productRegisterIntro">
-        Her ser du hvilke produkter som er åpne for den valgte konsulenten.
+        Her ser du produktene konsulenten har tilgang til.
       </p>
       <div class="registry-list" id="productRegistryList"></div>
     </section>

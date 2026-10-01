@@ -1,4 +1,5 @@
 const params = new URLSearchParams(window.location.search);
+const adminMode = params.get("admin") === "1";
 
 function cleanReference(value) {
   return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
@@ -947,30 +948,26 @@ function renderProductRegistry(status) {
   if (!intro || !list) return;
   const consultantLabel = consultantName || referenceCode;
   const registered = Boolean(status?.registered);
+  const activeProducts = productRegister.filter(currentProductAccess);
   intro.textContent = registered
-    ? `Konsulenten ${consultantLabel} er registrert i systemet. Her ser du hvilke løsninger som er åpne.`
-    : `Konsulenten ${consultantLabel} er ikke registrert ennå. Her ser du hvilke løsninger som kan åpnes når profilen er aktiv.`;
-  list.innerHTML = productRegister.map(product => {
-    const active = currentProductAccess(product);
-    const badgeClass = active ? "active" : "locked";
-    const badgeText = active ? "Tilgang" : "Låst";
-    const note = "Tilgang gis eller fjernes av superadministrator etter kjøp.";
+    ? `${consultantLabel} har tilgang til ${activeProducts.length} ${activeProducts.length === 1 ? "produkt" : "produkter"}.`
+    : `Konsulenten ${consultantLabel} er ikke registrert ennå.`;
+  list.innerHTML = activeProducts.map(product => {
     return `
-      <article class="registry-card ${active ? "is-active" : "is-locked"}">
+      <article class="registry-card is-active">
         <div class="registry-card-head">
           <div>
             <strong>${product.title}</strong>
             <p>${product.description}</p>
           </div>
-          <span class="module-status ${badgeClass}">${badgeText}</span>
+          <span class="module-status active">Tilgang</span>
         </div>
         <div class="registry-meta">
           <span>${product.accessLabel}</span>
-          <span>${note}</span>
         </div>
       </article>
     `;
-  }).join("");
+  }).join("") || `<p class="admin-product-empty">Ingen produkter er åpnet for denne konsulenten ennå.</p>`;
 }
 
 function updateVisibleModules() {
@@ -1137,9 +1134,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.querySelector("#adminPaymentDate").value = localDate.slice(0, 10);
   document.querySelector("#adminAccountingMonth").value = localDate.slice(0, 7);
   if (window.lucide) window.lucide.createIcons();
-  initializeAdminSwitcher().catch(error => {
-    document.querySelector("#adminLoginMessage").textContent = error.message || "Kunne ikke starte administratorverktøyet.";
-  });
+  if (adminMode) {
+    document.querySelector("#adminSwitcher").hidden = false;
+    initializeAdminSwitcher().catch(error => {
+      document.querySelector("#adminLoginMessage").textContent = error.message || "Kunne ikke starte administratorverktøyet.";
+    });
+  }
   if (!referenceCode) {
     document.querySelector("#hubConsultantName").textContent = "Ingen konsulent valgt";
     document.querySelector("#pageConsultantName").textContent = "INGEN KONSULENT VALGT";
