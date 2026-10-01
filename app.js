@@ -245,7 +245,7 @@ async function loadConsultant() {
   }
   showConsultant("Kontrollerer konsulent ...", `Ref. ${requestedConsultantRef}`);
   try {
-    const payload = await fetchJson(`/api/consultant?ref=${encodeURIComponent(requestedConsultantRef)}`);
+    const payload = await fetchJson(`/api/consultant?ref=${encodeURIComponent(requestedConsultantRef)}&track=1&catalog=norsk-nettkatalog`);
     if (!payload.found) {
       activeConsultantRef = "";
       showConsultant("Konsulentreferansen finnes ikke", `Ugyldig ref. ${requestedConsultantRef}`, "invalid");

@@ -377,7 +377,7 @@
       const reference = cleanReference(params.get("ref"));
       if (!reference) { consultantLine.classList.add("invalid"); consultantName.textContent = "ingen konsulent valgt"; return; }
       try {
-        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1`);
+        const response = await fetch(`/api/consultant?ref=${encodeURIComponent(reference)}&track=1&catalog=september-2026`);
         const result = await response.json();
         if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
         consultantName.textContent = result.name || result.consultant?.display_name || reference;

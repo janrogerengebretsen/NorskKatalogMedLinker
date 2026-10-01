@@ -271,7 +271,36 @@ function consultantLabel(consultant) {
 }
 
 function consultantLinkUseCount(consultant) {
-  return Number(consultant?.link_use_count || 0);
+  const counts = Object.values(consultant?.catalog_counts || {});
+  return counts.length
+    ? counts.reduce((total, count) => total + Number(count || 0), 0)
+    : Number(consultant?.link_use_count || 0);
+}
+
+function consultantCatalogUseCount(consultant, productKey) {
+  if (productKey === "maanedstilbud") {
+    return Object.entries(consultant?.catalog_counts || {})
+      .filter(([key]) => /^\w+-20\d{2}$/.test(key))
+      .reduce((total, [, count]) => total + Number(count || 0), 0);
+  }
+  return Number(consultant?.catalog_counts?.[productKey] || 0);
+}
+
+const catalogCountLabels = {
+  "norsk-nettkatalog": "Norsk nettkatalog",
+  "norsk-produktkatalog": "Digital produktkatalog",
+  "september-2026": "September 2026",
+  "oktober-2026": "Oktober 2026",
+  "tw-host-vinter-2026-27": "Høst/vinter 2026–27",
+};
+
+function consultantCatalogBreakdown(consultant) {
+  const rows = Object.entries(consultant?.catalog_counts || {})
+    .filter(([, count]) => Number(count) > 0)
+    .map(([key, count]) => `${catalogCountLabels[key] || key}: ${Number(count)}`);
+  return rows.length
+    ? `<small class="admin-catalog-breakdown">${rows.join("<br>")}</small>`
+    : `<small class="admin-catalog-breakdown">Ingen registrerte katalogåpninger</small>`;
 }
 
 function renderAdminConsultants(search = "") {
@@ -315,9 +344,10 @@ function renderAdminOverview() {
     const row = document.createElement("tr");
     const accessCells = productRegister.map(product => {
       const active = consultant.product_access.has(product.key);
-      return `<td><button type="button" class="admin-access-toggle ${active ? "is-active" : ""}" data-overview-access="${product.key}" data-access-consultant="${consultant.reference_code}" title="${active ? "Fjern tilgang" : "Gi tilgang"}" aria-label="${active ? "Fjern tilgang" : "Gi tilgang"}"><i data-lucide="${active ? "check-circle-2" : "ban"}"></i></button></td>`;
+      const opens = consultantCatalogUseCount(consultant, product.key);
+      return `<td><div class="admin-access-cell"><button type="button" class="admin-access-toggle ${active ? "is-active" : ""}" data-overview-access="${product.key}" data-access-consultant="${consultant.reference_code}" title="${active ? "Fjern tilgang" : "Gi tilgang"}" aria-label="${active ? "Fjern tilgang" : "Gi tilgang"}"><i data-lucide="${active ? "check-circle-2" : "ban"}"></i></button><span class="admin-open-count" title="Antall katalogåpninger">${opens}</span></div></td>`;
     }).join("");
-    row.innerHTML = `<td><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name} (${consultantLinkUseCount(consultant)})</button></td><td><code>${consultant.reference_code}</code></td>${accessCells}`;
+    row.innerHTML = `<td><button type="button" class="admin-overview-link" data-admin-select="${consultant.reference_code}">${consultant.display_name} (${consultantLinkUseCount(consultant)})</button>${consultantCatalogBreakdown(consultant)}</td><td><code>${consultant.reference_code}</code></td>${accessCells}`;
     return row;
   }));
   if (window.lucide) window.lucide.createIcons();
@@ -437,7 +467,7 @@ async function verifySuperAdmin() {
 }
 
 async function loadAdminConsultants() {
-  const [consultants, productAccess] = await Promise.all([
+  const [consultants, productAccess, catalogCounters] = await Promise.all([
     jsonRequest(
       `${adminState.config.supabaseUrl}/rest/v1/consultants?select=id,reference_code,display_name,email,phone,status,public_listing,municipality,county,own_shop_enabled,link_use_count&order=display_name.asc&limit=500`,
       { headers: adminHeaders() },
@@ -446,10 +476,17 @@ async function loadAdminConsultants() {
       `${adminState.config.supabaseUrl}/rest/v1/consultant_product_access?select=consultant_id,product_key,is_active`,
       { headers: adminHeaders() },
     ),
+    jsonRequest(
+      `${adminState.config.supabaseUrl}/rest/v1/consultant_catalog_use_counters?select=consultant_id,catalog_key,open_count,last_opened_at`,
+      { headers: adminHeaders() },
+    ).catch(() => []),
   ]);
   adminState.productAccess = productAccess;
   adminState.consultants = consultants.map(consultant => ({
     ...consultant,
+    catalog_counts: Object.fromEntries(catalogCounters
+      .filter(item => item.consultant_id === consultant.id)
+      .map(item => [item.catalog_key, Number(item.open_count || 0)])),
     product_access: new Set(productAccess
       .filter(item => item.consultant_id === consultant.id && item.is_active)
       .map(item => item.product_key)),

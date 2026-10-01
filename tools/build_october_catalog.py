@@ -566,7 +566,7 @@ def build_html(pages: list[dict[str, int | str]], products: list[dict[str, objec
         QRCode.toCanvas(document.querySelector("#catalogDigitalQr"), fallbackDigitalUrl, {{ width:260, margin:1 }});
       }}
       try {{
-        const response = await fetch(`/api/consultant?ref=${{encodeURIComponent(reference)}}&track=1`);
+        const response = await fetch(`/api/consultant?ref=${{encodeURIComponent(reference)}}&track=1&catalog=oktober-2026`);
         const result = await response.json();
         if (!response.ok || !result.found) throw new Error("Ugyldig konsulent");
         consultantName.textContent = result.name || result.consultant?.display_name || reference;

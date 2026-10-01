@@ -681,7 +681,10 @@ footer a { color: var(--brand); }
 .admin-overview-table code { color: var(--accent, #087f6b); }
 .admin-overview-link { padding: 0; border: 0; background: none; color: var(--accent, #087f6b); font: inherit; font-weight: 700; cursor: pointer; text-align: left; }
 .admin-overview-link:hover { text-decoration: underline; }
+.admin-catalog-breakdown { display: block; margin-top: 6px; color: var(--muted, #63706b); font-size: 11px; line-height: 1.45; }
 .admin-access-toggle { width: 34px; height: 34px; padding: 6px; border: 1px solid #d6dfda; border-radius: 6px; background: #fff3f1; color: #b42318; cursor: pointer; }
 .admin-access-toggle.is-active { background: #e8f7ee; border-color: #9dd8b1; color: #16803c; }
 .admin-access-toggle:hover { filter: brightness(.96); }
+.admin-access-cell { display: flex; align-items: center; gap: 8px; }
+.admin-open-count { min-width: 26px; padding: 3px 6px; border-radius: 999px; background: #eef3f1; color: #33413b; font-size: 12px; font-weight: 800; text-align: center; }
 .admin-overview-table th { white-space: nowrap; }
