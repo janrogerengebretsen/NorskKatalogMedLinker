@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-const adminMode = params.get("admin") === "1";
+const adminMode = window.location.pathname.replace(/\/$/, "") === "/admin" || params.get("admin") === "1";
 
 function cleanReference(value) {
   return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
@@ -116,6 +116,33 @@ const adminState = {
   productAccess: [],
   payments: [],
 };
+
+function setAdminTab(tabName) {
+  const selected = tabName || "profile";
+  document.querySelectorAll("[data-admin-panel]").forEach(panel => {
+    panel.hidden = panel.dataset.adminPanel !== selected;
+  });
+  document.querySelectorAll("[data-admin-tab]").forEach(button => {
+    const active = button.dataset.adminTab === selected;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  sessionStorage.setItem("adminActiveTab", selected);
+}
+
+function prepareAdminPage() {
+  document.body.classList.add("admin-page");
+  document.title = "Administrasjon | Tupperware-katalogene";
+  const brand = document.querySelector(".hub-brand");
+  brand.href = "/admin";
+  brand.querySelector("strong").textContent = "Administrasjon";
+  document.querySelector("#hubConsultantName").textContent = "Konsulenter, produkter og regnskap";
+  document.querySelector("#adminSwitcherHeading").textContent = "Kontrollpanel";
+  document.querySelectorAll("#adminTabs [data-admin-tab]").forEach(button => {
+    button.addEventListener("click", () => setAdminTab(button.dataset.adminTab));
+  });
+  setAdminTab(sessionStorage.getItem("adminActiveTab") || "profile");
+}
 
 const adminProductLinks = {
   "norsk-nettkatalog": reference => new URL(`/?ref=${encodeURIComponent(reference)}`, window.location.origin).toString(),
@@ -1137,6 +1164,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.querySelector("#adminAccountingMonth").value = localDate.slice(0, 7);
   if (window.lucide) window.lucide.createIcons();
   if (adminMode) {
+    prepareAdminPage();
     document.querySelector("#adminSwitcher").hidden = false;
     initializeAdminSwitcher().catch(error => {
       document.querySelector("#adminLoginMessage").textContent = error.message || "Kunne ikke starte administratorverktøyet.";

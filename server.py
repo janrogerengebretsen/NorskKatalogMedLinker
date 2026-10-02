@@ -1916,6 +1916,8 @@ a{{display:inline-block;margin-top:24px;color:#fff;background:#007b68;padding:13
             "/start": ("hub.html", "text/html; charset=utf-8"),
             "/start/": ("hub.html", "text/html; charset=utf-8"),
             "/hub.html": ("hub.html", "text/html; charset=utf-8"),
+            "/admin": ("hub.html", "text/html; charset=utf-8"),
+            "/admin/": ("hub.html", "text/html; charset=utf-8"),
             "/hub.css": ("hub.css", "text/css; charset=utf-8"),
             "/hub.js": ("hub.js", "application/javascript; charset=utf-8"),
             "/kataloghefte-test": ("catalog-demo/index.html", "text/html; charset=utf-8"),

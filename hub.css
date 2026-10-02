@@ -297,6 +297,25 @@ main {
   border: 1px solid var(--line);
   background: white;
 }
+.share-details { margin-top: 12px; }
+.share-details > summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--brand);
+  background: white;
+  padding: 0 14px;
+  color: var(--brand);
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+.share-details > summary::-webkit-details-marker { display: none; }
+.share-details > summary svg { width: 18px; height: 18px; }
+.share-details > summary .summary-arrow { margin-left: auto; transition: transform .2s ease; }
+.share-details[open] > summary .summary-arrow { transform: rotate(180deg); }
+.share-details .share-grid { margin-top: 12px; }
 .qr-frame img {
   width: 100%;
   height: 100%;
@@ -455,6 +474,36 @@ main {
   font-weight: 700;
 }
 .admin-browser { padding: 18px; }
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 14px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+}
+.admin-tabs button {
+  flex: 0 0 auto;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  padding: 0 13px;
+  color: var(--muted);
+  font-weight: 750;
+  cursor: pointer;
+}
+.admin-tabs button.is-active { border-bottom-color: var(--brand); color: var(--brand); }
+.admin-tabs svg { width: 16px; height: 16px; }
+.admin-page .page-heading,
+.admin-page main > .module-section { display: none; }
+.admin-page main { max-width: 1240px; }
+.admin-page .admin-switcher { margin-top: 28px; }
+.admin-page footer a { display: none; }
+.admin-page .admin-tools-grid { display: contents; }
+.admin-page .admin-tool-panel { margin-top: 18px; }
 .admin-session-line,
 .admin-search-row,
 .admin-navigation {
