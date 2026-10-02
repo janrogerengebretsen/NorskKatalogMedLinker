@@ -544,7 +544,9 @@ async function loadAdminConsultants() {
       .map(item => item.product_key)),
   }));
   renderAdminConsultants();
-  document.querySelector("#adminPaymentProduct").replaceChildren(...productRegister.map(product => new Option(product.title, product.key)));
+  const paymentProduct = document.querySelector("#adminPaymentProduct");
+  paymentProduct.replaceChildren(...productRegister.map(product => new Option(product.title, product.key)));
+  paymentProduct.value = "tw-host-vinter-2026-27";
   await loadAdminAccounting();
 }
 
